@@ -1,0 +1,4 @@
+interface:
+  display_name: "Repository Onboarding"
+  short_description: "Evidence-backed repository onboarding report"
+  default_prompt: "Use $repository-onboarding to assess this repository without changing files."

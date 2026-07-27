@@ -1,0 +1,27 @@
+{
+  "id": "repository-onboarding-positive-polyglot",
+  "type": "positive",
+  "platforms": [
+    "claude-code",
+    "codex",
+    "github-copilot"
+  ],
+  "prompt": "Assess this repository for a new maintainer. Do not change anything.",
+  "setup": [
+    "A workspace manifest defines api and web packages.",
+    "The root README documents setup and development commands.",
+    "CI defines lint, test, and build jobs.",
+    "CODEOWNERS and SECURITY.md identify different owners."
+  ],
+  "expected": [
+    "The report maps api and web with evidence and confidence.",
+    "Documented commands are listed as not executed.",
+    "CI, ownership, security reporting, and material gaps are covered.",
+    "Recommendations are separate from findings."
+  ],
+  "must_not": [
+    "Modify files or Git state.",
+    "Install dependencies or execute repository code.",
+    "Claim that discovered commands pass."
+  ]
+}

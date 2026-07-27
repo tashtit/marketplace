@@ -1,0 +1,25 @@
+{
+  "name": "git-workflow",
+  "version": "0.1.0",
+  "description": "Safe, focused Git commits and review-ready pull request workflows.",
+  "author": {
+    "name": "Tashtit contributors",
+    "url": "https://github.com/tashtit"
+  },
+  "homepage": "https://github.com/tashtit/marketplace/tree/main/plugins/git-workflow",
+  "repository": "https://github.com/tashtit/marketplace",
+  "license": "Apache-2.0",
+  "keywords": ["git", "pull-requests", "commits", "change-management"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Git Workflow",
+    "shortDescription": "Safe commits and review-ready pull requests",
+    "longDescription": "Prepare focused, signed changes and pull requests while preserving user work, repository policy, and recoverable history.",
+    "developerName": "Tashtit contributors",
+    "category": "Developer Tools",
+    "capabilities": ["Git inspection", "Commit preparation", "Pull requests"],
+    "defaultPrompt": [
+      "Prepare these changes as focused commits and a review-ready pull request."
+    ]
+  }
+}

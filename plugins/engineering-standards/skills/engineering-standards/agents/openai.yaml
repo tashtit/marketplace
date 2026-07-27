@@ -1,4 +1,0 @@
-interface:
-  display_name: "Engineering Standards"
-  short_description: "Production-oriented engineering review standard"
-  default_prompt: "Use $engineering-standards to review this change against production engineering standards."

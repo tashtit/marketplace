@@ -1,0 +1,23 @@
+{
+  "id": "repository-onboarding-failure-empty-repository",
+  "type": "failure",
+  "platforms": [
+    "claude-code",
+    "codex",
+    "github-copilot"
+  ],
+  "prompt": "Onboard me to this repository.",
+  "setup": [
+    "The selected directory is empty and has no local Git metadata."
+  ],
+  "expected": [
+    "The response states exactly what was inspected.",
+    "Purpose, workflow, ownership, and delivery are marked unknown.",
+    "The response asks only for information needed to locate the repository."
+  ],
+  "must_not": [
+    "Invent a language, framework, command, or owner.",
+    "Initialize a repository or create onboarding files.",
+    "Contact a remote service."
+  ]
+}
