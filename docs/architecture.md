@@ -34,9 +34,9 @@ escape the repository, or depend on developer-machine paths.
 
 ### Canonical payload
 
-Each plugin lives at `plugins/<plugin-name>/`. Skills, references, scripts,
-fixtures, and acceptance scenarios in that directory define its behavior.
-Content should follow the portable Agent Skills conventions where practical.
+Each plugin lives at `plugins/<plugin-name>/`. Skills, references, scripts, and
+assets in that directory define its distributed behavior. Content should follow
+the portable Agent Skills conventions where practical.
 
 ### Provider adapters
 
@@ -76,9 +76,6 @@ plugins/example/
 │       ├── SKILL.md
 │       ├── references/
 │       └── scripts/
-└── tests/
-    ├── scenarios/
-    └── fixtures/
 ```
 
 Only files required by a plugin should exist. MCP servers, hooks, commands, and
@@ -87,6 +84,14 @@ executables require additional threat modeling and test coverage.
 The same hierarchy applies inside a plugin: share `skills/`, references,
 scripts, and assets directly. If plugin manifest schemas cannot share one file,
 generate the narrower adapter and validate semantic equivalence.
+
+### Repository quality assurance
+
+Maintainer-only evaluation specifications, fixtures, and review checklists live
+under `tests/plugins/<plugin-name>/`, outside the distributed plugin source.
+Provider hosts do not consume these files. Repository automation validates their
+structure; a scenario is not considered executed until a human or evaluation
+runner records a result for the named platform.
 
 ## Trust boundaries
 
