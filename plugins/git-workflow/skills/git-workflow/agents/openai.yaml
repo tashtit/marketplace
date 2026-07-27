@@ -1,4 +1,0 @@
-interface:
-  display_name: "Git Workflow"
-  short_description: "Safe, reviewable Git and pull request workflow"
-  default_prompt: "Use $git-workflow to prepare this change as focused commits and a review-ready pull request."
