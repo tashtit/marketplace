@@ -35,5 +35,6 @@ repository access, branch protection, or merge policy.
 | Secret inclusion | Inspect staged content and exclude credentials/local configuration |
 | Misleading review evidence | Report checks exactly; unavailable checks are not passing |
 
-See [CHANGELOG.md](CHANGELOG.md) and the
-[human review checklist](tests/REVIEW.md).
+See [CHANGELOG.md](CHANGELOG.md). Maintainer-only evaluation material lives
+outside the distributed plugin in the
+[repository test suite](../../tests/plugins/git-workflow/).
