@@ -21,6 +21,16 @@ PLUGIN_NAME = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 MARKDOWN_LINK = re.compile(r"!?\[[^\]]*]\(([^)]+)\)")
 ACTION_REFERENCE = re.compile(r"^\s*uses:\s+([^@\s]+)@([^\s#]+)", re.MULTILINE)
 FULL_SHA = re.compile(r"^[0-9a-f]{40}$")
+SCENARIO_TYPES = {"positive", "failure", "unsafe"}
+SCENARIO_FIELDS = {
+    "id",
+    "type",
+    "platforms",
+    "prompt",
+    "setup",
+    "expected",
+    "must_not",
+}
 
 errors: list[str] = []
 
@@ -163,15 +173,92 @@ def validate_plugins(shared: dict[str, dict[str, Any]]) -> None:
                 fail(path, f"name must match plugin directory {name!r}")
 
         portable_version = shared.get(name, {}).get("version")
+        portable_description = shared.get(name, {}).get("description")
         for platform, manifest in loaded.items():
             if manifest.get("version") != portable_version:
                 fail(manifests[platform], "version differs across provider adapters")
+            if manifest.get("description") != portable_description:
+                fail(
+                    manifests[platform],
+                    "description differs from the shared marketplace",
+                )
             if manifest.get("license") != "Apache-2.0":
                 fail(manifests[platform], "license must be 'Apache-2.0'")
 
         skill_file = plugin_dir / "skills" / name / "SKILL.md"
         if not skill_file.is_file():
             fail(skill_file, "canonical skill is missing")
+
+
+def validate_string_list(path: Path, value: Any, field: str) -> list[str]:
+    if (
+        not isinstance(value, list)
+        or not value
+        or not all(isinstance(item, str) and item.strip() for item in value)
+    ):
+        fail(path, f"{field} must be a non-empty array of non-empty strings")
+        return []
+    return value
+
+
+def validate_scenarios() -> None:
+    seen_ids: set[str] = set()
+    plugins_root = ROOT / "plugins"
+    for plugin_dir in sorted(
+        path
+        for path in plugins_root.iterdir()
+        if path.is_dir() and not path.name.startswith(".")
+    ):
+        review_path = plugin_dir / "tests" / "REVIEW.md"
+        if not review_path.is_file():
+            fail(review_path, "human review checklist is missing")
+
+        scenarios_dir = plugin_dir / "tests" / "scenarios"
+        scenario_paths = (
+            sorted(scenarios_dir.glob("*.json"))
+            if scenarios_dir.is_dir()
+            else []
+        )
+        if not scenario_paths:
+            fail(scenarios_dir, "at least one acceptance scenario is required")
+            continue
+
+        found_types: set[str] = set()
+        for path in scenario_paths:
+            scenario = require_object(path, load_json(path), "scenario")
+            unknown_fields = set(scenario) - SCENARIO_FIELDS
+            if unknown_fields:
+                fail(path, f"unsupported fields: {sorted(unknown_fields)}")
+            missing_fields = SCENARIO_FIELDS - set(scenario)
+            if missing_fields:
+                fail(path, f"missing fields: {sorted(missing_fields)}")
+
+            scenario_id = require_text(path, scenario.get("id"), "id")
+            if scenario_id:
+                if not PLUGIN_NAME.fullmatch(scenario_id):
+                    fail(path, "id must use lowercase kebab-case")
+                if scenario_id in seen_ids:
+                    fail(path, f"duplicate scenario id: {scenario_id}")
+                seen_ids.add(scenario_id)
+
+            scenario_type = require_text(path, scenario.get("type"), "type")
+            if scenario_type not in SCENARIO_TYPES:
+                fail(path, f"type must be one of {sorted(SCENARIO_TYPES)}")
+            else:
+                found_types.add(scenario_type)
+
+            validate_string_list(path, scenario.get("platforms"), "platforms")
+            require_text(path, scenario.get("prompt"), "prompt")
+            validate_string_list(path, scenario.get("setup"), "setup")
+            validate_string_list(path, scenario.get("expected"), "expected")
+            validate_string_list(path, scenario.get("must_not"), "must_not")
+
+        missing_types = SCENARIO_TYPES - found_types
+        if missing_types:
+            fail(
+                scenarios_dir,
+                f"missing required scenario types: {sorted(missing_types)}",
+            )
 
 
 def validate_json_files() -> None:
@@ -267,6 +354,7 @@ def main() -> int:
     catalogs = validate_marketplaces()
     shared = catalogs.get("shared", {})
     validate_plugins(shared)
+    validate_scenarios()
     validate_json_files()
     validate_action_pins()
     validate_retired_branding()
