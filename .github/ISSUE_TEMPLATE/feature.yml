@@ -1,0 +1,41 @@
+name: Plugin or feature proposal
+description: Propose a scoped addition to Tashtit
+title: "proposal: "
+labels:
+  - proposal
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: Describe the engineering problem and intended users.
+    validations:
+      required: true
+  - type: textarea
+    id: default
+    attributes:
+      label: Recommended default
+      description: State the opinionated default and important tradeoffs.
+    validations:
+      required: true
+  - type: textarea
+    id: risks
+    attributes:
+      label: Risks and side effects
+      description: Include permissions, security, privacy, and recovery concerns.
+    validations:
+      required: true
+  - type: checkboxes
+    id: platforms
+    attributes:
+      label: Target platforms
+      options:
+        - label: Claude Code
+        - label: OpenAI Codex
+        - label: GitHub Copilot
+        - label: Cursor
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Sources and acceptance evidence
+      description: Link authoritative sources and describe how behavior can be tested.

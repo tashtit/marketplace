@@ -1,0 +1,10 @@
+config:
+  default: true
+  line-length: false
+  no-duplicate-heading:
+    siblings_only: true
+  no-inline-html: false
+globs:
+  - "**/*.md"
+  - "!LICENSE"
+  - "!CODE_OF_CONDUCT.md"
