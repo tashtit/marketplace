@@ -13,4 +13,6 @@ Key controls include allowlisted fields, stable event schemas, consistent
 severity, trace correlation, bounded values, sampling, sink-failure tolerance,
 and tests.
 
-See [CHANGELOG.md](CHANGELOG.md) and [tests/REVIEW.md](tests/REVIEW.md).
+See [CHANGELOG.md](CHANGELOG.md). Maintainer-only evaluation material lives
+outside the distributed plugin in the
+[repository test suite](../../tests/plugins/logging-standards/).
