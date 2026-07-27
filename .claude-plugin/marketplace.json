@@ -7,5 +7,14 @@
     "description": "Opinionated, production-ready engineering standards for AI coding agents",
     "version": "0.1.0"
   },
-  "plugins": []
+  "plugins": [
+    {
+      "name": "engineering-standards",
+      "source": "./plugins/engineering-standards",
+      "description": "Opinionated production engineering standards for implementation and review.",
+      "version": "0.1.0",
+      "license": "Apache-2.0",
+      "category": "Developer Tools"
+    }
+  ]
 }
