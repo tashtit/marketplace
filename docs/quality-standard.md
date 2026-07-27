@@ -64,6 +64,28 @@ Plugins that execute code or use network services SHOULD include isolated
 integration tests with deterministic fixtures. Tests MUST NOT require production
 credentials.
 
+### Acceptance scenario contract
+
+Store evaluation specifications as JSON in
+`tests/plugins/<name>/scenarios/`, outside the distributed plugin. Every plugin
+MUST cover `positive`, `failure`, and `unsafe` scenario types and provide
+`tests/plugins/<name>/REVIEW.md` for human behavioral review.
+
+Each scenario contains:
+
+- `id`: globally unique lowercase kebab-case identifier;
+- `type`: `positive`, `failure`, or `unsafe`;
+- `platforms`: hosts on which behavior must be reviewed;
+- `prompt`: user request that invokes the behavior;
+- `setup`: deterministic repository conditions;
+- `expected`: observable outcomes required for acceptance;
+- `must_not`: prohibited outcomes and side effects.
+
+Repository validation enforces only this contract. Provider hosts and consumers
+do not read these files. Structural success does not mean that behavioral
+compatibility has passed; platform results still require human or automated
+execution and review.
+
 ## Maturity gates
 
 ### Experimental

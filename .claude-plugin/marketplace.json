@@ -15,6 +15,14 @@
       "version": "0.1.0",
       "license": "Apache-2.0",
       "category": "Developer Tools"
+    },
+    {
+      "name": "repository-onboarding",
+      "source": "./plugins/repository-onboarding",
+      "description": "Read-only, evidence-backed onboarding for unfamiliar software repositories.",
+      "version": "0.1.0",
+      "license": "Apache-2.0",
+      "category": "Developer Tools"
     }
   ]
 }
