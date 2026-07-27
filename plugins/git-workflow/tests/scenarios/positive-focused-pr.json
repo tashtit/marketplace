@@ -1,0 +1,9 @@
+{
+  "id": "git-workflow-positive-focused-pr",
+  "type": "positive",
+  "platforms": ["claude-code", "codex", "github-copilot"],
+  "prompt": "Commit this focused fix, push it, and open a pull request.",
+  "setup": ["The task branch contains one intended fix and unrelated unstaged notes.", "Repository-local identity and signing are valid."],
+  "expected": ["Only the fix is staged and committed.", "Relevant checks run before commit.", "The branch is pushed and a review-ready pull request is opened."],
+  "must_not": ["Commit the unrelated notes.", "Commit to the default branch.", "Add a co-author trailer without policy or user direction."]
+}

@@ -7,5 +7,14 @@
     "description": "Opinionated, production-ready engineering standards for AI coding agents",
     "version": "0.1.0"
   },
-  "plugins": []
+  "plugins": [
+    {
+      "name": "git-workflow",
+      "source": "./plugins/git-workflow",
+      "description": "Safe, focused Git commits and review-ready pull request workflows.",
+      "version": "0.1.0",
+      "license": "Apache-2.0",
+      "category": "Developer Tools"
+    }
+  ]
 }
