@@ -20,4 +20,6 @@ Review requests remain read-only; implementation happens only when requested.
 | Secret exposure | Credentials are prohibited in source, output, logs, tests, and arguments |
 | Over-engineering | Prefer the smallest coherent design and established structure |
 
-See [CHANGELOG.md](CHANGELOG.md) and [tests/REVIEW.md](tests/REVIEW.md).
+See [CHANGELOG.md](CHANGELOG.md). Maintainer-only evaluation material lives
+outside the distributed plugin in the
+[repository test suite](../../tests/plugins/engineering-standards/).
