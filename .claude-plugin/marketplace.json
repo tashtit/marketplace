@@ -1,0 +1,11 @@
+{
+  "name": "tashtit",
+  "owner": {
+    "name": "Tashtit contributors"
+  },
+  "metadata": {
+    "description": "Opinionated, production-ready engineering standards for AI coding agents",
+    "version": "0.1.0"
+  },
+  "plugins": []
+}
