@@ -66,9 +66,10 @@ credentials.
 
 ### Acceptance scenario contract
 
-Store scenarios as JSON in `plugins/<name>/tests/scenarios/`. Every plugin MUST
-cover `positive`, `failure`, and `unsafe` scenario types and provide
-`tests/REVIEW.md` for human behavioral review.
+Store evaluation specifications as JSON in
+`tests/plugins/<name>/scenarios/`, outside the distributed plugin. Every plugin
+MUST cover `positive`, `failure`, and `unsafe` scenario types and provide
+`tests/plugins/<name>/REVIEW.md` for human behavioral review.
 
 Each scenario contains:
 
@@ -80,9 +81,10 @@ Each scenario contains:
 - `expected`: observable outcomes required for acceptance;
 - `must_not`: prohibited outcomes and side effects.
 
-Repository validation enforces this structure. Structural success does not mean
-that behavioral compatibility has passed; platform results still require human
-or automated execution and review.
+Repository validation enforces only this contract. Provider hosts and consumers
+do not read these files. Structural success does not mean that behavioral
+compatibility has passed; platform results still require human or automated
+execution and review.
 
 ## Maturity gates
 

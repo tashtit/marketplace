@@ -209,11 +209,12 @@ def validate_scenarios() -> None:
         for path in plugins_root.iterdir()
         if path.is_dir() and not path.name.startswith(".")
     ):
-        review_path = plugin_dir / "tests" / "REVIEW.md"
+        tests_root = ROOT / "tests" / "plugins" / plugin_dir.name
+        review_path = tests_root / "REVIEW.md"
         if not review_path.is_file():
             fail(review_path, "human review checklist is missing")
 
-        scenarios_dir = plugin_dir / "tests" / "scenarios"
+        scenarios_dir = tests_root / "scenarios"
         scenario_paths = (
             sorted(scenarios_dir.glob("*.json"))
             if scenarios_dir.is_dir()

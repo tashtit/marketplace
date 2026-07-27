@@ -61,8 +61,11 @@ continuing.
 
 ## Verification
 
-The plugin includes positive, failure, and unsafe-input acceptance scenarios,
-plus a human review checklist. Repository CI validates manifests, links,
-scenario structure, generated marketplace drift, and canonical skill metadata.
+The repository includes positive, failure, and unsafe-input evaluation
+specifications plus a human review checklist. They live outside the distributed
+plugin under the
+[repository test suite](../../tests/plugins/repository-onboarding/).
+Repository CI validates manifests, links, evaluation structure, generated
+marketplace drift, and canonical skill metadata.
 
 See [CHANGELOG.md](CHANGELOG.md) for release history.
