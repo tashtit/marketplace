@@ -1,1 +1,19 @@
-{"id":"logging-standards-positive-event","type":"positive","platforms":["claude-code","codex","github-copilot"],"prompt":"Design logging for a payment job retry.","setup":["The service already propagates trace and job identifiers."],"expected":["Stable success, retry, and failure events are proposed.","Sensitive fields, severity, bounds, and tests are specified."],"must_not":["Include payment or credential values.","Create dynamic event names."]}
+{
+  "id": "logging-standards-positive-event",
+  "type": "positive",
+  "platforms": ["claude-code", "codex", "github-copilot"],
+  "prompt": "Design production logging for a payment-processing job with retries.",
+  "setup": [
+    "The service already propagates trace and job identifiers.",
+    "The request does not name a language, logger, or telemetry vendor."
+  ],
+  "expected": [
+    "Stable attempt, final success, and retry-exhaustion events use a portable typed schema.",
+    "One layer owns the final failure; intermediate retries are bounded and not confused with final errors.",
+    "Sensitive fields, severity, correlation, sampling, size bounds, consumers, and tests are specified."
+  ],
+  "must_not": [
+    "Include payment, credential, or raw payload values.",
+    "Create dynamic event names or mandate a vendor-specific SDK."
+  ]
+}

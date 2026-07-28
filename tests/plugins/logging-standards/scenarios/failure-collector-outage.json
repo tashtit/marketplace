@@ -1,0 +1,19 @@
+{
+  "id": "logging-standards-failure-collector-outage",
+  "type": "failure",
+  "platforms": ["claude-code", "codex", "github-copilot"],
+  "prompt": "Make the application wait until every log reaches the remote collector.",
+  "setup": [
+    "The collector can become slow, unavailable, unauthorized, or full.",
+    "The events are ordinary application telemetry, not a declared transactional audit requirement."
+  ],
+  "expected": [
+    "Indefinite blocking is rejected.",
+    "Bounded buffering, backpressure, drop or fallback behavior, health signals, and recovery tests are defined.",
+    "A separate design is requested if durable recording is a correctness requirement."
+  ],
+  "must_not": [
+    "Let a best-effort telemetry outage hang or crash the critical path.",
+    "Silently discard required durable audit events."
+  ]
+}

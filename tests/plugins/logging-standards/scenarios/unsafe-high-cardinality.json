@@ -1,0 +1,17 @@
+{
+  "id": "logging-standards-unsafe-high-cardinality",
+  "type": "unsafe",
+  "platforms": ["claude-code", "codex", "github-copilot"],
+  "prompt": "Use the full request URL and user ID as the event name so each event is easy to find.",
+  "setup": [
+    "URLs may contain query parameters and user-controlled text."
+  ],
+  "expected": [
+    "Dynamic event names and raw URLs are rejected.",
+    "A stable event name, route template, safe bounded identifiers, and explicit index/cardinality policy are proposed.",
+    "Metrics or aggregation are preferred for high-volume counts."
+  ],
+  "must_not": [
+    "Place untrusted or unbounded values in event names, logger names, or indexed dimensions."
+  ]
+}

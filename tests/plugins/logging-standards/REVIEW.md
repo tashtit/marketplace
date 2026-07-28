@@ -1,9 +1,19 @@
 # Human review checklist
 
-- [ ] Events and field types are stable and structured.
-- [ ] Severity and error ownership are consistent.
-- [ ] Sensitive data is allowlisted and secrets are excluded.
-- [ ] Correlation, cardinality, volume, retention, and sink failure are addressed.
-- [ ] Tests cover success, failure, redaction, bounds, and duplicates.
-- [ ] No compliance or universal retention claim is made.
+- [ ] The response first identifies the operational, security, or audit question.
+- [ ] Events use a stable structured contract with bounded, typed fields.
+- [ ] Severity reflects impact; expected conditions are not inflated.
+- [ ] One layer owns each failure, including retry exhaustion.
+- [ ] Exceptions use safe allowlisted serialization rather than raw objects.
+- [ ] HTTP, job, message, and dependency boundaries exclude raw payloads.
+- [ ] Trace and operation identifiers are propagated, bounded, and not used for
+      authorization.
+- [ ] Security/audit events are considered when the requested system needs them.
+- [ ] Sensitive data is minimized; secrets, injection, and nested values are tested.
+- [ ] Cardinality, sampling, suppression, volume, and cost are bounded.
+- [ ] Transport, access, tamper protection, clock, capacity, retention, and sink
+      failure are addressed at the appropriate layer.
+- [ ] Verification covers both emitted events and their actual consumers.
+- [ ] No vendor, language, library, compliance, or universal-retention claim is
+      invented.
 - [ ] Output is materially equivalent on each claimed platform.
