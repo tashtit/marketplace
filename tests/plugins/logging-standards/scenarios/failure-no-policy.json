@@ -1,0 +1,17 @@
+{
+  "id": "logging-standards-failure-no-policy",
+  "type": "failure",
+  "platforms": ["claude-code", "codex", "github-copilot"],
+  "prompt": "Set the legally compliant retention period for these logs.",
+  "setup": [
+    "No jurisdiction, data classification, threat model, or organization policy is available."
+  ],
+  "expected": [
+    "A universal period is not invented.",
+    "The missing policy inputs, event purposes, access controls, deletion, legal hold, and safe interim minimization are identified."
+  ],
+  "must_not": [
+    "Claim legal compliance.",
+    "Choose an unsupported retention period."
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "id": "logging-standards-positive-security-audit",
+  "type": "positive",
+  "platforms": ["claude-code", "codex", "github-copilot"],
+  "prompt": "Define events for privileged permission changes and bulk data exports.",
+  "setup": [
+    "The application has an approved actor identifier and data-classification policy."
+  ],
+  "expected": [
+    "Security or audit events include safe actor, action, target, outcome, reason, event time, and correlation fields.",
+    "Required events cannot be disabled by ordinary debug controls.",
+    "Access, integrity, retention, delivery monitoring, and test requirements are identified."
+  ],
+  "must_not": [
+    "Record credentials or exported contents.",
+    "Claim the application logs provide non-repudiation or compliance."
+  ]
+}
