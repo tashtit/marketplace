@@ -159,14 +159,20 @@ def validate_plugins(shared: dict[str, dict[str, Any]]) -> None:
         }
 
         redundant_manifest = plugin_dir / "plugin.json"
-        if redundant_manifest.exists() and not redundant_manifest.is_symlink():
+        if redundant_manifest.exists() or redundant_manifest.is_symlink():
             fail(
                 redundant_manifest,
-                "duplicate manifest is prohibited; reuse or link the shared manifest",
+                "duplicate manifest is prohibited; no supported host reads it",
             )
 
         loaded: dict[str, dict[str, Any]] = {}
         for platform, path in manifests.items():
+            if path.is_symlink():
+                fail(
+                    path,
+                    "manifest must be a regular file; a symlink becomes plain "
+                    "text when core.symlinks=false and no host can parse it",
+                )
             manifest = require_object(path, load_json(path), "plugin manifest")
             loaded[platform] = manifest
             if manifest.get("name") != name:
@@ -188,6 +194,70 @@ def validate_plugins(shared: dict[str, dict[str, Any]]) -> None:
         skill_file = plugin_dir / "skills" / name / "SKILL.md"
         if not skill_file.is_file():
             fail(skill_file, "canonical skill is missing")
+
+
+def parse_catalog_table(path: Path, prefix: str) -> dict[str, str]:
+    """Map plugin name to listed version for every catalog row in a document."""
+    listed: dict[str, str] = {}
+    for line in path.read_text(encoding="utf-8").splitlines():
+        if not line.lstrip().startswith("|"):
+            continue
+        cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
+        if len(cells) < 2:
+            continue
+        targets = MARKDOWN_LINK.findall(cells[0])
+        if len(targets) != 1:
+            continue
+        target = targets[0].strip()
+        if not target.endswith("/"):
+            continue
+        if prefix and not target.startswith(prefix):
+            continue
+        name = target[len(prefix):].strip("./")
+        if not PLUGIN_NAME.fullmatch(name):
+            continue
+        if name in listed:
+            fail(path, f"duplicate catalog row for {name}")
+        listed[name] = cells[1]
+    return listed
+
+
+def validate_catalog_tables(shared: dict[str, dict[str, Any]]) -> None:
+    """Keep advertised catalogs identical to the canonical marketplace.
+
+    A published table that disagrees with the marketplace is drift, so it is
+    validated like any other generated-from-canonical artifact.
+    """
+    tables = {
+        ROOT / "README.md": "plugins/",
+        ROOT / "plugins" / "README.md": "",
+    }
+    for path, prefix in tables.items():
+        if not path.is_file():
+            fail(path, "required file is missing")
+            continue
+
+        listed = parse_catalog_table(path, prefix)
+        expected_names = set(shared)
+        missing = sorted(expected_names - set(listed))
+        unexpected = sorted(set(listed) - expected_names)
+        if missing:
+            fail(path, f"catalog table is missing plugins: {missing}")
+        if unexpected:
+            fail(path, f"catalog table lists unknown plugins: {unexpected}")
+
+        for name, version in sorted(listed.items()):
+            expected_version = shared.get(name, {}).get("version")
+            if expected_version and version != expected_version:
+                fail(
+                    path,
+                    f"{name} is listed as version {version!r} but the "
+                    f"marketplace declares {expected_version!r}",
+                )
+
+        names = list(listed)
+        if names != sorted(names):
+            fail(path, "catalog table rows must be sorted by plugin name")
 
 
 def validate_string_list(path: Path, value: Any, field: str) -> list[str]:
@@ -366,6 +436,7 @@ def main() -> int:
     catalogs = validate_marketplaces()
     shared = catalogs.get("shared", {})
     validate_plugins(shared)
+    validate_catalog_tables(shared)
     validate_scenarios()
     validate_json_files()
     validate_action_pins()

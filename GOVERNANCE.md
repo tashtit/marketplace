@@ -15,6 +15,10 @@ Roles are earned through consistent, constructive participation. Maintainers
 may invite contributors into additional responsibility based on demonstrated
 judgment and project need.
 
+Current maintainers and per-area owners are recorded in
+[.github/CODEOWNERS](.github/CODEOWNERS), which is the single source for review
+routing. Plugin owners are named there or in the plugin's own documentation.
+
 ## Decision making
 
 Routine changes use pull-request review and lazy consensus. Material changes

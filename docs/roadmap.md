@@ -12,11 +12,13 @@ omitted until maintainers establish delivery capacity.
 - [x] Use the standard Claude marketplace as canonical catalog metadata.
 - [x] Share the Claude/Copilot marketplace instead of duplicating it.
 - [x] Generate the Codex marketplace from the canonical catalog.
+- [x] Generate each Codex plugin manifest instead of relying on symlinks.
 - [x] Add CI validation for generated-adapter drift.
+- [x] Validate the documented plugin catalog tables against the marketplace.
 - [ ] Add JSON Schema, Markdown, and secret validation.
 - [x] Add scenario test conventions and a local structural test harness.
 - [ ] Define release automation, provenance, checksums, and changelogs.
-- [ ] Publish maintainer and private security contact details.
+- [x] Publish maintainer ownership and the private security reporting channel.
 
 ## Phase 1: repository engineering
 

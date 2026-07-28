@@ -42,7 +42,10 @@ MUST be documented and covered by platform-specific scenarios.
 
 Shared files and standard locations MUST be reused across platforms whenever
 possible. When they cannot be shared, implementations MUST use a safe relative
-link or a deterministic generated adapter. Hand-copied provider variants are
+link or a deterministic generated adapter. A file the provider itself parses
+MUST NOT rely on a repository symlink, because a checkout with
+`core.symlinks=false` replaces it with the link target as plain text.
+Hand-copied provider variants are
 not permitted. CI MUST fail on broken links, unsafe link targets, or generated
 file drift.
 

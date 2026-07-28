@@ -75,17 +75,18 @@ stable compatibility or production-readiness claim.
 ```text
 plugins/<plugin-name>/
 ├── skills/                         # Shared canonical behavior
-├── .claude-plugin/plugin.json      # Shared Claude/Copilot manifest
-└── .codex-plugin/plugin.json       # Generated only where Codex differs
+├── .claude-plugin/plugin.json      # Canonical Claude/Copilot manifest
+└── .codex-plugin/plugin.json       # Generated for Codex's required path
 
 .claude-plugin/marketplace.json     # Canonical Claude/Copilot catalog
 .agents/plugins/marketplace.json    # Generated Codex catalog
 ```
 
 Tashtit reuses one file wherever platforms accept the same standard location.
-When formats are incompatible, provider files are generated and checked for
-drift in CI; they are never maintained as hand-copied implementations. See the
-[architecture](docs/architecture.md) for the full deduplication policy.
+When a format or a required location cannot be shared, provider files are
+generated with `make sync` and checked for drift in CI; they are never
+maintained as hand-copied implementations, and never as repository symlinks.
+See the [architecture](docs/architecture.md) for the full deduplication policy.
 
 ## Project status
 

@@ -23,12 +23,26 @@ order:
 3. **Link:** use a repository-relative link only when every supported checkout,
    archive, cache, and operating system preserves it and resolves it inside the
    plugin package.
-4. **Generate:** when schemas are incompatible, generate the smallest possible
-   adapter from canonical metadata.
+4. **Generate:** when a schema or a host-mandated location cannot be shared,
+   generate the smallest possible adapter from canonical metadata.
 
 Hand-maintained copies are prohibited. A generated adapter MUST have a
 deterministic sync command and a CI drift check. Links MUST NOT be absolute,
 escape the repository, or depend on developer-machine paths.
+
+### Why repository symlinks are not used
+
+A Git symlink is not a portable packaging mechanism for a file a host must
+parse. When a checkout sets `core.symlinks=false` — the default whenever the
+filesystem or user cannot create symlinks, which is common on Windows — Git
+materializes the entry as a regular file whose contents are the link target
+path. A host then reads `../.claude-plugin/plugin.json` instead of JSON and the
+plugin fails to load. `git archive` in tar and zip form does preserve the
+symlink, so archive testing alone does not detect this.
+
+Tier 3 is therefore unavailable for any file a provider parses, including
+manifests and catalogs. Those use tier 4. Validation rejects a symlinked
+manifest rather than trusting that every consumer can follow it.
 
 ## Layers
 
@@ -43,8 +57,10 @@ the portable Agent Skills conventions where practical.
 Adapters describe the same payload to each host. They are added only when a
 shared standard location cannot serve the platforms:
 
-- Claude Code and GitHub Copilot: shared `.claude-plugin/plugin.json`;
-- Codex: `.codex-plugin/plugin.json`;
+- Claude Code and GitHub Copilot: canonical `.claude-plugin/plugin.json`;
+- Codex: `.codex-plugin/plugin.json`, generated from that canonical manifest.
+  Codex accepts the same fields, but it only discovers the manifest at its own
+  required path, so the file is duplicated by generation rather than shared;
 - Cursor: an optional adapter once its contract is validated.
 
 Adapters may express platform capabilities but must not silently change
@@ -60,8 +76,11 @@ distribution artifact is required:
 - `.agents/plugins/marketplace.json` is generated for Codex because its
   marketplace schema includes different source and policy fields.
 
-Run `make sync` to regenerate the Codex artifact. `make validate` and CI fail if
-it differs from the shared canonical marketplace.
+Run `make sync` to regenerate every Codex artifact: the catalog above and each
+plugin's `.codex-plugin/plugin.json`. `make validate` and CI fail if any of them
+differs from the canonical source. Because JSON carries no comment syntax, these
+files cannot carry an in-file generated marker; they are marked as generated here
+and in `plugins/README.md`, and must never be hand-edited.
 
 ## Plugin shape
 

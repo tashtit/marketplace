@@ -1,0 +1,15 @@
+# Tashtit code owners.
+#
+# Listed owners are requested for review automatically and are the maintainers
+# referenced by GOVERNANCE.md. Report vulnerabilities through the private
+# process in SECURITY.md instead of assigning a reviewer.
+
+*                       @titan-ron
+
+# Repository contract: changing these alters the quality bar or the
+# generated-adapter guarantees for every plugin.
+/docs/                  @titan-ron
+/scripts/               @titan-ron
+/Makefile               @titan-ron
+/.github/               @titan-ron
+/.claude-plugin/        @titan-ron
