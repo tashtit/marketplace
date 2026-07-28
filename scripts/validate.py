@@ -264,8 +264,19 @@ def validate_scenarios() -> None:
 
 def validate_json_files() -> None:
     for path in ROOT.rglob("*.json"):
-        if ".git" not in path.parts and ".idea" not in path.parts:
-            load_json(path)
+        if ".git" in path.parts or ".idea" in path.parts:
+            continue
+        data = load_json(path)
+        try:
+            raw = path.read_text(encoding="utf-8")
+        except (FileNotFoundError, UnicodeDecodeError):
+            continue
+        if isinstance(data, (dict, list)) and data and "\n" not in raw.strip():
+            fail(
+                path,
+                "JSON must be pretty-printed across multiple lines, not "
+                "collapsed onto a single line",
+            )
 
 
 def validate_action_pins() -> None:
