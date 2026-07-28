@@ -22,10 +22,11 @@ omitted until maintainers establish delivery capacity.
 
 ### Engineering standards
 
-- [ ] Definition-of-done and verification workflow.
-- [ ] Testing pyramid, deterministic tests, and flaky-test handling.
-- [ ] Error handling, configuration, dependency, and API design defaults.
-- [ ] Security and privacy baseline for application changes.
+- [x] Definition-of-done and verification workflow.
+- [x] Testing strategy and deterministic-test defaults.
+- [ ] Flaky-test detection and handling.
+- [x] Error handling, configuration, dependency, and API design defaults.
+- [x] Security and privacy baseline for application changes.
 
 ### Repository onboarding
 
@@ -36,10 +37,10 @@ omitted until maintainers establish delivery capacity.
 
 ### Git and pull requests
 
-- [ ] Branching, focused commits, and Conventional Commits.
-- [ ] Safe rebasing, conflict handling, and history-preservation rules.
-- [ ] Pull-request description, evidence, and reviewer handoff.
-- [ ] Guardrails for default branches, force pushes, and destructive recovery.
+- [x] Branching, focused commits, and Conventional Commits.
+- [x] Safe rebasing, conflict handling, and history-preservation rules.
+- [x] Pull-request description, evidence, and reviewer handoff.
+- [x] Guardrails for default branches, force pushes, and destructive recovery.
 
 ### Repository settings
 
@@ -60,11 +61,11 @@ omitted until maintainers establish delivery capacity.
 
 ### Logging and observability
 
-- [ ] Structured event schema and severity semantics.
-- [ ] Correlation, trace, request, and tenant identifiers.
-- [ ] Redaction, data classification, and retention guidance.
-- [ ] Error taxonomy, sampling, cardinality, and cost controls.
-- [ ] OpenTelemetry alignment and verification scenarios.
+- [x] Structured event schema and severity semantics.
+- [x] Correlation, trace, request, and tenant identifiers.
+- [x] Redaction, data classification, and retention guidance.
+- [x] Error taxonomy, sampling, cardinality, and cost controls.
+- [x] OpenTelemetry alignment and verification scenarios.
 
 ### Production snippets
 
