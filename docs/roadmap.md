@@ -17,6 +17,9 @@ omitted until maintainers establish delivery capacity.
 - [x] Validate the documented plugin catalog tables against the marketplace.
 - [ ] Add JSON Schema, Markdown, and secret validation.
 - [x] Add scenario test conventions and a local structural test harness.
+- [x] Gate maturity claims on recorded, version-pinned acceptance results.
+- [ ] Add an evaluation runner that executes scenarios and records results
+      automatically.
 - [ ] Define release automation, provenance, checksums, and changelogs.
 - [x] Publish the private security reporting channel.
 - [ ] Publish maintainer ownership details.

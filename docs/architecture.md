@@ -110,7 +110,9 @@ Maintainer-only evaluation specifications, fixtures, and review checklists live
 under `tests/plugins/<plugin-name>/`, outside the distributed plugin source.
 Provider hosts do not consume these files. Repository automation validates their
 structure; a scenario is not considered executed until a human or evaluation
-runner records a result for the named platform.
+runner records a result in `tests/plugins/<plugin-name>/acceptance.json`. That
+record, not the scenario file, is what gates a maturity claim above
+`experimental`, so an unreviewed plugin cannot advertise reviewed behavior.
 
 ## Trust boundaries
 

@@ -41,6 +41,9 @@ but shallow guidance.
 - Keep the plugin tables in `README.md` and `plugins/README.md` in step with the
   canonical marketplace; `make validate` fails on drift.
 - Add or update acceptance scenarios for every behavioral change.
+- Never record a result in `tests/plugins/<name>/acceptance.json` that was not
+  actually observed, and never raise a plugin's maturity to satisfy the
+  validator. The record exists to make an unreviewed claim impossible.
 - Keep documentation concise, actionable, and free from vendor marketing copy.
 
 ## Validation

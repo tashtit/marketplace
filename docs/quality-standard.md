@@ -89,6 +89,29 @@ do not read these files. Structural success does not mean that behavioral
 compatibility has passed; platform results still require human or automated
 execution and review.
 
+### Recorded review results
+
+Nothing in this repository executes a scenario. A maturity claim above
+`experimental` is therefore only credible when a review result has been recorded,
+so each plugin MUST carry `tests/plugins/<name>/acceptance.json`:
+
+- `plugin`: the plugin directory name;
+- `maturity`: `experimental`, `candidate`, or `stable`;
+- `results`: recorded reviews, each naming `scenario`, `platform`,
+  `plugin_version`, `commit` (full 40-character SHA), `reviewed_on` (ISO 8601
+  date), `reviewer`, and `outcome` (`pass` or `fail`), with optional `notes`.
+
+`make validate` requires a `pass` for every scenario and claimed platform **at
+the currently published version** before a plugin may declare `candidate` or
+`stable`, and it rejects a maturity that disagrees with the plugin README or the
+published catalog tables. Results are version-pinned deliberately: changing a
+plugin's behavior invalidates earlier reviews, so a version bump returns the
+plugin to `experimental` until it is reviewed again.
+
+An `experimental` plugin MUST leave `results` empty unless a review has genuinely
+been performed. Recording a result that was not observed is a policy violation,
+not a shortcut.
+
 ## Maturity gates
 
 ### Experimental

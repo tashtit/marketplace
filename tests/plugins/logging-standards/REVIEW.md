@@ -17,3 +17,7 @@
 - [ ] No vendor, language, library, compliance, or universal-retention claim is
       invented.
 - [ ] Output is materially equivalent on each claimed platform.
+
+After reviewing a scenario on a platform, record the outcome in
+`acceptance.json` beside this file. Results are pinned to the plugin version,
+so a version bump requires a fresh review.

@@ -31,6 +31,27 @@ SCENARIO_FIELDS = {
     "expected",
     "must_not",
 }
+PLATFORMS = {"claude-code", "codex", "cursor", "github-copilot"}
+MATURITY_LEVELS = ("experimental", "candidate", "stable")
+# Experimental makes no behavioral claim, so it needs no recorded results.
+REVIEWED_MATURITY = set(MATURITY_LEVELS) - {"experimental"}
+ACCEPTANCE_FIELDS = {"plugin", "maturity", "results"}
+RESULT_FIELDS = {
+    "scenario",
+    "platform",
+    "plugin_version",
+    "commit",
+    "reviewed_on",
+    "reviewer",
+    "outcome",
+}
+RESULT_OPTIONAL_FIELDS = {"notes"}
+RESULT_OUTCOMES = {"pass", "fail"}
+ISO_DATE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+SEMVER = re.compile(r"^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$")
+MATURITY_CLAIM = re.compile(
+    r"\b(Experimental|Candidate|Stable)\b\s*[—-]\s*(\d+\.\d+\.\d+[0-9A-Za-z.-]*)"
+)
 
 errors: list[str] = []
 
@@ -196,14 +217,14 @@ def validate_plugins(shared: dict[str, dict[str, Any]]) -> None:
             fail(skill_file, "canonical skill is missing")
 
 
-def parse_catalog_table(path: Path, prefix: str) -> dict[str, str]:
-    """Map plugin name to listed version for every catalog row in a document."""
-    listed: dict[str, str] = {}
+def parse_catalog_table(path: Path, prefix: str) -> dict[str, tuple[str, str]]:
+    """Map plugin name to its listed version and maturity for each table row."""
+    listed: dict[str, tuple[str, str]] = {}
     for line in path.read_text(encoding="utf-8").splitlines():
         if not line.lstrip().startswith("|"):
             continue
         cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
-        if len(cells) < 2:
+        if len(cells) < 3:
             continue
         targets = MARKDOWN_LINK.findall(cells[0])
         if len(targets) != 1:
@@ -218,11 +239,14 @@ def parse_catalog_table(path: Path, prefix: str) -> dict[str, str]:
             continue
         if name in listed:
             fail(path, f"duplicate catalog row for {name}")
-        listed[name] = cells[1]
+        listed[name] = (cells[1], cells[2])
     return listed
 
 
-def validate_catalog_tables(shared: dict[str, dict[str, Any]]) -> None:
+def validate_catalog_tables(
+    shared: dict[str, dict[str, Any]],
+    maturity_by_plugin: dict[str, str],
+) -> None:
     """Keep advertised catalogs identical to the canonical marketplace.
 
     A published table that disagrees with the marketplace is drift, so it is
@@ -246,13 +270,20 @@ def validate_catalog_tables(shared: dict[str, dict[str, Any]]) -> None:
         if unexpected:
             fail(path, f"catalog table lists unknown plugins: {unexpected}")
 
-        for name, version in sorted(listed.items()):
+        for name, (version, maturity) in sorted(listed.items()):
             expected_version = shared.get(name, {}).get("version")
             if expected_version and version != expected_version:
                 fail(
                     path,
                     f"{name} is listed as version {version!r} but the "
                     f"marketplace declares {expected_version!r}",
+                )
+            expected_maturity = maturity_by_plugin.get(name)
+            if expected_maturity and maturity.lower() != expected_maturity:
+                fail(
+                    path,
+                    f"{name} is listed as maturity {maturity!r} but its "
+                    f"acceptance record declares {expected_maturity!r}",
                 )
 
         names = list(listed)
@@ -271,7 +302,14 @@ def validate_string_list(path: Path, value: Any, field: str) -> list[str]:
     return value
 
 
-def validate_scenarios() -> None:
+def validate_scenarios() -> dict[str, dict[str, set[str]]]:
+    """Validate scenario shape and index each plugin's scenario platforms.
+
+    The returned index is what makes the acceptance gate enforceable: it states
+    exactly which scenario and platform pairs a non-experimental plugin must
+    have recorded results for.
+    """
+    index: dict[str, dict[str, set[str]]] = {}
     seen_ids: set[str] = set()
     plugins_root = ROOT / "plugins"
     for plugin_dir in sorted(
@@ -279,6 +317,7 @@ def validate_scenarios() -> None:
         for path in plugins_root.iterdir()
         if path.is_dir() and not path.name.startswith(".")
     ):
+        plugin_scenarios = index.setdefault(plugin_dir.name, {})
         tests_root = ROOT / "tests" / "plugins" / plugin_dir.name
         review_path = tests_root / "REVIEW.md"
         if not review_path.is_file():
@@ -318,7 +357,19 @@ def validate_scenarios() -> None:
             else:
                 found_types.add(scenario_type)
 
-            validate_string_list(path, scenario.get("platforms"), "platforms")
+            platforms = validate_string_list(
+                path, scenario.get("platforms"), "platforms"
+            )
+            unknown_platforms = sorted(set(platforms) - PLATFORMS)
+            if unknown_platforms:
+                fail(
+                    path,
+                    f"unsupported platforms {unknown_platforms}; "
+                    f"expected values from {sorted(PLATFORMS)}",
+                )
+            if scenario_id:
+                plugin_scenarios[scenario_id] = set(platforms) & PLATFORMS
+
             require_text(path, scenario.get("prompt"), "prompt")
             validate_string_list(path, scenario.get("setup"), "setup")
             validate_string_list(path, scenario.get("expected"), "expected")
@@ -330,6 +381,177 @@ def validate_scenarios() -> None:
                 scenarios_dir,
                 f"missing required scenario types: {sorted(missing_types)}",
             )
+
+    return index
+
+
+def validate_acceptance_results(
+    path: Path,
+    scenarios: dict[str, set[str]],
+    results: Any,
+) -> dict[tuple[str, str], set[str]]:
+    """Validate recorded review results and index passes by scenario platform.
+
+    Each entry records one reviewed scenario and platform pair. The index maps
+    that pair to the plugin versions it passed on, so the gate can require a
+    pass at the version being published rather than at any version ever
+    reviewed.
+    """
+    passes: dict[tuple[str, str], set[str]] = {}
+    if not isinstance(results, list):
+        fail(path, "results must be an array")
+        return passes
+
+    seen: set[tuple[str, str, str]] = set()
+    for position, entry in enumerate(results):
+        label = f"results[{position}]"
+        if not isinstance(entry, dict):
+            fail(path, f"{label} must be an object")
+            continue
+
+        unknown = set(entry) - RESULT_FIELDS - RESULT_OPTIONAL_FIELDS
+        if unknown:
+            fail(path, f"{label} has unsupported fields: {sorted(unknown)}")
+        missing = RESULT_FIELDS - set(entry)
+        if missing:
+            fail(path, f"{label} is missing fields: {sorted(missing)}")
+            continue
+
+        scenario = entry["scenario"]
+        platform = entry["platform"]
+        version = entry["plugin_version"]
+        commit = entry["commit"]
+        reviewed_on = entry["reviewed_on"]
+        outcome = entry["outcome"]
+
+        if not require_text(path, entry.get("reviewer"), f"{label}.reviewer"):
+            continue
+        if scenario not in scenarios:
+            fail(path, f"{label} references unknown scenario {scenario!r}")
+            continue
+        if platform not in scenarios[scenario]:
+            fail(
+                path,
+                f"{label} reviews {scenario!r} on {platform!r}, which the "
+                "scenario does not claim",
+            )
+            continue
+        if not isinstance(version, str) or not SEMVER.fullmatch(version):
+            fail(path, f"{label}.plugin_version must be a semantic version")
+            continue
+        if not isinstance(commit, str) or not FULL_SHA.fullmatch(commit):
+            fail(
+                path,
+                f"{label}.commit must be a full lowercase 40-character commit "
+                "SHA so the reviewed content is unambiguous",
+            )
+        if not isinstance(reviewed_on, str) or not ISO_DATE.fullmatch(
+            reviewed_on
+        ):
+            fail(path, f"{label}.reviewed_on must be an ISO 8601 date")
+        if outcome not in RESULT_OUTCOMES:
+            fail(path, f"{label}.outcome must be one of {sorted(RESULT_OUTCOMES)}")
+            continue
+
+        key = (scenario, platform, version)
+        if key in seen:
+            fail(
+                path,
+                f"{label} duplicates the review of {scenario!r} on "
+                f"{platform!r} at version {version}",
+            )
+        seen.add(key)
+
+        if outcome == "pass":
+            passes.setdefault((scenario, platform), set()).add(version)
+
+    return passes
+
+
+def validate_acceptance(
+    shared: dict[str, dict[str, Any]],
+    scenario_index: dict[str, dict[str, set[str]]],
+) -> dict[str, str]:
+    """Enforce the maturity gate against recorded behavioral review results.
+
+    Scenarios describe required behavior but nothing executes them, so a
+    maturity claim above experimental is only credible when a human or
+    evaluation runner has recorded a passing result for every scenario and
+    platform pair at the published version.
+    """
+    maturity_by_plugin: dict[str, str] = {}
+    for name in sorted(scenario_index):
+        path = ROOT / "tests" / "plugins" / name / "acceptance.json"
+        if not path.is_file():
+            fail(path, "acceptance record is missing")
+            continue
+
+        record = require_object(path, load_json(path), "acceptance record")
+        unknown = set(record) - ACCEPTANCE_FIELDS
+        if unknown:
+            fail(path, f"unsupported fields: {sorted(unknown)}")
+        missing = ACCEPTANCE_FIELDS - set(record)
+        if missing:
+            fail(path, f"missing fields: {sorted(missing)}")
+
+        if record.get("plugin") != name:
+            fail(path, f"plugin must be {name!r}")
+
+        maturity = record.get("maturity")
+        if maturity not in MATURITY_LEVELS:
+            fail(path, f"maturity must be one of {list(MATURITY_LEVELS)}")
+            continue
+        maturity_by_plugin[name] = maturity
+
+        scenarios = scenario_index.get(name, {})
+        passes = validate_acceptance_results(
+            path, scenarios, record.get("results")
+        )
+        if maturity not in REVIEWED_MATURITY:
+            continue
+
+        version = shared.get(name, {}).get("version")
+        if not isinstance(version, str):
+            continue
+
+        unreviewed = sorted(
+            f"{scenario} on {platform}"
+            for scenario, platforms in scenarios.items()
+            for platform in sorted(platforms)
+            if version not in passes.get((scenario, platform), set())
+        )
+        if unreviewed:
+            fail(
+                path,
+                f"maturity {maturity!r} requires a recorded pass at version "
+                f"{version} for every scenario and platform; missing: "
+                f"{unreviewed}",
+            )
+
+    return maturity_by_plugin
+
+
+def validate_maturity_claims(maturity_by_plugin: dict[str, str]) -> None:
+    """Keep each plugin's advertised maturity aligned with its record."""
+    for name, maturity in sorted(maturity_by_plugin.items()):
+        path = ROOT / "plugins" / name / "README.md"
+        if not path.is_file():
+            continue
+        claims = MATURITY_CLAIM.findall(path.read_text(encoding="utf-8"))
+        if not claims:
+            fail(
+                path,
+                "must state maturity and version as "
+                "'<Experimental|Candidate|Stable> — <version>'",
+            )
+            continue
+        for level, _version in claims:
+            if level.lower() != maturity:
+                fail(
+                    path,
+                    f"advertises maturity {level!r} but the acceptance record "
+                    f"declares {maturity!r}",
+                )
 
 
 def validate_json_files() -> None:
@@ -436,8 +658,10 @@ def main() -> int:
     catalogs = validate_marketplaces()
     shared = catalogs.get("shared", {})
     validate_plugins(shared)
-    validate_catalog_tables(shared)
-    validate_scenarios()
+    scenario_index = validate_scenarios()
+    maturity_by_plugin = validate_acceptance(shared, scenario_index)
+    validate_maturity_claims(maturity_by_plugin)
+    validate_catalog_tables(shared, maturity_by_plugin)
     validate_json_files()
     validate_action_pins()
     validate_retired_branding()

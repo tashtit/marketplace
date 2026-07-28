@@ -75,9 +75,16 @@ Never edit a generated file by hand; change the canonical source and re-run
 
 `make validate` fails when any generated file drifts and also checks JSON
 syntax, marketplace alignment, the plugin catalog tables in `README.md` and
-`plugins/README.md`, plugin naming and manifest consistency, safe links,
-canonical skill presence, local documentation links, and whitespace. CI runs the
-same validation on every push and pull request.
+`plugins/README.md`, plugin naming and manifest consistency, recorded acceptance
+results against the claimed maturity, safe links, canonical skill presence,
+local documentation links, and whitespace. CI runs the same validation on every
+push and pull request.
+
+Nothing here executes an acceptance scenario. Raising a plugin's maturity above
+`experimental` requires recording a passing review for every scenario and claimed
+platform at the published version in `tests/plugins/<name>/acceptance.json`;
+see [the quality standard](docs/quality-standard.md). Bumping a plugin's version
+invalidates earlier results, because the reviewed behavior changed.
 
 ## Review
 
