@@ -1,7 +1,10 @@
 # Plugins
 
 Each directory in this folder is an independently versioned Tashtit plugin.
-The catalog is intentionally empty during the foundation phase.
+
+| Plugin | Version | Maturity | Purpose |
+| --- | --- | --- | --- |
+| [Repository Onboarding](repository-onboarding/) | 0.1.0 | Experimental | Read-only, evidence-backed repository assessment |
 
 A new plugin must follow [the architecture](../docs/architecture.md), satisfy
 the maturity gate in [the quality standard](../docs/quality-standard.md), and

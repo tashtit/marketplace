@@ -1,4 +1,0 @@
-interface:
-  display_name: "Logging Standards"
-  short_description: "Secure structured application logging standard"
-  default_prompt: "Use $logging-standards to design or review production logging for this service."

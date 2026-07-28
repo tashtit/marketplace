@@ -9,9 +9,33 @@
   },
   "plugins": [
     {
+      "name": "engineering-standards",
+      "source": "./plugins/engineering-standards",
+      "description": "Opinionated production engineering standards for implementation and review.",
+      "version": "0.1.0",
+      "license": "Apache-2.0",
+      "category": "Developer Tools"
+    },
+    {
+      "name": "git-workflow",
+      "source": "./plugins/git-workflow",
+      "description": "Safe, focused Git commits and review-ready pull request workflows.",
+      "version": "0.1.0",
+      "license": "Apache-2.0",
+      "category": "Developer Tools"
+    },
+    {
       "name": "logging-standards",
       "source": "./plugins/logging-standards",
       "description": "Secure structured logging standards for production applications.",
+      "version": "0.1.0",
+      "license": "Apache-2.0",
+      "category": "Developer Tools"
+    },
+    {
+      "name": "repository-onboarding",
+      "source": "./plugins/repository-onboarding",
+      "description": "Read-only, evidence-backed onboarding for unfamiliar software repositories.",
       "version": "0.1.0",
       "license": "Apache-2.0",
       "category": "Developer Tools"

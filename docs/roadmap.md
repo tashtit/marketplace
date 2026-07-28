@@ -14,7 +14,7 @@ omitted until maintainers establish delivery capacity.
 - [x] Generate the Codex marketplace from the canonical catalog.
 - [x] Add CI validation for generated-adapter drift.
 - [ ] Add JSON Schema, Markdown, and secret validation.
-- [ ] Add scenario test conventions and a local test harness.
+- [x] Add scenario test conventions and a local structural test harness.
 - [ ] Define release automation, provenance, checksums, and changelogs.
 - [ ] Publish maintainer and private security contact details.
 
@@ -29,10 +29,10 @@ omitted until maintainers establish delivery capacity.
 
 ### Repository onboarding
 
-- [ ] Structured repository discovery and architecture mapping.
-- [ ] Build, test, lint, and local-environment detection.
-- [ ] Risk, ownership, dependency, and operational-context inventory.
-- [ ] Generation of a reviewable onboarding report without repository changes.
+- [x] Structured repository discovery and architecture mapping.
+- [x] Build, test, lint, and local-environment detection.
+- [x] Risk, ownership, dependency, and operational-context inventory.
+- [x] Generation of a reviewable onboarding report without repository changes.
 
 ### Git and pull requests
 

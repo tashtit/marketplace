@@ -58,6 +58,15 @@ The initial backlog is organized around:
 The prioritized scope and acceptance criteria live in the
 [roadmap](docs/roadmap.md).
 
+## Available plugins
+
+| Plugin | Version | Maturity | Default behavior |
+| --- | --- | --- | --- |
+| [Repository Onboarding](plugins/repository-onboarding/) | 0.1.0 | Experimental | Read-only repository assessment |
+
+Experimental plugins are published for evaluation and do not carry Tashtit's
+stable compatibility or production-readiness claim.
+
 ## Repository model
 
 ```text
