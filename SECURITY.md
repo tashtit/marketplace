@@ -14,10 +14,9 @@ unsafe command execution, permission bypasses, or supply-chain concerns.
 Report privately through
 [GitHub private vulnerability reporting](https://github.com/tashtit/marketplace/security/advisories/new).
 This is the only supported reporting channel: it keeps the report private until
-disclosure and reaches the maintainers listed in
-[.github/CODEOWNERS](.github/CODEOWNERS). No email address is published, so do
-not send vulnerability details to any address that claims to represent this
-project.
+disclosure and reaches the maintainers directly. No email address is published,
+so do not send vulnerability details to any address that claims to represent
+this project.
 
 If the link returns a 404, private reporting has not been enabled yet. Open a
 public issue that says only that you need a private channel, without any

@@ -18,7 +18,8 @@ omitted until maintainers establish delivery capacity.
 - [ ] Add JSON Schema, Markdown, and secret validation.
 - [x] Add scenario test conventions and a local structural test harness.
 - [ ] Define release automation, provenance, checksums, and changelogs.
-- [x] Publish maintainer ownership and the private security reporting channel.
+- [x] Publish the private security reporting channel.
+- [ ] Publish maintainer ownership details.
 
 ## Phase 1: repository engineering
 
