@@ -11,9 +11,19 @@ release.
 Do not open a public issue for suspected vulnerabilities, exposed secrets,
 unsafe command execution, permission bypasses, or supply-chain concerns.
 
-Use GitHub private vulnerability reporting for this repository. If that feature
-is unavailable, contact the maintainers through a private channel listed on the
-repository owner profile and include:
+Report privately through
+[GitHub private vulnerability reporting](https://github.com/tashtit/marketplace/security/advisories/new).
+This is the only supported reporting channel: it keeps the report private until
+disclosure and reaches the maintainers directly. No email address is published,
+so do not send vulnerability details to any address that claims to represent
+this project.
+
+If the link returns a 404, private reporting has not been enabled yet. Open a
+public issue that says only that you need a private channel, without any
+vulnerability detail, and a maintainer will enable the feature
+(Settings > Advanced Security > Private vulnerability reporting) and respond.
+
+Include:
 
 - the affected plugin, file, and version or commit;
 - the impact and realistic attack or failure scenario;

@@ -28,7 +28,10 @@ real repositories. Every stable Tashtit plugin is expected to be:
 - **Portable:** its core behavior is shared across supported agent platforms.
 - **Evidence-driven:** normative guidance cites authoritative sources or clearly
   labels a Tashtit convention.
-- **Testable:** acceptance scenarios verify behavior, not only file structure.
+- **Accountable:** every plugin declares its behavior as acceptance scenarios,
+  and a maturity claim above experimental requires a recorded passing review of
+  each scenario on each claimed platform. Automation enforces that record, not
+  the behavior itself.
 
 ## Compatibility
 
@@ -75,29 +78,35 @@ stable compatibility or production-readiness claim.
 ```text
 plugins/<plugin-name>/
 ├── skills/                         # Shared canonical behavior
-├── .claude-plugin/plugin.json      # Shared Claude/Copilot manifest
-└── .codex-plugin/plugin.json       # Generated only where Codex differs
+├── .claude-plugin/plugin.json      # Canonical Claude/Copilot manifest
+└── .codex-plugin/plugin.json       # Generated for Codex's required path
 
 .claude-plugin/marketplace.json     # Canonical Claude/Copilot catalog
 .agents/plugins/marketplace.json    # Generated Codex catalog
 ```
 
 Tashtit reuses one file wherever platforms accept the same standard location.
-When formats are incompatible, provider files are generated and checked for
-drift in CI; they are never maintained as hand-copied implementations. See the
-[architecture](docs/architecture.md) for the full deduplication policy.
+When a format or a required location cannot be shared, provider files are
+generated with `make sync` and checked for drift in CI; they are never
+maintained as hand-copied implementations, and never as repository symlinks.
+See the [architecture](docs/architecture.md) for the full deduplication policy.
 
 ## Project status
 
 Tashtit uses maturity levels so installation never implies unsupported
 stability:
 
-1. **Experimental:** design is still changing; no compatibility guarantee.
-2. **Candidate:** reviewed content with automated validation and test scenarios.
+1. **Experimental:** design is still changing; no compatibility guarantee, and
+   no behavioral review is claimed.
+2. **Candidate:** automated validation passes and every acceptance scenario has
+   a recorded passing review on each claimed platform at the published version.
 3. **Stable:** documented compatibility, security review, and release history.
 4. **Deprecated:** supported only for a documented migration window.
 
-Only stable plugins may use the `production-ready` label.
+Only stable plugins may use the `production-ready` label. Every plugin is
+currently experimental, so no behavioral review is being claimed yet; reviews
+are recorded in `tests/plugins/<name>/acceptance.json` and `make validate`
+rejects an unearned maturity claim.
 
 ## Contributing
 

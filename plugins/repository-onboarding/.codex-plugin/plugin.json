@@ -1,1 +1,34 @@
-../.claude-plugin/plugin.json
+{
+  "name": "repository-onboarding",
+  "version": "0.1.0",
+  "description": "Read-only, evidence-backed onboarding for unfamiliar software repositories.",
+  "author": {
+    "name": "Tashtit contributors",
+    "url": "https://github.com/tashtit"
+  },
+  "homepage": "https://github.com/tashtit/marketplace/tree/main/plugins/repository-onboarding",
+  "repository": "https://github.com/tashtit/marketplace",
+  "license": "Apache-2.0",
+  "keywords": [
+    "onboarding",
+    "repository",
+    "architecture",
+    "developer-experience"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Repository Onboarding",
+    "shortDescription": "Evidence-backed repository orientation",
+    "longDescription": "Map an unfamiliar repository, its workflows, ownership, delivery path, and material unknowns without changing files or executing project code.",
+    "developerName": "Tashtit contributors",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Read-only analysis",
+      "Repository mapping",
+      "Risk identification"
+    ],
+    "defaultPrompt": [
+      "Assess this repository and produce an evidence-backed onboarding report."
+    ]
+  }
+}

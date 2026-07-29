@@ -16,7 +16,9 @@ but shallow guidance.
 - Follow this fallback order when a shared path is impossible:
   1. reference the canonical file directly;
   2. use a repository-relative link when every target platform and packaging
-     path preserves and safely resolves it;
+     path preserves and safely resolves it. Never use a repository symlink for a
+     file the provider parses: a checkout with `core.symlinks=false` replaces it
+     with the link target as plain text;
   3. generate the provider file with a deterministic syncer.
 - Never maintain hand-copied provider variants. Generated files must be marked
   by repository documentation, regenerated with `make sync`, and checked for
@@ -33,11 +35,18 @@ but shallow guidance.
 - Do not claim a plugin is stable or production-ready until it satisfies
   `docs/quality-standard.md`.
 - Edit `.claude-plugin/marketplace.json`, which is the shared canonical
-  marketplace. Do not hand-edit `.agents/plugins/marketplace.json`.
+  marketplace, and each plugin's `.claude-plugin/plugin.json`. Do not hand-edit
+  the generated `.agents/plugins/marketplace.json` or any
+  `.codex-plugin/plugin.json`.
+- Keep the plugin tables in `README.md` and `plugins/README.md` in step with the
+  canonical marketplace; `make validate` fails on drift.
 - Add or update acceptance scenarios for every behavioral change.
+- Never record a result in `tests/plugins/<name>/acceptance.json` that was not
+  actually observed, and never raise a plugin's maturity to satisfy the
+  validator. The record exists to make an unreviewed claim impossible.
 - Keep documentation concise, actionable, and free from vendor marketing copy.
 
 ## Validation
 
 Run `make validate` and inspect the complete diff before requesting review.
-Run `make sync` after changing the shared marketplace.
+Run `make sync` after changing the canonical marketplace or any plugin manifest.

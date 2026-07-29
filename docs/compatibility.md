@@ -23,9 +23,16 @@ A platform is supported only when both are tested for the plugin version.
 
 GitHub Copilot officially discovers the Claude marketplace and plugin
 locations, so Tashtit uses those shared files rather than keeping Copilot
-copies. Codex requires distinct catalog policy metadata, so its adapter is
+copies. Codex requires distinct catalog policy metadata, so its catalog is
 generated from `.claude-plugin/marketplace.json` with the standard Tashtit
 defaults (`AVAILABLE` and `ON_INSTALL`) and checked for drift.
+
+Codex plugin manifests need no field translation, but Codex only discovers a
+manifest at `.codex-plugin/plugin.json`, so each one is generated from the
+plugin's canonical `.claude-plugin/plugin.json`. Symlinking the two is not an
+option: a checkout with `core.symlinks=false` turns the manifest into a text
+file holding the link target, which no host can parse. Both Codex artifacts are
+produced by `make sync` and must never be hand-edited.
 
 ## Compatibility rules
 

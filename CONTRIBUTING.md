@@ -53,7 +53,8 @@ In particular:
   recovery guidance;
 - shared standards and files must be reused across platforms where possible;
 - platform-specific files must be links or deterministic generated adapters,
-  never hand-maintained copies;
+  never hand-maintained copies, and never repository symlinks when the provider
+  parses the file itself;
 - stable guidance must not depend on an unpinned mutable external source.
 
 ## Validation
@@ -66,12 +67,24 @@ make sync
 make validate
 ```
 
-`make sync` regenerates the unavoidable Codex marketplace from the canonical
-`.claude-plugin/marketplace.json`. `make validate` fails when the generated file
-drifts and also checks JSON syntax, marketplace alignment, plugin naming and
-manifest consistency, safe links, canonical skill presence, local
-documentation links, and whitespace. CI runs the same validation on every push
-and pull request.
+`make sync` regenerates the unavoidable Codex artifacts from canonical sources:
+the Codex marketplace from `.claude-plugin/marketplace.json`, and each
+`.codex-plugin/plugin.json` from that plugin's `.claude-plugin/plugin.json`.
+Never edit a generated file by hand; change the canonical source and re-run
+`make sync`.
+
+`make validate` fails when any generated file drifts and also checks JSON
+syntax, marketplace alignment, the plugin catalog tables in `README.md` and
+`plugins/README.md`, plugin naming and manifest consistency, recorded acceptance
+results against the claimed maturity, safe links, canonical skill presence,
+local documentation links, and whitespace. CI runs the same validation on every
+push and pull request.
+
+Nothing here executes an acceptance scenario. Raising a plugin's maturity above
+`experimental` requires recording a passing review for every scenario and claimed
+platform at the published version in `tests/plugins/<name>/acceptance.json`;
+see [the quality standard](docs/quality-standard.md). Bumping a plugin's version
+invalidates earlier results, because the reviewed behavior changed.
 
 ## Review
 

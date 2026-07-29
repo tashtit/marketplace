@@ -1,1 +1,20 @@
-../.claude-plugin/plugin.json
+{
+  "name": "engineering-standards",
+  "version": "0.1.0",
+  "description": "Opinionated production engineering standards for implementation and review.",
+  "author": {"name": "Tashtit contributors", "url": "https://github.com/tashtit"},
+  "homepage": "https://github.com/tashtit/marketplace/tree/main/plugins/engineering-standards",
+  "repository": "https://github.com/tashtit/marketplace",
+  "license": "Apache-2.0",
+  "keywords": ["engineering", "code-review", "testing", "security"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Engineering Standards",
+    "shortDescription": "Production-oriented engineering review",
+    "longDescription": "Plan, implement, and review changes for correctness, security, maintainability, verification, and operational readiness.",
+    "developerName": "Tashtit contributors",
+    "category": "Developer Tools",
+    "capabilities": ["Implementation guidance", "Code review", "Definition of done"],
+    "defaultPrompt": ["Review this change against production engineering standards."]
+  }
+}
