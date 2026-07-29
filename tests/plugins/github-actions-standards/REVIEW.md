@@ -6,7 +6,9 @@
       names, least-privilege permissions, and real dependency edges.
 - [ ] Untrusted PR code cannot access secrets, write tokens, OIDC, protected
       environments, or persistent runners.
-- [ ] Remote actions and reusable workflows use verified full commit SHAs.
+- [ ] Non-GitHub actions and cross-repository reusable workflows use verified
+      full commit SHAs; GitHub-authored actions use the preferred SHA or a
+      policy-approved exact release tag.
 - [ ] Dependency installation is lockfile-based and cache misses remain correct.
 - [ ] Required outputs are built once and the distributable artifact is tested.
 - [ ] Matrices, service jobs, retries, diagnostics, and cleanup have bounded

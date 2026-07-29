@@ -125,18 +125,26 @@ explicit authorization.
 
 ## Pin the supply chain
 
-Remote actions and cross-repository reusable workflows MUST use a full
-40-character commit SHA. Add a comment with the human-readable release version
-so automated dependency tooling can update it:
+Remote actions SHOULD use a full 40-character commit SHA. Non-GitHub-authored
+actions and cross-repository reusable workflows MUST use one. Add a comment
+with the human-readable release version so automated dependency tooling can
+update it:
 
 ```yaml
 - uses: actions/checkout@<full-40-character-commit-sha> # vX.Y.Z
 ```
 
-Do not use a branch, `@latest`, or a movable major tag as the executable
-reference. Verify the commit belongs to the intended upstream repository.
-Prefer allowlisted, maintained actions with a narrow purpose. Review their
-inputs, permissions, network behavior, and release history before adoption.
+An action authored by GitHub in the `actions` or `github` organization MAY use
+a complete release tag such as `@v6.0.2` when repository policy intentionally
+trusts GitHub as the publisher and does not require SHA pinning. This is a
+convenience exception, not an immutability claim; prefer a full SHA for jobs
+with secrets, write permissions, OIDC, or deployment authority.
+
+Do not use a branch, `@latest`, or a movable major tag such as `@v6` as the
+executable reference. Verify a pinned commit belongs to the intended upstream
+repository and an exact tag identifies the intended release. Prefer
+allowlisted, maintained actions with a narrow purpose. Review their inputs,
+permissions, network behavior, and release history before adoption.
 
 Use a committed lockfile and the ecosystem's immutable or frozen install
 command. Pin command-line tools that are downloaded during the run. Runtime

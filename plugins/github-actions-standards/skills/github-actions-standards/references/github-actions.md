@@ -113,12 +113,28 @@ can still be over-authorized.
 ## Action and reusable-workflow pins
 
 GitHub states that a full-length commit SHA is the only immutable action
-reference. Tashtit applies the same rule to official, third-party, and internal
-remote actions. A tag in a comment preserves readability:
+reference. Tashtit therefore requires full SHAs for non-GitHub-authored remote
+actions and cross-repository reusable workflows, and prefers them for every
+remote action. A tag in a comment preserves readability:
 
 ```yaml
 - uses: owner/action@0123456789abcdef0123456789abcdef01234567 # v1.2.3
 ```
+
+GitHub's own secure-use guidance also recognizes tags as a convenient choice
+when the creator is trusted. Tashtit permits this only for GitHub-authored
+actions in the `actions` and `github` organizations, only with a complete
+release tag such as `@v6.0.2`, and only when repository or organization policy
+does not require SHA pinning:
+
+```yaml
+- uses: actions/checkout@v6.0.2
+```
+
+The exact tag improves version intent but remains movable or deletable, so it
+MUST NOT be described as immutable. Prefer the SHA form for any job with
+secrets, write permissions, OIDC, or deployment authority. Major-only tags,
+branches, and `@latest` are not permitted by this exception.
 
 Verify the SHA against the upstream repository, not a fork. Configure
 Dependabot or Renovate to propose reviewed updates. A repository policy can
@@ -186,7 +202,9 @@ and their tag cannot then be modified.
 - [ ] Untrusted code cannot reach secrets, write tokens, OIDC, protected
       environments, or persistent runners.
 - [ ] Untrusted expressions do not flow directly into shell code.
-- [ ] Every remote action and reusable workflow uses a verified full commit SHA.
+- [ ] Every non-GitHub action and cross-repository reusable workflow uses a
+      verified full commit SHA; a GitHub-authored action uses either the
+      preferred SHA or a policy-approved exact release tag.
 - [ ] Lockfiles and immutable install commands make dependencies reproducible.
 - [ ] Every job has an explicit timeout and least-privilege permissions.
 - [ ] CI concurrency cancels superseded PR work without racing publication.

@@ -12,11 +12,12 @@
   ],
   "expected": [
     "Mutable action references are rejected.",
-    "Each remote action and cross-repository reusable workflow is pinned to a verified full commit SHA with a readable version comment.",
+    "Non-GitHub actions and cross-repository reusable workflows are pinned to verified full commit SHAs with readable version comments.",
+    "GitHub-authored actions prefer full SHAs but may use complete release tags when repository policy explicitly permits the trust exception.",
     "Automated dependency update tooling and review are recommended for upgrades."
   ],
   "must_not": [
-    "Use a branch, latest tag, or movable major tag as the executable reference.",
-    "Claim that an official action is immutable when referenced by a tag."
+    "Use a branch, latest tag, or major-only tag as the executable reference.",
+    "Apply the exact-tag exception to non-GitHub actions or claim that an official action tag is immutable."
   ]
 }
