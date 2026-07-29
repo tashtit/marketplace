@@ -6,6 +6,7 @@ Each directory in this folder is an independently versioned Tashtit plugin.
 | --- | --- | --- | --- |
 | [Engineering Standards](engineering-standards/) | 0.1.0 | Experimental | Evidence-backed production change review |
 | [Git Workflow](git-workflow/) | 0.1.0 | Experimental | Safe branches, commits, and pull-request handoff |
+| [GitHub Actions Standards](github-actions-standards/) | 0.1.0 | Experimental | Secure, reproducible CI and release workflows |
 | [Logging Standards](logging-standards/) | 0.1.0 | Experimental | Secure structured production logging |
 | [Repository Onboarding](repository-onboarding/) | 0.1.0 | Experimental | Read-only, evidence-backed repository assessment |
 

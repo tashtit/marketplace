@@ -1,0 +1,24 @@
+{
+  "id": "github-actions-standards-positive-library",
+  "type": "positive",
+  "platforms": [
+    "claude-code",
+    "codex",
+    "github-copilot"
+  ],
+  "prompt": "Create GitHub Actions CI and release automation for this library.",
+  "setup": [
+    "The repository declares its default branch, runtime support matrix, lockfile, test, lint, format, build, pack, and clean-consumer smoke commands.",
+    "Publishing supports OIDC and the production environment already has protection rules."
+  ],
+  "expected": [
+    "The primary CI has explicit PR, default-branch push, and manual triggers, PR-aware concurrency, stable jobs, timeouts, and least-privilege job permissions.",
+    "Dependencies use the lockfile, remote actions use full commit SHAs, and supported runtimes drive a fail-fast-false compatibility matrix.",
+    "The packed artifact is uploaded once and exercised in a clean consumer before a trusted, protected, OIDC-based release consumes the verified output.",
+    "Validation, artifact absence, retention, release serialization, and recovery behavior are explicit."
+  ],
+  "must_not": [
+    "Invent repository commands, branches, secrets, registries, versions, or permissions.",
+    "Publish from a pull request or rebuild a different artifact after approval."
+  ]
+}

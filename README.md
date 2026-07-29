@@ -67,6 +67,7 @@ The prioritized scope and acceptance criteria live in the
 | --- | --- | --- | --- |
 | [Engineering Standards](plugins/engineering-standards/) | 0.1.0 | Experimental | Evidence-backed production change review |
 | [Git Workflow](plugins/git-workflow/) | 0.1.0 | Experimental | Safe branches, commits, and pull-request handoff |
+| [GitHub Actions Standards](plugins/github-actions-standards/) | 0.1.0 | Experimental | Secure, reproducible CI and release workflows |
 | [Logging Standards](plugins/logging-standards/) | 0.1.0 | Experimental | Secure structured production logging |
 | [Repository Onboarding](plugins/repository-onboarding/) | 0.1.0 | Experimental | Read-only repository assessment |
 
