@@ -70,6 +70,7 @@ The prioritized scope and acceptance criteria live in the
 | [GitHub Actions Standards](plugins/github-actions-standards/) | 0.1.0 | Experimental | Secure, reproducible CI and release workflows |
 | [Logging Standards](plugins/logging-standards/) | 0.1.0 | Experimental | Secure structured production logging |
 | [Repository Onboarding](plugins/repository-onboarding/) | 0.1.0 | Experimental | Read-only repository assessment |
+| [Repository Policy](plugins/repository-policy/) | 0.1.0 | Experimental | Safe GitHub merge, review, and ruleset policy |
 
 Experimental plugins are published for evaluation and do not carry Tashtit's
 stable compatibility or production-readiness claim.

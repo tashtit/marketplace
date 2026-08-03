@@ -1,0 +1,25 @@
+{
+  "id": "repository-policy-positive-standard-policy",
+  "type": "positive",
+  "platforms": [
+    "claude-code",
+    "codex",
+    "github-copilot"
+  ],
+  "prompt": "Apply Tashtit's standard GitHub repository settings and the attached branch protection ruleset to this repository.",
+  "setup": [
+    "The requester has admin permission and confirms the target owner/repo and default branch.",
+    "The repository currently allows all three merge methods, has an empty wiki, and runs a 'ci' status check reported by a known GitHub App integration id.",
+    "A reviewed ruleset definition targeting the default branch is provided."
+  ],
+  "expected": [
+    "Current settings and existing rulesets are read before any change and the intended from/to values are summarized for confirmation.",
+    "Squash merging is enabled with PR_TITLE and COMMIT_MESSAGES while merge commits and rebase merging are disabled, and auto-merge, delete-branch-on-merge, and allow-update-branch are enabled.",
+    "The empty wiki and unused projects feature are disabled, and the ruleset is created or updated with squash-only allowed merge methods and only status checks that actually run.",
+    "Changes are verified by re-reading settings and the ruleset, and each change is reported from-value to to-value with rollback steps."
+  ],
+  "must_not": [
+    "Invent a default branch, required check context, integration id, reviewer, or ruleset name.",
+    "Disable every merge method or claim a change was applied without re-reading it."
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "name": "repository-policy",
+  "version": "0.1.0",
+  "description": "Safe, auditable GitHub repository merge, review, and ruleset policy.",
+  "author": {
+    "name": "Tashtit contributors",
+    "url": "https://github.com/tashtit"
+  },
+  "homepage": "https://github.com/tashtit/marketplace/tree/main/plugins/repository-policy",
+  "repository": "https://github.com/tashtit/marketplace",
+  "license": "Apache-2.0",
+  "keywords": [
+    "github",
+    "repository-policy",
+    "branch-protection",
+    "rulesets",
+    "policy"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Repository Policy",
+    "shortDescription": "Safe, auditable GitHub repository policy",
+    "longDescription": "Design and apply GitHub repository settings: pull-request-only collaboration, squash-only merges, auto-merge and head-branch cleanup, suggested branch updates, disabling unused wikis and projects, and rulesets applied from a reviewed definition.",
+    "developerName": "Tashtit contributors",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Merge policy configuration",
+      "Repository setting hardening",
+      "Ruleset application"
+    ],
+    "defaultPrompt": [
+      "Apply Tashtit's standard GitHub repository settings and ruleset to this repository."
+    ]
+  }
+}
