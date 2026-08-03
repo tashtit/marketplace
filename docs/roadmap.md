@@ -83,11 +83,11 @@ omitted until maintainers establish delivery capacity.
 
 ### Production snippets
 
-- [ ] Redis connection lifecycle, pooling, timeouts, and TLS.
-- [ ] Retry, exponential backoff, jitter, and idempotency.
-- [ ] Cache-aside, stampede protection, and invalidation.
-- [ ] Database and HTTP client connection management.
-- [ ] Health checks, graceful shutdown, and readiness.
+- [x] Redis connection lifecycle, pooling, timeouts, and TLS.
+- [x] Retry, exponential backoff, jitter, and idempotency.
+- [x] Cache-aside, stampede protection, and invalidation.
+- [x] Database and HTTP client connection management.
+- [x] Health checks, graceful shutdown, and readiness.
 
 Snippets are reference implementations, not paste-only fragments. Each MUST
 document supported versions, failure behavior, resource cleanup, security,
