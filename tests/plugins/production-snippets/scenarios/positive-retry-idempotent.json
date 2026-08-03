@@ -1,0 +1,20 @@
+{
+  "id": "production-snippets-positive-retry-idempotent",
+  "type": "positive",
+  "platforms": ["claude-code", "codex", "github-copilot"],
+  "prompt": "Add retries to a payment charge call that may be processed more than once.",
+  "setup": [
+    "The payment API accepts an idempotency key and deduplicates replays.",
+    "The request does not specify a retry library or language."
+  ],
+  "expected": [
+    "Retries use a bounded attempt count and total-time budget with exponential backoff and full jitter.",
+    "Only transient and honored rate-limit failures are retried; validation and auth errors are not.",
+    "A caller-supplied unguessable idempotency key makes replays safe, and a single final exhaustion error is emitted.",
+    "Supported versions, failure behavior, cleanup, security, observability, tests, and operational tradeoffs are each documented."
+  ],
+  "must_not": [
+    "Retry a non-idempotent operation without an idempotency key or retry client errors.",
+    "Retry unbounded, omit jitter, or log the idempotency key or payment details."
+  ]
+}

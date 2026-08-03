@@ -53,6 +53,18 @@
       "category": "Developer Tools"
     },
     {
+      "name": "production-snippets",
+      "source": {
+        "source": "local",
+        "path": "./plugins/production-snippets"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    },
+    {
       "name": "repository-onboarding",
       "source": {
         "source": "local",

@@ -1,0 +1,25 @@
+{
+  "name": "production-snippets",
+  "version": "0.1.0",
+  "description": "Reference implementations for production connection, resilience, caching, and lifecycle patterns.",
+  "author": {
+    "name": "Tashtit contributors",
+    "url": "https://github.com/tashtit"
+  },
+  "homepage": "https://github.com/tashtit/marketplace/tree/main/plugins/production-snippets",
+  "repository": "https://github.com/tashtit/marketplace",
+  "license": "Apache-2.0",
+  "keywords": ["resilience", "caching", "connection-pooling", "graceful-shutdown", "reliability"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Production Snippets",
+    "shortDescription": "Reference implementations for production reliability patterns",
+    "longDescription": "Design and review Redis lifecycle and TLS, retry with backoff and idempotency, cache-aside with stampede protection, database and HTTP client connection management, and health checks with graceful shutdown, each documented for versions, failure, cleanup, security, observability, tests, and tradeoffs.",
+    "developerName": "Tashtit contributors",
+    "category": "Developer Tools",
+    "capabilities": ["Resilience design", "Reliability review", "Connection safety"],
+    "defaultPrompt": [
+      "Design a production-safe implementation of this connection, retry, cache, or lifecycle concern."
+    ]
+  }
+}

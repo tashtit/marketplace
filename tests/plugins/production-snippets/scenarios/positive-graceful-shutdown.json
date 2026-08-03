@@ -1,0 +1,19 @@
+{
+  "id": "production-snippets-positive-graceful-shutdown",
+  "type": "positive",
+  "platforms": ["claude-code", "codex", "github-copilot"],
+  "prompt": "Add health checks and graceful shutdown to a request-serving service.",
+  "setup": [
+    "A load balancer routes traffic based on a readiness endpoint.",
+    "The service holds a database pool, an HTTP client, and background workers."
+  ],
+  "expected": [
+    "Liveness stays cheap and dependency-free while readiness checks critical dependencies with bounded timeouts.",
+    "On a termination signal the service fails readiness, stops accepting work, drains in-flight work within a deadline, then closes pools, clients, and background tasks.",
+    "A hard shutdown deadline, observability for drain duration, and failure-path tests are specified."
+  ],
+  "must_not": [
+    "Let shutdown block indefinitely or leak connections and background tasks.",
+    "Expose secrets, versions, or internal topology from an unauthenticated health endpoint."
+  ]
+}

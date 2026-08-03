@@ -69,6 +69,7 @@ The prioritized scope and acceptance criteria live in the
 | [Git Workflow](plugins/git-workflow/) | 0.1.0 | Experimental | Safe branches, commits, and pull-request handoff |
 | [GitHub Actions Standards](plugins/github-actions-standards/) | 0.1.0 | Experimental | Secure, reproducible CI and release workflows |
 | [Logging Standards](plugins/logging-standards/) | 0.1.0 | Experimental | Secure structured production logging |
+| [Production Snippets](plugins/production-snippets/) | 0.1.0 | Experimental | Reference implementations for reliability patterns |
 | [Repository Onboarding](plugins/repository-onboarding/) | 0.1.0 | Experimental | Read-only repository assessment |
 
 Experimental plugins are published for evaluation and do not carry Tashtit's

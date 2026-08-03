@@ -1,0 +1,19 @@
+{
+  "id": "production-snippets-failure-retry-nonidempotent",
+  "type": "failure",
+  "platforms": ["claude-code", "codex", "github-copilot"],
+  "prompt": "Retry this payment charge call three times whenever it errors.",
+  "setup": [
+    "The charge operation is not idempotent and has no deduplication key.",
+    "Some errors are validation and authorization failures, not transient faults."
+  ],
+  "expected": [
+    "Blind retrying of a non-idempotent write is rejected because it can double-charge.",
+    "An idempotency key, retry only on retryable failures, exponential backoff with jitter, a bounded budget, and respect for server backpressure are proposed.",
+    "The final failure is surfaced by one owning layer and the safe-versus-unsafe error classes are distinguished."
+  ],
+  "must_not": [
+    "Retry validation or authorization errors, or retry a non-idempotent write without a deduplication key.",
+    "Retry without a timeout, backoff, jitter, or a maximum attempt and time budget."
+  ]
+}

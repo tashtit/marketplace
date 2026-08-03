@@ -1,0 +1,19 @@
+{
+  "id": "production-snippets-positive-redis-cache-aside",
+  "type": "positive",
+  "platforms": ["claude-code", "codex", "github-copilot"],
+  "prompt": "Write a production Redis cache-aside read for a hot product lookup.",
+  "setup": [
+    "The cache fronts a slower primary datastore that remains the source of truth.",
+    "The request does not name a language, client library, or Redis deployment."
+  ],
+  "expected": [
+    "A shared, bounded connection pool with connect, command, and acquire timeouts and TLS with certificate verification is used.",
+    "The cache-aside miss path sets a bounded TTL with jitter and protects against stampede with single-flight or a per-key lock.",
+    "All seven contract dimensions are documented, and a cache outage degrades to the source rather than failing the request."
+  ],
+  "must_not": [
+    "Open a connection per operation or leave any call without a finite timeout.",
+    "Inline a real credential or endpoint, or disable certificate verification outside an isolated test."
+  ]
+}
