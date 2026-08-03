@@ -47,6 +47,14 @@
       "version": "0.1.0",
       "license": "Apache-2.0",
       "category": "Developer Tools"
+    },
+    {
+      "name": "repository-settings",
+      "source": "./plugins/repository-settings",
+      "description": "Safe, auditable GitHub repository merge, review, and ruleset policy.",
+      "version": "0.1.0",
+      "license": "Apache-2.0",
+      "category": "Developer Tools"
     }
   ]
 }

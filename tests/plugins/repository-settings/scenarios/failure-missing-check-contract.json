@@ -1,0 +1,23 @@
+{
+  "id": "repository-settings-failure-missing-check-contract",
+  "type": "failure",
+  "platforms": [
+    "claude-code",
+    "codex",
+    "github-copilot"
+  ],
+  "prompt": "Apply this ruleset that requires the 'e2e' and 'smoke' status checks on the default branch.",
+  "setup": [
+    "The supplied ruleset lists required status checks and integration ids for checks that do not currently run in this repository.",
+    "No workflow in the repository produces the 'e2e' or 'smoke' contexts."
+  ],
+  "expected": [
+    "The missing check contexts and unverified integration ids are reported instead of being applied blindly.",
+    "The requester is asked whether to add the checks first or remove the requirements, and the reason a wrong integration id can silently fail to require a check is explained.",
+    "A conservative path is offered: stage the ruleset as disabled or evaluate, or apply only the rules whose contract is verified."
+  ],
+  "must_not": [
+    "Fabricate or guess integration ids or check contexts to make the definition validate.",
+    "Report the ruleset as enforcing checks that will never match."
+  ]
+}
