@@ -1,0 +1,25 @@
+{
+  "name": "code-style",
+  "version": "0.1.0",
+  "description": "Language-neutral code style and maintainability guidance with language profiles and generated-code safety.",
+  "author": {
+    "name": "Tashtit contributors",
+    "url": "https://github.com/tashtit"
+  },
+  "homepage": "https://github.com/tashtit/marketplace/tree/main/plugins/code-style",
+  "repository": "https://github.com/tashtit/marketplace",
+  "license": "Apache-2.0",
+  "keywords": ["code-style", "maintainability", "formatting", "linting"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Code Style",
+    "shortDescription": "Readable, maintainable code with safe tooling boundaries",
+    "longDescription": "Design and review readable change scopes, formatting and semantic linting policies, language-specific tooling, and generated or vendored code handling.",
+    "developerName": "Tashtit contributors",
+    "category": "Developer Tools",
+    "capabilities": ["Code readability", "Linting policy", "Language profiles"],
+    "defaultPrompt": [
+      "Review this change for readable, maintainable code style and safe linting boundaries."
+    ]
+  }
+}

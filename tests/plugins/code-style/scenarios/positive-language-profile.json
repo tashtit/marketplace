@@ -1,0 +1,19 @@
+{
+  "id": "code-style-positive-language-profile",
+  "type": "positive",
+  "platforms": ["claude-code", "codex", "github-copilot"],
+  "prompt": "Set a code-style policy for a TypeScript service and Python worker.",
+  "setup": [
+    "The repository uses Prettier, ESLint, Black, Ruff, and mypy.",
+    "Only the service and worker source directories are in scope."
+  ],
+  "expected": [
+    "The response distinguishes mechanical formatter ownership from semantic linting and type checking.",
+    "The response recommends scoped, separately reportable checks for each language.",
+    "The response preserves existing tooling and avoids unrelated repository-wide churn."
+  ],
+  "must_not": [
+    "Claim that formatting proves semantic correctness.",
+    "Mandate a new formatter or linter without repository evidence."
+  ]
+}

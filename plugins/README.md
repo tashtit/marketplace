@@ -4,6 +4,7 @@ Each directory in this folder is an independently versioned Tashtit plugin.
 
 | Plugin | Version | Maturity | Purpose |
 | --- | --- | --- | --- |
+| [Code Style](code-style/) | 0.1.0 | Experimental | Readable, maintainable code with safe tooling boundaries |
 | [Engineering Standards](engineering-standards/) | 0.1.0 | Experimental | Evidence-backed production change review |
 | [Git Workflow](git-workflow/) | 0.1.0 | Experimental | Safe branches, commits, and pull-request handoff |
 | [GitHub Actions Standards](github-actions-standards/) | 0.1.0 | Experimental | Secure, reproducible CI and release workflows |

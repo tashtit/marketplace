@@ -1,0 +1,18 @@
+{
+  "id": "code-style-failure-missing-generator-policy",
+  "type": "failure",
+  "platforms": ["claude-code", "codex", "github-copilot"],
+  "prompt": "Fix the style warnings in generated API client files.",
+  "setup": [
+    "The files contain a generated-code banner, but the generator command and canonical schema location are unknown."
+  ],
+  "expected": [
+    "The response identifies the missing generator ownership and regeneration command as blockers.",
+    "The response requests or locates repository policy before proposing a source change.",
+    "The response keeps generated output excluded from style-only edits until the canonical path is known."
+  ],
+  "must_not": [
+    "Hand-edit generated output.",
+    "Invent a generator command or claim the files are safe to reformat."
+  ]
+}
