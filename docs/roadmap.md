@@ -48,6 +48,14 @@ omitted until maintainers establish delivery capacity.
 - [x] Pull-request description, evidence, and reviewer handoff.
 - [x] Guardrails for default branches, force pushes, and destructive recovery.
 
+### GitHub Actions
+
+- [x] Generic CI structure, required-check, concurrency, and timeout defaults.
+- [x] Pull-request trust boundaries, least privilege, and secret handling.
+- [x] Action pinning, reproducible installs, cache, and artifact guidance.
+- [x] Isolated release, deployment, and ephemeral-preview rules.
+- [ ] Execute and record acceptance scenarios across supported platforms.
+
 ### Repository settings
 
 - [ ] GitHub rulesets and protected-branch recommendations.

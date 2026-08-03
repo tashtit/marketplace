@@ -29,6 +29,18 @@
       "category": "Developer Tools"
     },
     {
+      "name": "github-actions-standards",
+      "source": {
+        "source": "local",
+        "path": "./plugins/github-actions-standards"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    },
+    {
       "name": "logging-standards",
       "source": {
         "source": "local",
