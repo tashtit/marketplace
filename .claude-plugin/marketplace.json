@@ -12,7 +12,7 @@
       "name": "engineering-standards",
       "source": "./plugins/engineering-standards",
       "description": "Opinionated production engineering standards for implementation and review.",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "license": "Apache-2.0",
       "category": "Developer Tools"
     },

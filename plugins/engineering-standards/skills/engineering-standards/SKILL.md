@@ -58,6 +58,29 @@ production-readiness, or security certification from checklist completion.
 - Report exact results and untested areas. Never describe an unrun check as
   passing.
 
+#### Flaky tests
+
+A flaky test passes and fails without a code change and destroys trust in the
+suite. Detect and handle it deliberately.
+
+- Detect: treat a test as suspect when it fails intermittently, only on CI, only
+  under parallelism, or only in a specific order. Reproduce with repeated runs
+  (a repeat/count flag or a loop) and record the observed failure rate rather
+  than dismissing a single red run as noise.
+- Diagnose the root cause before muting. Common sources are uncontrolled time,
+  randomness, timezone, and locale; ordering or shared mutable state between
+  tests; real network, filesystem, or clock dependencies; unawaited async work
+  and race conditions; and fixed sleeps standing in for synchronization.
+- Fix the cause: inject clocks and seeds, isolate state, await work explicitly,
+  wait on conditions instead of sleeping, and stub external boundaries.
+- Quarantine only as a temporary, tracked exception. A muted or skipped test
+  MUST link an issue with an owner and a re-enable plan, and MUST NOT mask a
+  real product bug. Never make a test pass by loosening an assertion until it no
+  longer verifies the behavior.
+- Do not retry to green blindly. If automatic retries are used, cap them, make
+  retried failures visible, and never hide a consistently failing test behind
+  retries.
+
 ### Operations and delivery
 
 - Define configuration, observability, resource limits, timeouts, cleanup, and

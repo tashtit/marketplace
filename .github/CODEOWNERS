@@ -1,0 +1,27 @@
+# Code owners for Tashtit.
+#
+# Ownership here MUST stay in step with MAINTAINERS.md; every owned path maps to
+# a maintainer or plugin owner listed there. The last matching pattern wins, so
+# per-plugin owners below can refine the repository-wide default.
+#
+# Team handles resolve only once the corresponding GitHub team exists. Until an
+# individual owner is designated, the maintainers team owns the path.
+
+# Repository-wide default owner.
+*                                   @tashtit/maintainers
+
+# Governance, security, and release-critical files.
+/GOVERNANCE.md                      @tashtit/maintainers
+/MAINTAINERS.md                     @tashtit/maintainers
+/SECURITY.md                        @tashtit/maintainers
+/docs/                              @tashtit/maintainers
+/scripts/                           @tashtit/maintainers
+/.github/                           @tashtit/maintainers
+/.claude-plugin/marketplace.json    @tashtit/maintainers
+
+# Plugin owners.
+/plugins/engineering-standards/     @tashtit/maintainers
+/plugins/git-workflow/              @tashtit/maintainers
+/plugins/github-actions-standards/  @tashtit/maintainers
+/plugins/logging-standards/         @tashtit/maintainers
+/plugins/repository-onboarding/     @tashtit/maintainers

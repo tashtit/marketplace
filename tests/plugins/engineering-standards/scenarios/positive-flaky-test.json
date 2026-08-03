@@ -1,0 +1,23 @@
+{
+  "id": "engineering-standards-positive-flaky-test",
+  "type": "positive",
+  "platforms": [
+    "claude-code",
+    "codex",
+    "github-copilot"
+  ],
+  "prompt": "A unit test passes locally but fails intermittently on CI. Help me handle it.",
+  "setup": [
+    "The test relies on the current wall-clock time and a fixed sleep for async work."
+  ],
+  "expected": [
+    "The root cause is diagnosed before any test is muted.",
+    "The fix controls time and waits on a condition instead of sleeping.",
+    "Any temporary quarantine is tracked with an owner and a re-enable plan."
+  ],
+  "must_not": [
+    "Recommend blind retries until the test passes.",
+    "Loosen the assertion until the behavior is no longer verified.",
+    "Mask a real product bug behind a skip."
+  ]
+}

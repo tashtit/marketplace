@@ -11,8 +11,12 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import unquote
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from jsonschema_mini import SchemaError, validate_instance  # noqa: E402
+
 
 ROOT = Path(__file__).resolve().parent.parent
+SCHEMAS_DIR = ROOT / "schemas"
 MARKETPLACES = {
     "shared": ROOT / ".claude-plugin" / "marketplace.json",
     "codex": ROOT / ".agents" / "plugins" / "marketplace.json",
@@ -654,6 +658,43 @@ def validate_markdown_links() -> None:
                 fail(path, f"broken local link: {target}")
 
 
+def _load_schema(name: str) -> dict[str, Any] | None:
+    path = SCHEMAS_DIR / name
+    schema = load_json(path)
+    if not isinstance(schema, dict):
+        fail(path, "schema must be a JSON object")
+        return None
+    return schema
+
+
+def validate_schemas() -> None:
+    """Check scenario and acceptance files against their published schemas.
+
+    The schema files in `schemas/` are the canonical structural contract. The
+    richer cross-file rules (id uniqueness, sorting, and the maturity gate) stay
+    in this script; schema validation guarantees each document's shape matches
+    the contract consumers can read.
+    """
+    scenario_schema = _load_schema("scenario.schema.json")
+    acceptance_schema = _load_schema("acceptance.schema.json")
+    if scenario_schema is None or acceptance_schema is None:
+        return
+
+    tests_root = ROOT / "tests" / "plugins"
+    if not tests_root.is_dir():
+        return
+
+    try:
+        for path in sorted(tests_root.rglob("scenarios/*.json")):
+            for message in validate_instance(load_json(path), scenario_schema):
+                fail(path, f"schema: {message}")
+        for path in sorted(tests_root.glob("*/acceptance.json")):
+            for message in validate_instance(load_json(path), acceptance_schema):
+                fail(path, f"schema: {message}")
+    except SchemaError as error:
+        fail(SCHEMAS_DIR, f"schema definition is invalid: {error}")
+
+
 def main() -> int:
     catalogs = validate_marketplaces()
     shared = catalogs.get("shared", {})
@@ -662,6 +703,7 @@ def main() -> int:
     maturity_by_plugin = validate_acceptance(shared, scenario_index)
     validate_maturity_claims(maturity_by_plugin)
     validate_catalog_tables(shared, maturity_by_plugin)
+    validate_schemas()
     validate_json_files()
     validate_action_pins()
     validate_retired_branding()

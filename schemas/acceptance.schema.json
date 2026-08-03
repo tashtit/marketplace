@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/tashtit/marketplace/schemas/acceptance.schema.json",
+  "title": "Tashtit acceptance record",
+  "description": "Recorded behavioral review results for a plugin. A maturity above experimental requires a recorded pass for every scenario and claimed platform at the published version.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["plugin", "maturity", "results"],
+  "properties": {
+    "plugin": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "maturity": {
+      "type": "string",
+      "enum": ["experimental", "candidate", "stable"]
+    },
+    "results": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/result"}
+    }
+  },
+  "$defs": {
+    "result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scenario",
+        "platform",
+        "plugin_version",
+        "commit",
+        "reviewed_on",
+        "reviewer",
+        "outcome"
+      ],
+      "properties": {
+        "scenario": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+        "platform": {
+          "type": "string",
+          "enum": ["claude-code", "codex", "cursor", "github-copilot"]
+        },
+        "plugin_version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+(?:-[0-9A-Za-z.-]+)?$"
+        },
+        "commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "reviewed_on": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$"},
+        "reviewer": {"type": "string", "minLength": 1},
+        "outcome": {"type": "string", "enum": ["pass", "fail"]},
+        "notes": {"type": "string"}
+      }
+    }
+  }
+}

@@ -15,14 +15,14 @@ omitted until maintainers establish delivery capacity.
 - [x] Generate each Codex plugin manifest instead of relying on symlinks.
 - [x] Add CI validation for generated-adapter drift.
 - [x] Validate the documented plugin catalog tables against the marketplace.
-- [ ] Add JSON Schema, Markdown, and secret validation.
+- [x] Add JSON Schema, Markdown, and secret validation.
 - [x] Add scenario test conventions and a local structural test harness.
 - [x] Gate maturity claims on recorded, version-pinned acceptance results.
-- [ ] Add an evaluation runner that executes scenarios and records results
+- [x] Add an evaluation runner that executes scenarios and records results
       automatically.
-- [ ] Define release automation, provenance, checksums, and changelogs.
+- [x] Define release automation, provenance, checksums, and changelogs.
 - [x] Publish the private security reporting channel.
-- [ ] Publish maintainer ownership details.
+- [x] Publish maintainer ownership details.
 
 ## Phase 1: repository engineering
 
@@ -30,7 +30,7 @@ omitted until maintainers establish delivery capacity.
 
 - [x] Definition-of-done and verification workflow.
 - [x] Testing strategy and deterministic-test defaults.
-- [ ] Flaky-test detection and handling.
+- [x] Flaky-test detection and handling.
 - [x] Error handling, configuration, dependency, and API design defaults.
 - [x] Security and privacy baseline for application changes.
 

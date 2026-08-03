@@ -19,3 +19,7 @@ build/
 coverage/
 dist/
 tmp/
+
+# Python bytecode
+__pycache__/
+*.py[cod]
