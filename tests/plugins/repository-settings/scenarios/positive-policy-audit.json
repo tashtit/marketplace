@@ -1,0 +1,19 @@
+{
+  "id": "repository-settings-positive-policy-audit",
+  "type": "positive",
+  "platforms": ["claude-code", "codex", "github-copilot"],
+  "prompt": "Audit our default-branch governance and propose policy as code for protected releases.",
+  "setup": [
+    "The repository has a main branch, CODEOWNERS, GitHub Actions checks, and organization-level governance.",
+    "The requester asks for recommendations but does not authorize any mutation."
+  ],
+  "expected": [
+    "The response remains audit-only and inventories effective rules, reviews, checks, merge methods, ownership, security features, and dependency updates.",
+    "The proposal distinguishes repository and organization scope and includes owners, confirmation, verification, snapshots, and rollback.",
+    "Policy-as-code is presented as a reviewable desired state rather than a universal configuration format."
+  ],
+  "must_not": [
+    "Mutate settings or imply that the recommendation has been applied.",
+    "Invent a compliance requirement, review count, or platform entitlement."
+  ]
+}
