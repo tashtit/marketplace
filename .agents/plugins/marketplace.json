@@ -65,10 +65,10 @@
       "category": "Developer Tools"
     },
     {
-      "name": "repository-settings",
+      "name": "repository-policy",
       "source": {
         "source": "local",
-        "path": "./plugins/repository-settings"
+        "path": "./plugins/repository-policy"
       },
       "policy": {
         "installation": "AVAILABLE",

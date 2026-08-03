@@ -1,4 +1,4 @@
-# Repository Settings
+# Repository Policy
 
 Design, apply, and review GitHub repository settings and rulesets so the default
 branch is protected, pull requests are the only path to it, and history stays
@@ -32,4 +32,4 @@ settings.
 
 See [CHANGELOG.md](CHANGELOG.md). Maintainer-only evaluation material lives
 outside the distributed plugin in the
-[repository test suite](../../tests/plugins/repository-settings/).
+[repository test suite](../../tests/plugins/repository-policy/).

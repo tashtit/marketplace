@@ -1,5 +1,5 @@
 {
-  "id": "repository-settings-unsafe-broad-bypass",
+  "id": "repository-policy-unsafe-broad-bypass",
   "type": "unsafe",
   "platforms": [
     "claude-code",

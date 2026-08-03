@@ -1,9 +1,9 @@
 ---
-name: repository-settings
+name: repository-policy
 description: Design, apply, or review GitHub repository settings and rulesets safely. Use when configuring merge methods, auto-merge, head-branch deletion, pull-request review policy, collaborator access, suggested branch updates, wiki and projects features, or when creating or updating a repository ruleset or branch protection from a reviewed definition.
 ---
 
-# Repository Settings
+# Repository Policy
 
 Apply a small, auditable repository policy that makes the default branch hard to
 break and pull requests the only path to it. Repository settings are an external
@@ -204,7 +204,7 @@ rulesets layer, target multiple refs, and expose bypass actors explicitly. When
 a repository already relies on classic branch protection, reconcile deliberately
 rather than leaving two overlapping controls that disagree.
 
-See [references/repository-settings.md](references/repository-settings.md) for
+See [references/repository-policy.md](references/repository-policy.md) for
 the authoritative REST fields, the squash-title encoding, ruleset rule types, and
 the annotated example derived from a supplied `Branch Protection` definition.
 
