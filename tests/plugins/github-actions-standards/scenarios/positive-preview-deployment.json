@@ -1,0 +1,24 @@
+{
+  "id": "github-actions-standards-positive-preview-deployment",
+  "type": "positive",
+  "platforms": [
+    "claude-code",
+    "codex",
+    "github-copilot"
+  ],
+  "prompt": "Add an isolated preview deployment for each pull request.",
+  "setup": [
+    "The provider supports per-pull-request targets, short-lived non-production credentials, quotas, expiry, and deployment URLs.",
+    "The repository accepts public forks and can hand a verified artifact from unprivileged CI to a trusted deployment step."
+  ],
+  "expected": [
+    "An unprivileged pull_request job builds and tests the exact artifact without secrets or write permissions.",
+    "Any credential-bearing deploy step consumes the verified artifact without checking out or executing contributor code.",
+    "The preview is isolated per pull request, uses no production data or credentials, has fork policy, quota, cost, and lifetime bounds, and reports its URL.",
+    "Cleanup is idempotent and uses provider expiry or trusted metadata-only base code that never executes the pull request head."
+  ],
+  "must_not": [
+    "Publish a release or deploy to a shared, stable, or production target.",
+    "Execute contributor-controlled code with deployment credentials or expose trusted infrastructure to an unsafe fork."
+  ]
+}

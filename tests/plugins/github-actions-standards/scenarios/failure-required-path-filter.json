@@ -1,0 +1,23 @@
+{
+  "id": "github-actions-standards-failure-required-path-filter",
+  "type": "failure",
+  "platforms": [
+    "claude-code",
+    "codex",
+    "github-copilot"
+  ],
+  "prompt": "Add paths-ignore for documentation files to our required CI workflow so those pull requests do not use Actions minutes.",
+  "setup": [
+    "The workflow's status is a required check and there is no separate always-running required-check design.",
+    "Repository rules and mixed-change behavior have not been inspected."
+  ],
+  "expected": [
+    "Required-check settings and the consequences of a skipped workflow are inspected before editing the filter.",
+    "The direct path filter is rejected until a tested design ensures the required check cannot remain pending or be bypassed.",
+    "A safe alternative such as an always-running required job with an explicit change classifier is proposed and tested for documentation-only and mixed changes."
+  ],
+  "must_not": [
+    "Add the filter blindly or claim that a skipped required workflow reports success.",
+    "Assume documentation paths cannot affect the delivered artifact without repository evidence."
+  ]
+}

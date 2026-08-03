@@ -117,11 +117,25 @@ the provider trust policy to the expected organization, repository, ref,
 workflow, and environment. Grant `id-token: write` only to the job that
 exchanges the token; it does not itself grant cloud access.
 
-Use a protected GitHub environment for release and deployment jobs. Configure
-allowed branches or tags, reviewers when appropriate, and environment-scoped
-secrets outside the workflow. Changing repository permissions, secrets,
-environments, or protection rules is an external side effect and requires
-explicit authorization.
+Pass secrets through a secret-aware action input or, when a command requires
+them, a narrowly scoped environment variable or standard input. Secrets MUST
+NOT appear in workflow source, generated scripts, command-line arguments, or
+ordinary log output. Disable shell tracing around secret-bearing commands and
+delete secret-bearing temporary files with cleanup that also runs on failure.
+
+GitHub log redaction is a defense in depth, not a guarantee. Register every
+derived or transformed secret with `::add-mask::` before it can reach output.
+Store unrelated sensitive values as separate secrets rather than one structured
+blob when feasible, because redaction depends on matching known values. Test
+failure paths with synthetic values and inspect their logs. If a secret reaches
+a log, delete the log where possible, revoke or rotate the credential, and
+investigate the exposure before rerunning.
+
+Use a protected GitHub environment for releases and deployments to shared,
+stable, or production targets. Configure allowed branches or tags, reviewers
+when appropriate, and environment-scoped secrets outside the workflow.
+Changing repository permissions, secrets, environments, or protection rules
+is an external side effect and requires explicit authorization.
 
 ## Pin the supply chain
 
@@ -216,7 +230,8 @@ debug logging when it could disclose secrets.
 
 ## Isolate release and deployment
 
-A release or deployment job MUST:
+A release job or a deployment job targeting a shared, stable, or production
+environment MUST:
 
 1. depend on the exact required CI, artifact, smoke, and integration jobs;
 2. run only for explicitly trusted refs and events;
@@ -228,10 +243,25 @@ A release or deployment job MUST:
    supports it;
 8. report the published version, digest, target, and rollback or recovery path.
 
-Pull requests MUST NOT publish, deploy, or enter a protected production
-environment. A PR dry run must remain read-only and secret-free. Manual
-dispatch inputs that affect a release MUST be typed, validated, and visible in
-the run; a manual button is not an authorization boundary.
+Pull requests MUST NOT publish releases or deploy to a shared, stable, or
+production target. A pull request MAY deploy an ephemeral preview only when:
+
+- an unprivileged `pull_request` job builds and tests the exact artifact;
+- any credential-bearing deploy step consumes that verified artifact without
+  checking out or executing contributor-controlled code;
+- the target is isolated per pull request and contains no production data;
+- credentials are short-lived, least-privilege, non-production credentials;
+- public forks are excluded unless the preview path is demonstrably safe
+  without exposing credentials or trusted infrastructure;
+- a bounded lifetime, quota, and cost limit exist; and
+- cleanup is idempotent and uses provider expiry or trusted, metadata-only base
+  code that never executes the pull request head.
+
+A PR dry run MUST remain non-publishing and MUST NOT receive production
+credentials. It MAY receive a narrowly scoped non-production credential only
+when the same isolation requirements apply. Manual dispatch inputs that affect
+a release MUST be typed, validated, and visible in the run; a manual button is
+not an authorization boundary.
 
 ## Reuse without hiding risk
 

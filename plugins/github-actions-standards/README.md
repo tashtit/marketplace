@@ -15,7 +15,8 @@ trusted events, and protected environments.
 
 The skill also covers artifact handoff, clean-room smoke tests, compatibility
 matrices, integration-service lifecycle, caches, diagnostics, path filters,
-untrusted pull requests, OIDC, and evidence-based verification.
+untrusted pull requests, isolated preview deployments, secret lifecycle, OIDC,
+and evidence-based verification.
 
 It deliberately does not mandate a programming language, package manager, task
 runner, runner provider, registry, deployment platform, release tool, coverage

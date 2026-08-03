@@ -11,6 +11,7 @@ this file identifies a GitHub requirement.
 - [Permissions and credentials](#permissions-and-credentials)
 - [Action and reusable-workflow pins](#action-and-reusable-workflow-pins)
 - [Concurrency and timeouts](#concurrency-and-timeouts)
+- [Release and preview deployments](#release-and-preview-deployments)
 - [Caches, artifacts, and provenance](#caches-artifacts-and-provenance)
 - [Workflow review checklist](#workflow-review-checklist)
 
@@ -37,6 +38,8 @@ Use current GitHub documentation when platform behavior may have changed:
   short-lived cloud credentials and trust claims.
 - [Managing environments for deployment](https://docs.github.com/en/actions/how-tos/deploy/configure-and-manage-deployments/manage-environments):
   protection rules, allowed refs, reviewers, and environment-scoped secrets.
+- [Deploying with GitHub Actions](https://docs.github.com/en/actions/how-tos/deploy/configure-and-manage-deployments/control-deployments):
+  deployment events, environments, concurrency, and deployment URLs.
 - [Reuse workflows](https://docs.github.com/en/actions/how-tos/reuse-automations/reuse-workflows):
   inputs, outputs, permissions, secret passing, and nesting.
 - [Artifact attestations](https://docs.github.com/en/actions/how-tos/secure-your-work/use-artifact-attestations/use-artifact-attestations):
@@ -106,6 +109,20 @@ Environment secrets become available only after the environment's protection
 rules pass. Use that boundary for deployments instead of placing production
 credentials in a general CI job.
 
+Prefer secret-aware action inputs. When a command must consume a secret, pass
+it through a narrowly scoped environment variable or standard input, not
+through a command-line argument or interpolated script. Avoid shell tracing and
+clean up temporary secret files on success, failure, and cancellation.
+
+GitHub attempts to redact registered secret values from logs, but redaction is
+not guaranteed. Mask derived or transformed sensitive values with
+`::add-mask::` before any output can contain them. Prefer separate secret
+values over structured blobs such as JSON when practical, because a changed or
+partially rendered structure may not match the registered value. Exercise
+failure diagnostics with synthetic secrets. If a real value is exposed,
+delete the affected logs where possible, revoke or rotate it, and investigate
+before rerunning.
+
 OIDC replaces stored cloud credentials only after the cloud provider trust is
 configured. Restrict subject and other claims; otherwise a short-lived token
 can still be over-authorized.
@@ -168,6 +185,26 @@ Cancellation can interrupt cleanup or publishing. Cancel superseded PR
 validation by default. For releases and deployments, decide whether to queue,
 cancel, or reject based on the publisher's transaction and recovery model.
 
+## Release and preview deployments
+
+GitHub supports deployments from `pull_request` workflows and can associate a
+deployment URL with a pull request. Tashtit permits that behavior only for an
+ephemeral, per-PR preview. It is not an exception for publishing releases or
+deploying to shared, stable, or production targets.
+
+Build and test the preview artifact in the unprivileged pull-request context.
+If deployment requires credentials, a trusted deploy step may consume the
+verified artifact but must not checkout, install, or execute the contributor
+head. Give every preview an isolated target, non-production data and
+least-privilege credentials, a bounded lifetime and cost, and deterministic
+cleanup. Exclude public forks unless the design remains safe without disclosing
+credentials or granting access to trusted infrastructure.
+
+Cleanup triggered by pull-request closure has its own trust boundary. Prefer a
+provider TTL or a metadata-only workflow that uses base-repository code and
+never executes the pull-request head. Cleanup must be idempotent because event
+delivery, cancellation, and retries can overlap.
+
 ## Caches, artifacts, and provenance
 
 GitHub distinguishes caches from artifacts:
@@ -202,6 +239,8 @@ and their tag cannot then be modified.
 - [ ] Untrusted code cannot reach secrets, write tokens, OIDC, protected
       environments, or persistent runners.
 - [ ] Untrusted expressions do not flow directly into shell code.
+- [ ] Secrets avoid source and command-line arguments; derived values are
+      masked before output and exposure response is defined.
 - [ ] Every non-GitHub action and cross-repository reusable workflow uses a
       verified full commit SHA; a GitHub-authored action uses either the
       preferred SHA or a policy-approved exact release tag.
@@ -218,7 +257,9 @@ and their tag cannot then be modified.
       are explicit.
 - [ ] Integration services have bounded readiness, safe diagnostics, and
       unconditional cleanup.
-- [ ] Release and deployment jobs use trusted refs, protected environments,
-      verified inputs, and a recovery path.
+- [ ] Releases and shared or stable deployments use trusted refs, protected
+      environments, verified inputs, and a recovery path.
+- [ ] Any PR preview is isolated, non-production, bounded, artifact-based, and
+      cleaned up without executing contributor code in a privileged context.
 - [ ] Workflow syntax, local commands, observed runs, and failure paths are
       verified without overstating evidence.

@@ -6,6 +6,8 @@
       names, least-privilege permissions, and real dependency edges.
 - [ ] Untrusted PR code cannot access secrets, write tokens, OIDC, protected
       environments, or persistent runners.
+- [ ] Secrets do not appear in source, command arguments, or logs; derived
+      values are masked before output and exposure response is documented.
 - [ ] Non-GitHub actions and cross-repository reusable workflows use verified
       full commit SHAs; GitHub-authored actions use the preferred SHA or a
       policy-approved exact release tag.
@@ -15,6 +17,8 @@
       failure behavior.
 - [ ] Release and deployment work is isolated behind successful CI, trusted
       refs, protected environments, and a recovery plan.
+- [ ] Any PR preview is per-PR, ephemeral, non-production, bounded, and
+      deployed and cleaned up without privileged execution of contributor code.
 - [ ] Path filtering cannot strand or bypass required checks.
 - [ ] Repository settings and external side effects are not changed without
       authorization.
