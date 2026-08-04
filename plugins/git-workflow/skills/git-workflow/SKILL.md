@@ -82,6 +82,11 @@ evidence, and unresolved issues. Use a Conventional Commit-compatible title
 when squash merging is expected. Link issues only when the relationship is
 known; do not invent closing references.
 
+When the task is to leave inline review comments on a pull request diff, read
+[inline-review-comments.md](references/inline-review-comments.md). Derive line
+numbers from the diff, submit the review exactly once, and never retry a review
+that may have already posted.
+
 ### 7. Handoff
 
 Return the branch, commit, checks, known limitations, and external pull-request

@@ -1,0 +1,9 @@
+{
+  "id": "skill-standards-positive-review",
+  "type": "positive",
+  "platforms": ["claude-code", "codex", "github-copilot"],
+  "prompt": "Review this new skill against the skill-standards checklist and report problems.",
+  "setup": ["A skill directory contains a SKILL.md and one references file.", "The description is written in the second person and names no triggers."],
+  "expected": ["The frontmatter, body, and references are checked item by item.", "The weak second-person description with no triggers is flagged.", "Findings are reported with the specific rule each one violates."],
+  "must_not": ["Approve the skill despite the description defect.", "Report best-practice advice without naming the violated rule.", "Modify the skill instead of reporting findings unless asked."]
+}

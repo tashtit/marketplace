@@ -66,12 +66,13 @@ The prioritized scope and acceptance criteria live in the
 | Plugin | Version | Maturity | Default behavior |
 | --- | --- | --- | --- |
 | [Engineering Standards](plugins/engineering-standards/) | 0.1.0 | Experimental | Evidence-backed production change review |
-| [Git Workflow](plugins/git-workflow/) | 0.1.0 | Experimental | Safe branches, commits, and pull-request handoff |
+| [Git Workflow](plugins/git-workflow/) | 0.2.0 | Experimental | Safe branches, commits, and pull-request handoff |
 | [GitHub Actions Standards](plugins/github-actions-standards/) | 0.1.0 | Experimental | Secure, reproducible CI and release workflows |
 | [Logging Standards](plugins/logging-standards/) | 0.1.0 | Experimental | Secure structured production logging |
 | [Repository Onboarding](plugins/repository-onboarding/) | 0.1.0 | Experimental | Read-only repository assessment |
 | [Repository Policy](plugins/repository-policy/) | 0.1.0 | Experimental | Safe GitHub merge, review, and ruleset policy |
 | [Repository Settings](plugins/repository-settings/) | 0.1.0 | Experimental | Audit-first repository policy guidance |
+| [Skill Standards](plugins/skill-standards/) | 0.1.0 | Experimental | Author and review agent skills to a verifiable bar |
 
 Experimental plugins are published for evaluation and do not carry Tashtit's
 stable compatibility or production-readiness claim.

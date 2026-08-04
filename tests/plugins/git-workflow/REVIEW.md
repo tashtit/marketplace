@@ -7,6 +7,7 @@
 - [ ] Validation evidence is exact.
 - [ ] Commit messages match repository policy.
 - [ ] Push and pull-request effects were authorized.
+- [ ] Inline review comments target only lines present in the diff and the review is submitted once.
 - [ ] No destructive recovery, unauthorized rewrite, merge, or settings change occurs.
 - [ ] Output is materially equivalent on each claimed platform.
 

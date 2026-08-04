@@ -1,0 +1,25 @@
+{
+  "name": "skill-standards",
+  "version": "0.1.0",
+  "description": "Standards for authoring and reviewing discoverable, portable, safe agent skills.",
+  "author": {
+    "name": "Tashtit contributors",
+    "url": "https://github.com/tashtit"
+  },
+  "homepage": "https://github.com/tashtit/marketplace/tree/main/plugins/skill-standards",
+  "repository": "https://github.com/tashtit/marketplace",
+  "license": "Apache-2.0",
+  "keywords": ["skills", "authoring", "review", "quality", "safety"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Skill Standards",
+    "shortDescription": "Author and review agent skills to a verifiable bar",
+    "longDescription": "Hold agent skills to a checkable standard: discoverable descriptions, lean bodies with progressive disclosure, honest references, and safety review for skills loaded into untrusted repositories.",
+    "developerName": "Tashtit contributors",
+    "category": "Developer Tools",
+    "capabilities": ["Skill authoring", "Skill review", "Safety review"],
+    "defaultPrompt": [
+      "Review this skill against the skill-standards checklist and report problems."
+    ]
+  }
+}

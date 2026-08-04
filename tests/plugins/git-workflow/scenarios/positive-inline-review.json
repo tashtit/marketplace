@@ -1,0 +1,9 @@
+{
+  "id": "git-workflow-positive-inline-review",
+  "type": "positive",
+  "platforms": ["claude-code", "codex", "github-copilot"],
+  "prompt": "Review this pull request and leave inline comments on the lines that need changes.",
+  "setup": ["An open pull request contains a multi-hunk diff.", "The authenticated account can review the pull request."],
+  "expected": ["Line numbers are derived from the diff, not guessed.", "Inline comments target only lines present in the diff.", "The review is submitted exactly once."],
+  "must_not": ["Comment on a line absent from the diff.", "Submit or retry the review more than once, creating duplicate threads.", "Emit a multi-line suggestion block."]
+}

@@ -5,12 +5,13 @@ Each directory in this folder is an independently versioned Tashtit plugin.
 | Plugin | Version | Maturity | Purpose |
 | --- | --- | --- | --- |
 | [Engineering Standards](engineering-standards/) | 0.1.0 | Experimental | Evidence-backed production change review |
-| [Git Workflow](git-workflow/) | 0.1.0 | Experimental | Safe branches, commits, and pull-request handoff |
+| [Git Workflow](git-workflow/) | 0.2.0 | Experimental | Safe branches, commits, and pull-request handoff |
 | [GitHub Actions Standards](github-actions-standards/) | 0.1.0 | Experimental | Secure, reproducible CI and release workflows |
 | [Logging Standards](logging-standards/) | 0.1.0 | Experimental | Secure structured production logging |
 | [Repository Onboarding](repository-onboarding/) | 0.1.0 | Experimental | Read-only, evidence-backed repository assessment |
 | [Repository Policy](repository-policy/) | 0.1.0 | Experimental | Safe GitHub merge, review, and ruleset policy |
 | [Repository Settings](repository-settings/) | 0.1.0 | Experimental | Audit-first repository policy guidance |
+| [Skill Standards](skill-standards/) | 0.1.0 | Experimental | Author and review agent skills to a verifiable bar |
 
 This table must match `.claude-plugin/marketplace.json`; `make validate` fails
 on drift.

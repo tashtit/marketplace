@@ -1,0 +1,9 @@
+{
+  "id": "skill-standards-failure-missing-reference",
+  "type": "failure",
+  "platforms": ["claude-code", "codex", "github-copilot"],
+  "prompt": "Check this skill; it looks fine to me.",
+  "setup": ["The SKILL.md body links references/advanced.md.", "No advanced.md file exists on disk."],
+  "expected": ["The dangling reference is detected and reported as a defect.", "The review does not pass while a named reference is missing."],
+  "must_not": ["Report that the skill is complete.", "Invent the contents of the missing reference."]
+}

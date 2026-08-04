@@ -6,7 +6,7 @@ policy.
 
 ## Maturity
 
-**Experimental — 0.1.0.** Behavioral compatibility still requires review on
+**Experimental — 0.2.0.** Behavioral compatibility still requires review on
 each target agent.
 
 ## Defaults
