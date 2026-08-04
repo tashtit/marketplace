@@ -1,0 +1,24 @@
+{
+  "id": "typescript-library-build-positive-monorepo",
+  "type": "positive",
+  "platforms": [
+    "claude-code",
+    "codex",
+    "github-copilot"
+  ],
+  "prompt": "Add a dual ESM and CJS build to the packages in this workspaces monorepo, each with several public entry points.",
+  "setup": [
+    "The repository is a workspaces monorepo whose packages expose many public subpath entry points.",
+    "TypeScript declarations are required and each package is versioned and published independently."
+  ],
+  "expected": [
+    "Declarations are emitted with tsc using isolatedDeclarations and NodeNext, and Rollup preserveModules emits per-module .js ESM and .cjs CJS output that mirrors the source tree.",
+    "Each generated publish manifest carries a full exports map with one types-first condition object per public entry pointing at the .js or .cjs output.",
+    "Publishing is per package with a per-package tag format and the repository's real release and prerelease branches, and runtime and peer dependencies stay external.",
+    "Both import and require are verified from a packed tarball in a clean consumer before the packages are trusted."
+  ],
+  "must_not": [
+    "Use the single-package single-bundle shape when many entry points require the preserved module graph.",
+    "Hand-maintain a second published manifest instead of generating it from the development manifest."
+  ]
+}

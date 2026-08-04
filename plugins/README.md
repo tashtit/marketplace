@@ -11,6 +11,7 @@ Each directory in this folder is an independently versioned Tashtit plugin.
 | [Repository Onboarding](repository-onboarding/) | 0.1.0 | Experimental | Read-only, evidence-backed repository assessment |
 | [Repository Policy](repository-policy/) | 0.1.0 | Experimental | Safe GitHub merge, review, and ruleset policy |
 | [Repository Settings](repository-settings/) | 0.1.0 | Experimental | Audit-first repository policy guidance |
+| [TypeScript Library Build](typescript-library-build/) | 0.1.0 | Experimental | Dual ESM and CJS library build and publish |
 
 This table must match `.claude-plugin/marketplace.json`; `make validate` fails
 on drift.

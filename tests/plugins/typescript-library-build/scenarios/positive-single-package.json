@@ -1,0 +1,24 @@
+{
+  "id": "typescript-library-build-positive-single-package",
+  "type": "positive",
+  "platforms": [
+    "claude-code",
+    "codex",
+    "github-copilot"
+  ],
+  "prompt": "Set up a dual ESM and CJS build for this single-package TypeScript library so both import and require consumers work.",
+  "setup": [
+    "The repository is a single TypeScript package with one public entry point, declared runtime dependencies, and a committed lockfile.",
+    "The repository states its supported Node.js range and its test, build, and pack commands."
+  ],
+  "expected": [
+    "A single-package Rollup build emits an ESM bundle, a CJS bundle, and a declaration file into the output directory after cleaning stale output.",
+    "The published manifest is generated with an exports map that lists types first and points import at the ESM output and require at the CJS output, keeps main and module for legacy tooling, and omits a stray type field.",
+    "Runtime and peer dependencies are kept external, and the development package.json is private with devDependencies, scripts, and private stripped from the generated manifest.",
+    "A packed tarball is imported and required in a clean consumer across the supported Node.js range before the package is trusted."
+  ],
+  "must_not": [
+    "Invent a registry, package manager, Node.js version, package name, or publish command.",
+    "Inline runtime dependencies into the bundle or ship the development package.json as the published manifest."
+  ]
+}
