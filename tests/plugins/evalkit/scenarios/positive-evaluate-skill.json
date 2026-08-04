@@ -1,0 +1,9 @@
+{
+  "id": "evalkit-positive-evaluate-skill",
+  "type": "positive",
+  "platforms": ["claude-code"],
+  "prompt": "Evaluate whether the commit-helper skill improves the task \"add input validation to the signup form\".",
+  "setup": ["The commit-helper skill exists at a repository-local load path.", "The working tree is clean and on a committed base."],
+  "expected": ["Two isolated git worktrees are created from the same base — one with the skill present, one with it deleted.", "The same task and model run in both arms.", "The reviewer scores each arm's diff without being told which arm it is.", "Both worktrees are kept and a metric comparison table is reported."],
+  "must_not": ["Run the task in only one arm.", "Pass the arm label to the reviewer.", "Remove either worktree automatically."]
+}

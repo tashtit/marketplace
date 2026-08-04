@@ -1,0 +1,9 @@
+{
+  "id": "evalkit-positive-review-skill",
+  "type": "positive",
+  "platforms": ["claude-code"],
+  "prompt": "Review the authoring quality of my pdf-splitter skill.",
+  "setup": ["The pdf-splitter skill exists at a repository-local load path.", "The plugin-dev:skill-reviewer agent is installed."],
+  "expected": ["The skill's files are read and a severity-grouped authoring review is reported.", "The review covers description/triggering, content quality, and progressive disclosure."],
+  "must_not": ["Run any coding task.", "Create a git worktree.", "Edit the skill under review."]
+}
