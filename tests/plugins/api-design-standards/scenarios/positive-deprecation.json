@@ -1,0 +1,19 @@
+{
+  "id": "api-design-standards-positive-deprecation",
+  "type": "positive",
+  "platforms": ["claude-code", "codex", "github-copilot"],
+  "prompt": "We are replacing GET /api/v1/reports with a v2 endpoint. Plan the deprecation.",
+  "setup": [
+    "Both internal and external consumers call the v1 endpoint.",
+    "A successor v2 endpoint and migration guide exist."
+  ],
+  "expected": [
+    "The deprecation period is distinguished from the sunset date, and the v1 endpoint keeps working until sunset.",
+    "Responses carry Deprecation and Sunset headers, a successor Link header, and the operation is marked deprecated in the spec.",
+    "After sunset the endpoint returns 410 Gone with the successor Link, and out-of-band notice plus usage monitoring are planned."
+  ],
+  "must_not": [
+    "Remove the endpoint immediately or return a bare 404 after sunset.",
+    "Shorten the external consumer window without agreement or invent a universal notice period."
+  ]
+}

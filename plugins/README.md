@@ -4,6 +4,8 @@ Each directory in this folder is an independently versioned Tashtit plugin.
 
 | Plugin | Version | Maturity | Purpose |
 | --- | --- | --- | --- |
+| [API Design Standards](api-design-standards/) | 0.1.0 | Experimental | Async REST jobs and safe API deprecation |
+| [Architecture Diagrams](architecture-diagrams/) | 0.1.0 | Experimental | C4 system context and container diagrams |
 | [Engineering Standards](engineering-standards/) | 0.1.0 | Experimental | Evidence-backed production change review |
 | [Git Workflow](git-workflow/) | 0.1.0 | Experimental | Safe branches, commits, and pull-request handoff |
 | [GitHub Actions Standards](github-actions-standards/) | 0.1.0 | Experimental | Secure, reproducible CI and release workflows |

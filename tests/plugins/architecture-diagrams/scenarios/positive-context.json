@@ -1,0 +1,19 @@
+{
+  "id": "architecture-diagrams-positive-context",
+  "type": "positive",
+  "platforms": ["claude-code", "codex", "github-copilot"],
+  "prompt": "Create a system context diagram for our internet banking service.",
+  "setup": [
+    "The service is used by customers and depends on a mainframe and an email provider.",
+    "The request does not name a diagramming tool or format."
+  ],
+  "expected": [
+    "Exactly one system in focus is shown at the center with an unambiguous boundary.",
+    "All human actors and all external systems are shown as boundaries, not internals.",
+    "Every interaction is a directional relationship labeled with its intent, and the diagram stays at the C1 level."
+  ],
+  "must_not": [
+    "Expand internal containers or code inside the context diagram.",
+    "Mandate a specific drawing tool, diagram language, or rendering format."
+  ]
+}

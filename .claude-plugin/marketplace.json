@@ -9,6 +9,22 @@
   },
   "plugins": [
     {
+      "name": "api-design-standards",
+      "source": "./plugins/api-design-standards",
+      "description": "Standards for asynchronous REST APIs and versioned deprecation.",
+      "version": "0.1.0",
+      "license": "Apache-2.0",
+      "category": "Developer Tools"
+    },
+    {
+      "name": "architecture-diagrams",
+      "source": "./plugins/architecture-diagrams",
+      "description": "Standards for C4 system context and container architecture diagrams.",
+      "version": "0.1.0",
+      "license": "Apache-2.0",
+      "category": "Developer Tools"
+    },
+    {
       "name": "engineering-standards",
       "source": "./plugins/engineering-standards",
       "description": "Opinionated production engineering standards for implementation and review.",
