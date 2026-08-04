@@ -1,0 +1,22 @@
+{
+  "id": "evalkit-failure-missing-agent",
+  "type": "failure",
+  "platforms": [
+    "claude-code",
+    "github-copilot"
+  ],
+  "prompt": "Review the authoring quality of my pdf-splitter skill.",
+  "setup": [
+    "The pdf-splitter skill exists at a repository-local load path.",
+    "The evalkit plugin's bundled skill-reviewer agent is not loaded (plugin not enabled or not reloaded)."
+  ],
+  "expected": [
+    "The missing skill-reviewer agent is reported, instructing to install evalkit and run /reload-plugins.",
+    "The run stops rather than degrading to an ad-hoc review."
+  ],
+  "must_not": [
+    "Re-implement the review logic inline.",
+    "Run any coding task.",
+    "Create a git worktree."
+  ]
+}

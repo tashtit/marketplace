@@ -1,6 +1,6 @@
 ---
 name: compare-models
-description: Compare two models on the same coding task by running each in an isolated git worktree and diffing cost, tokens, gates, and review findings. Models are chosen from the session's available list via picker. Expensive and side-effecting; spawns two headless agent sessions and leaves worktrees on disk. Invoke only on an explicit request to benchmark two models against a specific task. Do not trigger on general questions about which model to use.
+description: Compare two models on the same coding task by running each in an isolated git worktree and diffing gates, cost, tokens, and review findings. Models are chosen from the session's available list via picker. Expensive and side-effecting; spawns two headless agent sessions and leaves worktrees on disk. Invoke only on an explicit request to benchmark two models against a specific task. Do not trigger on general questions about which model to use.
 ---
 
 # Compare Models
@@ -9,7 +9,15 @@ Compare two models on the **same coding task** by running it under two isolated 
 
 The only difference between arms is `--model`. Prompt, base commit, skill state, and every quality layer are identical by construction, so any delta is attributable to the model.
 
-> **Cost warning.** This spawns two headless `claude -p` sessions and creates two git worktrees that are kept after the run. Confirm the user wants this before starting if the request was at all ambiguous.
+> **Cost warning.** This spawns two headless agent sessions and creates two git worktrees that are kept after the run. Confirm the user wants this before starting if the request was at all ambiguous.
+
+## Host resolution (do this first, once)
+
+The headless CLI, its flags, the review-subprocess invocation, the telemetry schema, and the metric names are **host-specific**. Resolve them deterministically instead of guessing:
+
+1. Run `scripts/resolve-host.sh`. It prints the path of the reference file for the current host and exits non-zero if the host cannot be identified.
+2. If it exits non-zero, **stop** and tell the user the host could not be determined — do not run any CLI.
+3. Read **only** the file it printed (never the other host's file). It defines the exact **Headless invocation**, **Review-layer subprocess**, **Telemetry parsing**, and **Report metric rows** referenced by name below.
 
 ## Arguments
 
@@ -45,28 +53,20 @@ When invoked as `/compare-models <task…>`, parse `task` from `$ARGUMENTS` as a
 
 6. Generate a `run-id` from the current timestamp (e.g. `20260803-143021`).
 
-7. Run both arms **in parallel** (isolated worktrees):
+7. Run both arms **in parallel** (isolated worktrees). Use the **Headless invocation** from the resolved host reference for each session — passing `<modelA>` / `<modelB>` as the model — and capture JSONL to `runs/<arm>-<run-id>.jsonl`:
 
    **Arm A** — runs with `modelA`:
    ```
    git worktree add -b mcmp/A-<run-id> mcmp/A-<run-id> <base>
    cd mcmp/A-<run-id>
-   claude -p "<task>" \
-          --model <modelA> \
-          --permission-mode bypassPermissions \
-          --output-format stream-json \
-          > runs/A-<run-id>.jsonl
+   # headless session (model = <modelA>) per the resolved host reference → runs/A-<run-id>.jsonl
    ```
 
    **Arm B** — runs with `modelB`:
    ```
    git worktree add -b mcmp/B-<run-id> mcmp/B-<run-id> <base>
    cd mcmp/B-<run-id>
-   claude -p "<task>" \
-          --model <modelB> \
-          --permission-mode bypassPermissions \
-          --output-format stream-json \
-          > runs/B-<run-id>.jsonl
+   # headless session (model = <modelB>) per the resolved host reference → runs/B-<run-id>.jsonl
    ```
 
 8. For each arm, run the quality layers in the worktree, before any teardown:
@@ -79,18 +79,15 @@ When invoked as `/compare-models <task…>`, parse `task` from `$ARGUMENTS` as a
    git diff <base> > runs/<arm>-<run-id>.diff
    ```
 
-   **`review`** (if in `layers`) — code-review the diff inside the arm's worktree so it inherits CLAUDE.md and project skills. Do **not** pass the arm label **or the model name** to the reviewer. → findings by severity.
+   **`review`** (if in `layers`) — code-review the diff using the **Review-layer subprocess** from the resolved host reference, run inside the arm's worktree so it inherits the host's project-context file and skills. Do **not** pass the arm label **or the model name** to the reviewer. → findings by severity.
 
    **`judge`** (if in `layers`) — judge the diff against the task for **task-correctness only**. Also arm- and model-blind.
 
-   **Telemetry** — parse `runs/<arm>-<run-id>.jsonl`:
-   - Final `result` event: `total_cost_usd`, `usage.input_tokens`, `usage.output_tokens`, `usage.cache_read_input_tokens`, `usage.cache_creation_input_tokens`, `duration_ms`, `turns`, `session_id`
-   - Tool profile: count `tool_use` events grouped by `name`
-   - Tool errors: count `tool_result` events where `is_error` is `true`
+   **Telemetry** — parse `runs/<arm>-<run-id>.jsonl` per the **Telemetry parsing** section of the resolved host reference. AI-unit / USD cost is per-model-priced, which is exactly the dimension being compared here.
 
 9. Worktrees are **kept** unless `keep` is false. Never auto-remove — use `remove-worktrees` to clean up later.
 
-10. Emit the report:
+10. Emit the report, substituting the **Report metric rows** from the resolved host reference for the `<host cost/token rows>` line:
 
 ```
 metric            | A (<modelA>)       | B (<modelB>)
@@ -98,8 +95,7 @@ metric            | A (<modelA>)       | B (<modelB>)
 gates_passed      | ...                | ...
 judge_completed   | ...                | ...
 review_findings   | 0c 1h 2m           | 0c 0h 1m
-tokens (in/out)   | ...k/...k          | ...k/...k
-cost (USD)        | $...               | $...
+<host cost/token rows>
 duration          | ...                | ...
 turns             | ...                | ...
 tool_calls        | ...                | ...

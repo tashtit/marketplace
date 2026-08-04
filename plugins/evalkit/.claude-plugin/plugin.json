@@ -1,7 +1,7 @@
 {
   "name": "evalkit",
   "version": "0.1.0",
-  "description": "Evaluate and compare skills and models with static reviews and worktree-isolated coding-task harnesses.",
+  "description": "Evaluate and compare skills and models with static reviews and worktree-isolated coding-task harnesses. Host-adaptive across Claude Code and GitHub Copilot CLI.",
   "author": {
     "name": "Tashtit contributors",
     "url": "https://github.com/tashtit"
@@ -11,10 +11,11 @@
   "license": "Apache-2.0",
   "keywords": ["evaluation", "skills", "benchmark", "worktrees", "review"],
   "skills": "./skills/",
+  "agents": "./agents/",
   "interface": {
     "displayName": "Evalkit",
     "shortDescription": "Evaluate and compare skills and models",
-    "longDescription": "Review skill authoring quality statically, or measure real coding-task outcomes by running the same task under isolated git worktrees while varying one factor: a skill's presence, one skill versus another, or one model versus another. Includes a worktree cleanup skill for the harness leftovers.",
+    "longDescription": "Review skill authoring quality statically, or measure real coding-task outcomes by running the same task under isolated git worktrees while varying one factor: a skill's presence, one skill versus another, or one model versus another. The dynamic harnesses are host-adaptive — they detect the current agent host and drive either Claude Code (claude -p) or GitHub Copilot CLI (copilot -p), parsing each host's telemetry and reporting its native metrics. Bundles a host-agnostic skill-reviewer agent so the static skills are self-contained. Includes a worktree cleanup skill for the harness leftovers.",
     "developerName": "Tashtit contributors",
     "category": "Developer Tools",
     "capabilities": ["Skill review", "Skill and model benchmarking", "Worktree cleanup"],

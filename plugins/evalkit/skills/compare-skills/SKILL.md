@@ -7,7 +7,7 @@ description: Compare two skills' authoring quality side-by-side by reading their
 
 Compare two skills' authoring quality by reading their artifacts. Never runs a coding task.
 
-This drives the installed `plugin-dev:skill-reviewer` agent independently on each skill, then synthesizes a difference summary from the two reports.
+This drives the bundled `skill-reviewer` agent independently on each skill, then synthesizes a difference summary from the two reports.
 
 ## Arguments
 
@@ -20,16 +20,15 @@ When invoked as `/compare-skills <skillA> <skillB>`, read both from `$ARGUMENTS`
 
 1. Determine `skillA` and `skillB` as described above. If two skills cannot be determined, ask the user which to compare and stop.
 
-2. Check whether the `plugin-dev:skill-reviewer` agent is installed — it is installed if it appears in the available agent list. If it is NOT installed, reply:
+2. Check whether the `skill-reviewer` agent is available — it is available if it appears in the available agent list. It ships bundled with this plugin, so if it is NOT available, reply:
 
-   > The skill-reviewer agent (plugin-dev) is required.
-   > Install it with /plugin, then /reload-plugins.
+   > The skill-reviewer agent is required. It ships bundled with this plugin. Install evalkit with `/plugin`, then run `/reload-plugins`.
 
    Then stop.
 
 3. Resolve both skill paths. For each, accept either a directory path or a skill name resolved against known skill load paths (`.claude/skills/`, `.github/skills/`, `src/skills/`, or any plugin skill path). If either is unresolvable, report the error and stop.
 
-4. Invoke `plugin-dev:skill-reviewer` on `skillA` and `skillB` **in parallel** — independent reads, neither review aware of the other.
+4. Invoke `skill-reviewer` on `skillA` and `skillB` **in parallel** — independent reads, neither review aware of the other.
 
 5. Synthesize a difference summary from the two reports. Line up the dimensions the agent already produced; do not invent new criteria. This synthesis step is the only place the two skills are considered together.
 

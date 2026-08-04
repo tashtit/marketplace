@@ -7,7 +7,7 @@ description: Review a single skill's authoring quality — structure, descriptio
 
 Assess one skill's authoring quality by reading its artifacts. Never runs a coding task.
 
-This is a thin orchestrator over the installed `plugin-dev:skill-reviewer` agent; it does not re-implement review logic.
+This is a thin orchestrator over the bundled `skill-reviewer` agent; it does not re-implement review logic.
 
 ## Arguments
 
@@ -19,10 +19,9 @@ When invoked as `/review-skill <skill>`, read it from `$ARGUMENTS`. When trigger
 
 1. Determine the target `skill` as described above. If none can be determined, ask the user which skill to review and stop.
 
-2. Check whether the `plugin-dev:skill-reviewer` agent is installed — it is installed if it appears in the available agent list. If it is NOT installed, reply:
+2. Check whether the `skill-reviewer` agent is available — it is available if it appears in the available agent list. It ships bundled with this plugin, so if it is NOT available, reply:
 
-   > The skill-reviewer agent (plugin-dev) is required.
-   > Install it with /plugin, then /reload-plugins.
+   > The skill-reviewer agent is required. It ships bundled with this plugin. Install evalkit with `/plugin`, then run `/reload-plugins`.
 
    Then stop.
 
@@ -32,7 +31,7 @@ When invoked as `/review-skill <skill>`, read it from `$ARGUMENTS`. When trigger
 
    If the skill cannot be resolved to an existing directory, report the resolution error and stop.
 
-4. Invoke the `plugin-dev:skill-reviewer` agent on the resolved skill path.
+4. Invoke the `skill-reviewer` agent on the resolved skill path.
 
 5. Emit the agent's review verbatim: summary and word counts, description analysis, content quality, progressive disclosure assessment, severity-grouped issues, overall rating, and priority recommendations.
 

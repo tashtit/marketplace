@@ -40,20 +40,26 @@ create two git worktrees.
 
 ## Prerequisites
 
-- The `plugin-dev:skill-reviewer` agent (from the `plugin-dev` plugin) backs
-  `review-skill` and `compare-skills`. Install it with `/plugin`, then
-  `/reload-plugins`. The two skills report the missing agent and stop rather than
-  degrading silently.
-- The dynamic harnesses require git worktree support and the `claude` CLI on
-  `PATH`.
+- The bundled `skill-reviewer` agent (`agents/skill-reviewer.md`) backs
+  `review-skill` and `compare-skills`. It ships with this plugin and is
+  host-agnostic — no external `plugin-dev` dependency. Install evalkit with
+  `/plugin`, then `/reload-plugins`. The two skills report the missing agent and
+  stop rather than degrading silently.
+- The dynamic harnesses require git worktree support and the host's CLI on `PATH`
+  (`claude` on Claude Code, `copilot` on GitHub Copilot CLI).
 
 ## Portability
 
-Evalkit is a **Claude Code** plugin. The dynamic harnesses invoke the Claude Code
-CLI (`claude -p ... --output-format stream-json`) and parse its stream-json
-telemetry, so their behavior is reviewed on `claude-code` only; other platforms
-are out of scope for this version. The static skills are read-only and portable in
-principle, but are likewise reviewed only on `claude-code` here.
+Evalkit is **host-adaptive** across Claude Code and GitHub Copilot CLI. The dynamic
+harnesses run `scripts/resolve-host.sh` first, which deterministically detects the
+current host (`CLAUDECODE` vs `COPILOT_CLI`) and prints the matching reference under
+`references/` — `host-claude.md` or `host-copilot.md`. Each skill reads **only** that
+file, which defines the exact headless invocation, review-subprocess, telemetry
+parsing, and report metric names for the host (e.g. `claude -p … stream-json` with
+USD/token metrics, or `copilot -p … --output-format json` JSONL with AI-unit/premium
+metrics). The resolver **fails closed**: on an unknown host it stops rather than
+guessing a CLI. The static skills and the bundled reviewer agent are host-agnostic.
+This plugin does not target Codex.
 
 ## Threat model
 

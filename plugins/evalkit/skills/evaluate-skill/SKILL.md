@@ -1,6 +1,6 @@
 ---
 name: evaluate-skill
-description: Measure whether a specific skill changes coding-task outcomes by running the same task twice — once with the skill present, once with it deleted — in isolated git worktrees, then comparing cost, tokens, gates, and review findings. Expensive and side-effecting; spawns two headless agent sessions and leaves worktrees on disk. Invoke only on an explicit request naming both a skill and a task. Do not trigger on casual mention of evaluating, testing, or measuring a skill.
+description: Measure whether a specific skill changes coding-task outcomes by running the same task twice — once with the skill present, once with it deleted — in isolated git worktrees, then comparing gates, cost, tokens, and review findings. Expensive and side-effecting; spawns two headless agent sessions and leaves worktrees on disk. Invoke only on an explicit request naming both a skill and a task. Do not trigger on casual mention of evaluating, testing, or measuring a skill.
 ---
 
 # Evaluate Skill
@@ -9,7 +9,15 @@ Measure a single skill's effect on a coding task by running the **same task** un
 
 The only difference between arms is whether the skill is present. Prompt, base commit, and model are identical by construction, so any delta is attributable to the skill.
 
-> **Cost warning.** This spawns two headless `claude -p` sessions and creates two git worktrees that are kept after the run. Confirm the user wants this before starting if the request was at all ambiguous.
+> **Cost warning.** This spawns two headless agent sessions and creates two git worktrees that are kept after the run. Confirm the user wants this before starting if the request was at all ambiguous.
+
+## Host resolution (do this first, once)
+
+The headless CLI, its flags, the review-subprocess invocation, the telemetry schema, and the metric names are **host-specific**. Resolve them deterministically instead of guessing:
+
+1. Run `scripts/resolve-host.sh`. It prints the path of the reference file for the current host and exits non-zero if the host cannot be identified.
+2. If it exits non-zero, **stop** and tell the user the host could not be determined — do not run any CLI.
+3. Read **only** the file it printed (never the other host's file). It defines the exact **Headless invocation**, **Review-layer subprocess**, **Telemetry parsing**, and **Report metric rows** referenced by name below.
 
 ## Arguments
 
@@ -40,17 +48,13 @@ When invoked as `/evaluate-skill <skill> <task…>`, parse from `$ARGUMENTS`: `s
 
 4. Generate a `run-id` from the current timestamp (e.g. `20260803-143021`).
 
-5. Run both arms **in parallel** (isolated worktrees). Both worktrees start from the same base with the skill present; the `without` arm deletes it before the session begins:
+5. Run both arms **in parallel** (isolated worktrees). Both worktrees start from the same base with the skill present; the `without` arm deletes it before the session begins. Use the **Headless invocation** from the resolved host reference for each session, capturing JSONL to `runs/<arm>-<run-id>.jsonl`:
 
    **Arm `with`** — skill present (repo as-is):
    ```
    git worktree add -b eval/<skill>-with-<run-id> eval/with-<run-id> <base>
    cd eval/with-<run-id>
-   claude -p "<task>" \
-          --model <model> \
-          --permission-mode bypassPermissions \
-          --output-format stream-json \
-          > runs/with-<run-id>.jsonl
+   # headless session per the resolved host reference → runs/with-<run-id>.jsonl
    ```
 
    **Arm `without`** — skill deleted before work begins:
@@ -58,11 +62,7 @@ When invoked as `/evaluate-skill <skill> <task…>`, parse from `$ARGUMENTS`: `s
    git worktree add -b eval/<skill>-without-<run-id> eval/without-<run-id> <base>
    # delete <resolved skill path> inside the worktree
    cd eval/without-<run-id>
-   claude -p "<task>" \
-          --model <model> \
-          --permission-mode bypassPermissions \
-          --output-format stream-json \
-          > runs/without-<run-id>.jsonl
+   # headless session per the resolved host reference → runs/without-<run-id>.jsonl
    ```
 
 6. For each arm, run the quality layers in the worktree, before any teardown:
@@ -75,26 +75,22 @@ When invoked as `/evaluate-skill <skill> <task…>`, parse from `$ARGUMENTS`: `s
    git diff <base> > runs/<arm>-<run-id>.diff
    ```
 
-   **`review`** (if in `layers`) — code-review the diff. Run inside the arm's worktree so it inherits CLAUDE.md and project skills. Do **not** pass the arm label to the reviewer (arm-blind). → findings by severity (critical / high / medium).
+   **`review`** (if in `layers`) — code-review the diff using the **Review-layer subprocess** from the resolved host reference, run inside the arm's worktree so it inherits the host's project-context file and skills. Do **not** pass the arm label to the reviewer (arm-blind). → findings by severity (critical / high / medium).
 
    **`judge`** (if in `layers`) — judge the diff against the task for **task-correctness only**: did it complete the task as specified? Narrowed so it does not overlap the review layer.
 
-   **Telemetry** — parse `runs/<arm>-<run-id>.jsonl`:
-   - Final `result` event: `total_cost_usd`, `usage.input_tokens`, `usage.output_tokens`, `usage.cache_read_input_tokens`, `usage.cache_creation_input_tokens`, `duration_ms`, `turns`, `session_id`
-   - Tool profile: count `tool_use` events grouped by `name`
-   - Tool errors: count `tool_result` events where `is_error` is `true`
+   **Telemetry** — parse `runs/<arm>-<run-id>.jsonl` per the **Telemetry parsing** section of the resolved host reference.
 
 7. Worktrees are **kept** unless `keep` is false. Never auto-remove — use `remove-worktrees` to clean up later.
 
-8. Emit the report:
+8. Emit the report, substituting the **Report metric rows** from the resolved host reference for the `<host cost/token rows>` line:
 
 ```
 metric            | with                    | without
 ------------------|-------------------------|------------------------
 gates_passed      | ...                     | ...
 review_findings   | 0c 1h 2m                | 0c 3h 5m
-tokens (in/out)   | ...k/...k               | ...k/...k
-cost (USD)        | $...                    | $...
+<host cost/token rows>
 duration          | ...                     | ...
 turns             | ...                     | ...
 tool_calls        | ...                     | ...

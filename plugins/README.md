@@ -5,7 +5,7 @@ Each directory in this folder is an independently versioned Tashtit plugin.
 | Plugin | Version | Maturity | Purpose |
 | --- | --- | --- | --- |
 | [Engineering Standards](engineering-standards/) | 0.1.0 | Experimental | Evidence-backed production change review |
-| [Evalkit](evalkit/) | 0.1.0 | Experimental | Static skill review and worktree-isolated skill and model benchmarks |
+| [Evalkit](evalkit/) | 0.1.0 | Experimental | Host-adaptive static skill review and worktree-isolated skill/model benchmarks (Claude Code + Copilot CLI) |
 | [Git Workflow](git-workflow/) | 0.1.0 | Experimental | Safe branches, commits, and pull-request handoff |
 | [GitHub Actions Standards](github-actions-standards/) | 0.1.0 | Experimental | Secure, reproducible CI and release workflows |
 | [Logging Standards](logging-standards/) | 0.1.0 | Experimental | Secure structured production logging |
