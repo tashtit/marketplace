@@ -10,6 +10,7 @@ Each directory in this folder is an independently versioned Tashtit plugin.
 | [Logging Standards](logging-standards/) | 0.1.0 | Experimental | Secure structured production logging |
 | [Repository Onboarding](repository-onboarding/) | 0.1.0 | Experimental | Read-only, evidence-backed repository assessment |
 | [Repository Policy](repository-policy/) | 0.1.0 | Experimental | Safe GitHub merge, review, and ruleset policy |
+| [Repository Settings](repository-settings/) | 0.1.0 | Experimental | Audit-first repository policy guidance |
 
 This table must match `.claude-plugin/marketplace.json`; `make validate` fails
 on drift.
