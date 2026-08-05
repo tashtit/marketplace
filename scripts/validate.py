@@ -178,6 +178,54 @@ def validate_marketplaces() -> dict[str, dict[str, dict[str, Any]]]:
     return catalogs
 
 
+# Component fields in a Claude Code plugin manifest and the JSON type each
+# must have. Claude Code rejects a manifest whose component field has the wrong
+# type with a load error such as "agents: Invalid input", which silently breaks
+# marketplace installation. `agents` and `commands` are arrays of file paths;
+# the rest are string directory or file paths. See the plugin manifest schema:
+# https://code.claude.com/docs/en/plugins-reference#complete-schema
+MANIFEST_STRING_COMPONENTS = ("skills", "hooks", "mcpServers", "outputStyles", "lspServers")
+MANIFEST_LIST_COMPONENTS = ("commands", "agents")
+
+
+def validate_manifest_components(
+    path: Path, plugin_dir: Path, manifest: dict[str, Any]
+) -> None:
+    """Enforce Claude Code's component field types and referenced paths.
+
+    A wrong-typed component field (for example ``"agents": "./agents/"`` where
+    the schema requires an array) loads cleanly as JSON but is rejected by the
+    host at install time, so it must fail validation here instead.
+    """
+    for field in MANIFEST_STRING_COMPONENTS:
+        if field not in manifest:
+            continue
+        value = manifest[field]
+        if not isinstance(value, str) or not value.strip():
+            fail(path, f"{field} must be a non-empty string path")
+            continue
+        if not (plugin_dir / value).exists():
+            fail(path, f"{field} path {value!r} does not exist")
+
+    for field in MANIFEST_LIST_COMPONENTS:
+        if field not in manifest:
+            continue
+        value = manifest[field]
+        if not isinstance(value, list) or not value:
+            fail(
+                path,
+                f"{field} must be a non-empty array of file paths, not "
+                f"{type(value).__name__}",
+            )
+            continue
+        for item in value:
+            if not isinstance(item, str) or not item.strip():
+                fail(path, f"{field} entries must be non-empty string paths")
+                continue
+            if not (plugin_dir / item).is_file():
+                fail(path, f"{field} path {item!r} is not a file")
+
+
 def validate_plugins(shared: dict[str, dict[str, Any]]) -> None:
     plugins_root = ROOT / "plugins"
     plugin_dirs = sorted(
@@ -246,6 +294,7 @@ def validate_plugins(shared: dict[str, dict[str, Any]]) -> None:
                 )
             if manifest.get("license") != "Apache-2.0":
                 fail(manifests[platform], "license must be 'Apache-2.0'")
+            validate_manifest_components(manifests[platform], plugin_dir, manifest)
 
         skill_file = plugin_dir / "skills" / name / "SKILL.md"
         if not skill_file.is_file():
