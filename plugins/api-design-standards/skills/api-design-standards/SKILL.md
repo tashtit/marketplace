@@ -1,6 +1,6 @@
 ---
 name: api-design-standards
-description: Design, implement, or review the contract an HTTP API makes to its clients over time — how long-running work behaves and how endpoints retire. Use when adding async operations, job status and polling, cancellation, callbacks or webhooks, versioning, or when deprecating and sunsetting endpoints with standard HTTP signals.
+description: Design, implement, or review the contract an HTTP API makes to its clients over time — how long-running work behaves and how endpoints are versioned and retired. Use when adding async operations, job status and polling, cancellation, callbacks or webhooks, choosing a versioning scheme (path or media type), or when deprecating and sunsetting endpoints with standard HTTP signals.
 ---
 
 # API Design Standards
@@ -115,8 +115,42 @@ See `references/async-operations.md` for concrete shapes and status codes.
 
 ## Over-time behavior: API lifecycle and deprecation
 
-Removing or replacing a published endpoint is a breaking change for someone.
-Signal it in-band and on a schedule.
+An endpoint's contract changes over its life. Versioning is how you make a
+breaking change without breaking existing clients; deprecation is how you retire
+the version they leave behind. Treat the two as one flow: publish the next
+version, then deprecate and sunset the previous one.
+
+### Versioning
+
+- Every published API MUST carry an explicit version. Do not ship an
+  unversioned public endpoint and retrofit a version later.
+- Choose **one** scheme and apply it consistently across the whole API:
+  - **URI path** (for example `/api/v1/...`) — the most common and most
+    visible; easy to route, cache, and reason about. A good default for
+    external, human-facing APIs.
+  - **Media type / content negotiation** (for example
+    `Accept: application/vnd.example.v2+json`) — keeps one URL per resource and
+    versions the representation; better when the resource identity is stable and
+    only the shape changes.
+  - **Custom header or query parameter** — acceptable when a gateway or
+    constraint requires it, but the least discoverable; prefer the two above.
+  Do not mix schemes in one API.
+- Bump the **major** version only for a breaking change: removing or renaming a
+  field, tightening validation, changing a type, or changing the meaning of a
+  response. Additive, backward-compatible changes (new optional fields, new
+  endpoints) MUST NOT require a new version — clients ignore what they do not
+  know.
+- Keep the version granularity coarse. Version the API (or a stable resource
+  group), not every individual endpoint, so clients are not tracking dozens of
+  independent versions.
+- A new major version and the deprecation of its predecessor are the same
+  event: ship `/v2`, then start the `/v1` deprecation clock with the signals
+  below and a `Link` to the `/v2` migration guide.
+
+### Deprecation and sunset
+
+Removing or replacing a published endpoint or version is a breaking change for
+someone. Signal it in-band and on a schedule.
 
 - Distinguish two phases explicitly: a **deprecation period**, during which the
   endpoint keeps working while clients migrate, and a **sunset date**, the hard
@@ -146,8 +180,8 @@ See `references/lifecycle.md` for the header set and phase transitions.
 
 ## Cross-cutting requirements
 
-- Versioning: choose one scheme (path or media type) consistent with the
-  repository and keep it; do not mix schemes in one API.
+- Versioning: use the single scheme defined above consistently; never mix path
+  and media-type versioning in one API.
 - Errors: use one structured error format across sync responses, async job
   failures, and delivery failures. RFC 9457 problem details is a strong
   default.
@@ -166,5 +200,7 @@ See `references/lifecycle.md` for the header set and phase transitions.
 - Deprecated endpoints carry `Deprecation`, `Sunset`, and successor `Link`
   signals, a spec flag, a stated version and window policy, and out-of-band
   notice; sunset endpoints return `410 Gone`.
+- Every public API carries an explicit version under one scheme; major bumps
+  are reserved for breaking changes and additive changes do not bump.
 - One versioning scheme and one error format are used consistently, and no
   secret rides in a URL or identifier.
