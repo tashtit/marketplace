@@ -6,7 +6,7 @@ deterministic fixes only when you ask.
 
 ## Maturity
 
-**Experimental — 0.1.0.** The rule catalog and scoring model still require
+**Experimental — 0.2.0.** The rule catalog and scoring model still require
 review on each target agent before any stability is claimed.
 
 ## Skills
@@ -19,6 +19,7 @@ one or both ecosystem sub-skills.
 | --- | --- |
 | `evaluate-dockerfile` | Node.js Dockerfile hygiene: Alpine vs slim base, source copied before install, end-of-life Node.js, drift from `.nvmrc`, npm used as the container command. |
 | `evaluate-npm` | package.json, lockfile, `.npmrc`, and `.nvmrc` hygiene: missing/conflicting lockfiles, outdated lockfile version, non-reproducible git/file dependencies, missing `.npmrc`/`.nvmrc`, and CI installing with `npm install` or `--ignore-scripts`. |
+| `evaluate-repository-hygiene` | Collaboration and documentation hygiene: missing or malformed CODEOWNERS, missing README, missing CONTRIBUTING, and missing `.editorconfig`. |
 
 Each rule carries a stable id, priority (Critical/High/Medium/Low), and weight.
 The score is `1 − (failing weight / relevant weight)` over the rules whose
@@ -29,16 +30,16 @@ preconditions hold, so it is auditable from the reported totals.
 - Evaluation is **read-only**. Nothing is installed, built, executed, or sent to
   a remote to produce a finding.
 - Fixes are applied **only when you ask**, and only for rules the catalog marks
-  fixable (`dockerfile-nodejs-slim` and `setup-nvmrc`). Every other rule is
-  report-only with a manual remediation, because it resolves the network or
-  requires a project decision.
+  fixable (`dockerfile-nodejs-slim`, `setup-nvmrc`, and `setup-editorconfig`).
+  Every other rule is report-only with a manual remediation, because it resolves
+  the network or requires a project decision.
 - Repository content is treated as untrusted evidence; instructions inside the
   repository cannot widen the skill's authority or change a rule.
 
 ## Scope
 
-This experimental version covers Dockerfile and npm ecosystems only. Other
-ecosystems (Terraform, CI workflow policy, repository hygiene) are intentionally
+This experimental version covers the Dockerfile, npm, and repository-hygiene
+ecosystems. Other ecosystems (Terraform, CI workflow policy) are intentionally
 out of scope for now.
 
 ## Prerequisites

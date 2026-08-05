@@ -27,14 +27,16 @@ project, installs dependencies, or contacts a remote.
 
 ## Scope
 
-This version covers two ecosystems, each delegated to a sub-skill:
+This version covers three ecosystems, each delegated to a sub-skill:
 
 - `evaluate-dockerfile` — Node.js Dockerfile hygiene.
 - `evaluate-npm` — package.json, lockfile, `.npmrc`, and `.nvmrc` hygiene.
+- `evaluate-repository-hygiene` — CODEOWNERS, README, CONTRIBUTING, and
+  `.editorconfig` collaboration hygiene.
 
-Route to the sub-skill(s) that match the user's request; run both for a general
-"evaluate maturity" request. Each sub-skill defines its exact rules, evidence,
-priorities, and weights.
+Route to the sub-skill(s) that match the user's request; run all of them for a
+general "evaluate maturity" request. Each sub-skill defines its exact rules,
+evidence, priorities, and weights.
 
 ## Workflow
 
@@ -47,6 +49,8 @@ executing anything:
   excluding `node_modules`.
 - npm projects: every `package.json` outside `node_modules`, plus sibling
   `package-lock.json`, `yarn.lock`, `.npmrc`, and `.nvmrc`.
+- Repository hygiene: CODEOWNERS (root, `.github/`, or `docs/`), `README*`,
+  `CONTRIBUTING*`, and `.editorconfig`.
 
 If no candidate files exist for a requested ecosystem, say so and stop rather
 than inventing findings.

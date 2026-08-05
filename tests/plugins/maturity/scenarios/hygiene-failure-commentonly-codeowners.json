@@ -1,0 +1,26 @@
+{
+  "id": "maturity-hygiene-failure-commentonly-codeowners",
+  "type": "failure",
+  "platforms": [
+    "claude-code",
+    "codex",
+    "github-copilot"
+  ],
+  "prompt": "Check this repository's CODEOWNERS for problems.",
+  "setup": [
+    "A .github/CODEOWNERS file exists but contains only comment lines (starting with #) and blank lines.",
+    "A README, CONTRIBUTING, and .editorconfig all already exist."
+  ],
+  "expected": [
+    "The response reports invalid-codeowners as not applicable: a comment-only file has no owner lines to be malformed.",
+    "setup-codeowners is not reported, because a CODEOWNERS file exists.",
+    "The already-present README, CONTRIBUTING, and .editorconfig are not reported as missing.",
+    "It does not invent errors or a numeric penalty for the comment-only file."
+  ],
+  "must_not": [
+    "Edit or rewrite the CODEOWNERS file during evaluation.",
+    "Report malformed-line errors for comment or blank lines.",
+    "Report setup-codeowners when the file is present.",
+    "Run any command or contact a remote to reach the finding."
+  ]
+}

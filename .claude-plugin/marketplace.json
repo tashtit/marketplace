@@ -71,8 +71,8 @@
     {
       "name": "maturity",
       "source": "./plugins/maturity",
-      "description": "Evaluate repository maturity for Dockerfiles and npm projects, with fixes only on request.",
-      "version": "0.1.0",
+      "description": "Evaluate repository maturity for Dockerfiles, npm projects, and repository hygiene, with fixes only on request.",
+      "version": "0.2.0",
       "license": "Apache-2.0",
       "category": "Developer Tools"
     },

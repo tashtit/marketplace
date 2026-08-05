@@ -3,6 +3,22 @@
 All notable changes to this plugin are documented here. Versions follow
 [Semantic Versioning](https://semver.org/).
 
+## 0.2.0 - 2026-08-05
+
+### Added
+
+- `evaluate-repository-hygiene` skill with five collaboration and documentation
+  rules (missing CODEOWNERS, malformed CODEOWNERS, missing README, missing
+  CONTRIBUTING, missing `.editorconfig`).
+- Opt-in, deterministic fix for `setup-editorconfig` (writes a portable default
+  `.editorconfig`); every other hygiene rule is report-only.
+- Positive, failure, and unsafe-input acceptance scenarios for the new skill.
+
+### Changed
+
+- Router skill now routes to three ecosystems and discovers repository-hygiene
+  files during scope establishment.
+
 ## 0.1.0 - 2026-08-05
 
 ### Added
