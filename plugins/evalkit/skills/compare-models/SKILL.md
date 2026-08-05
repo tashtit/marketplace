@@ -1,6 +1,6 @@
 ---
 name: compare-models
-description: Compare two models on the same coding task by running each in an isolated git worktree and diffing gates, cost, tokens, and review findings. Models are chosen from the session's available list via picker. Expensive and side-effecting; spawns two headless agent sessions and leaves worktrees on disk. Invoke only on an explicit request to benchmark two models against a specific task. Do not trigger on general questions about which model to use.
+description: "Usage: /compare-models <task…> — requires a task; the two models are picked interactively afterward. Compare two models on the same coding task by running each in an isolated git worktree and diffing gates, cost, tokens, and review findings. Expensive and side-effecting; spawns two headless agent sessions and leaves worktrees on disk. Invoke only on an explicit request to benchmark two models against a specific task. Do not trigger on general questions about which model to use."
 ---
 
 # Compare Models
@@ -21,18 +21,15 @@ The headless CLI, its flags, the review-subprocess invocation, the telemetry sch
 
 ## Arguments
 
-| Param          | Required | Default              | Notes |
-|----------------|----------|----------------------|-------|
-| `task`         | ✅       | —                    | The identical prompt passed to both arms. |
-| `runs`         | ⬜       | `1`                  | N per arm. >1 adds a seed loop and distribution reporting; cost scales linearly. |
-| `base`         | ⬜       | `HEAD`               | Commit both worktrees branch from. |
-| `layers`       | ⬜       | `gates,review,judge` | Which quality layers run: `gates` / `review` / `judge`. |
-| `keep`         | ⬜       | `true`               | Keep worktrees after the run. |
-| `review-skill` | ⬜       | —                    | Explicit skill for the review layer. If omitted, the subprocess loads whatever review skills are available in the arm's worktree. |
+| Param  | Required | Notes |
+|--------|----------|-------|
+| `task` | ✅       | The identical prompt passed to both arms. |
 
-The two models are **not** arguments — they are selected via picker after the task is known, so they can never be typos or unresolvable IDs.
+`task` is the only argument. The two models are **not** arguments — they are selected via picker after the task is known, so they can never be typos or unresolvable IDs.
 
-When invoked as `/compare-models <task…>`, parse `task` from `$ARGUMENTS` as all positional text; named params use `--` prefixes. When triggered from a natural-language request, take the task from the user's message. **If no task is given, ask for it — never guess one.**
+The rest of the run is fixed by design so the usage stays simple: it branches from the **current HEAD**, runs **all quality layers** (gates, review, judge), does a **single run per arm**, and **keeps** both worktrees afterward. If the user explicitly asks for something different — a different base commit, only some layers, more than one run, or removing the worktrees afterward — honor that request; otherwise never prompt for these.
+
+When invoked as `/compare-models <task…>`, parse `task` from `$ARGUMENTS` as all positional text. When triggered from a natural-language request, take the task from the user's message. **If no task is given, ask for it — never guess one.**
 
 ## Steps
 
@@ -46,9 +43,9 @@ When invoked as `/compare-models <task…>`, parse `task` from `$ARGUMENTS` as a
 
    If `modelA == modelB`, re-prompt: "Models must differ — pick a different model for Arm B." Do not error out cold.
 
-5. Resolve `base`:
+5. Resolve `base` to the current HEAD:
    ```
-   base = <--base value, or: git rev-parse HEAD>
+   base = git rev-parse HEAD
    ```
 
 6. Generate a `run-id` from the current timestamp (e.g. `20260803-143021`).
@@ -71,7 +68,7 @@ When invoked as `/compare-models <task…>`, parse `task` from `$ARGUMENTS` as a
 
 8. For each arm, run the quality layers in the worktree, before any teardown:
 
-   **`gates`** (if in `layers`) — run deterministic checks (tests / build / lint) → pass/fail per gate.
+   **`gates`** — run deterministic checks (tests / build / lint) → pass/fail per gate.
 
    **Commit the result:**
    ```
@@ -79,13 +76,13 @@ When invoked as `/compare-models <task…>`, parse `task` from `$ARGUMENTS` as a
    git diff <base> > runs/<arm>-<run-id>.diff
    ```
 
-   **`review`** (if in `layers`) — code-review the diff using the **Review-layer subprocess** from the resolved host reference, run inside the arm's worktree so it inherits the host's project-context file and skills. Do **not** pass the arm label **or the model name** to the reviewer. → findings by severity.
+   **`review`** — code-review the diff using the **Review-layer subprocess** from the resolved host reference, run inside the arm's worktree so it inherits the host's project-context file and skills. Do **not** pass the arm label **or the model name** to the reviewer. → findings by severity.
 
-   **`judge`** (if in `layers`) — judge the diff against the task for **task-correctness only**. Also arm- and model-blind.
+   **`judge`** — judge the diff against the task for **task-correctness only**. Also arm- and model-blind.
 
    **Telemetry** — parse `runs/<arm>-<run-id>.jsonl` per the **Telemetry parsing** section of the resolved host reference. AI-unit / USD cost is per-model-priced, which is exactly the dimension being compared here.
 
-9. Worktrees are **kept** unless `keep` is false. Never auto-remove — use `remove-worktrees` to clean up later.
+9. Worktrees are **always kept**. Never auto-remove — use `remove-worktrees` to clean up later.
 
 10. Emit the report, substituting the **Report metric rows** from the resolved host reference for the `<host cost/token rows>` line:
 
@@ -113,4 +110,4 @@ A is the better default unless the review delta matters for this codebase.">
 1. Identical **prompt**, **base commit**, **skill state**, and **review config** across arms. The model is the sole intentional variable.
 2. **Distinct models required** — identical selections are re-prompted, not accepted.
 3. **Arm- and model-blind reviewer and judge.** Model reputation is a strong prior; revealing it would bias findings toward the expected winner. The subprocesses receive the diff and project context only.
-4. N=1 results are **directional**. Models are non-deterministic, so a single delta may be noise. Report as such; raise `runs` and compare distributions for confidence.
+4. Single-run results are **directional**. Models are non-deterministic, so a single delta may be noise. Report as such; if the user needs statistical confidence, they can request repeated runs and compare distributions.

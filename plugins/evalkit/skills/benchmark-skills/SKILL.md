@@ -1,6 +1,6 @@
 ---
 name: benchmark-skills
-description: Compare two specific skills head-to-head by running the same coding task under each, in isolated git worktrees, then comparing gates, cost, tokens, and review findings. Expensive and side-effecting; spawns two headless agent sessions and leaves worktrees on disk. Invoke only on an explicit request naming two skills and a task. Do not trigger on casual mention of comparing or benchmarking skills — for a static read-only comparison use compare-skills instead.
+description: "Usage: /benchmark-skills <skillA> <skillB> <task…> — requires two skills and a task. Compare two specific skills head-to-head by running the same coding task under each, in isolated git worktrees, then comparing gates, cost, tokens, and review findings. Expensive and side-effecting; spawns two headless agent sessions and leaves worktrees on disk. Invoke only on an explicit request naming two skills and a task. Do not trigger on casual mention of comparing or benchmarking skills — for a static read-only comparison use compare-skills instead."
 ---
 
 # Benchmark Skills
@@ -21,18 +21,15 @@ The headless CLI, its flags, the review-subprocess invocation, the telemetry sch
 
 ## Arguments
 
-| Param    | Required | Default        | Notes |
-|----------|----------|----------------|-------|
-| `skillA` | ✅       | —              | First skill. Arm A. |
-| `skillB` | ✅       | —              | Second skill. Arm B. |
-| `task`   | ✅       | —              | The identical prompt passed to both arms. |
-| `runs`   | ⬜       | `1`            | N per arm. >1 adds a seed loop and distribution reporting; cost scales linearly. |
-| `model`  | ⬜       | current / auto | Applied identically to both arms — a single value, never per-arm. |
-| `base`   | ⬜       | `HEAD`         | Commit both worktrees branch from. |
-| `layers` | ⬜       | `gates,review` | Which quality layers run: `gates` / `review` / `judge`. |
-| `keep`   | ⬜       | `true`         | Keep worktrees after the run. |
+| Param    | Required | Notes |
+|----------|----------|-------|
+| `skillA` | ✅       | First skill. Arm A. |
+| `skillB` | ✅       | Second skill. Arm B. |
+| `task`   | ✅       | The identical prompt passed to both arms. |
 
-When invoked as `/benchmark-skills <skillA> <skillB> <task…>`, parse from `$ARGUMENTS`: `skillA` and `skillB` are positional args 1 and 2, `task` is the remaining positional text, and named params use `--` prefixes. When triggered from a natural-language request, extract the same values from the user's message.
+`skillA`, `skillB`, and `task` are the only arguments. The rest of the run is fixed by design so the usage stays simple: both arms use the **session's current model**, branch from the **current HEAD**, run the **gates and review** quality layers, do a **single run per arm**, and **keep** both worktrees afterward. If the user explicitly asks for something different — a different base commit, the judge layer, more than one run, or removing the worktrees afterward — honor that request; otherwise never prompt for these.
+
+When invoked as `/benchmark-skills <skillA> <skillB> <task…>`, parse from `$ARGUMENTS`: `skillA` and `skillB` are positional args 1 and 2, and `task` is the remaining positional text. When triggered from a natural-language request, extract the same values from the user's message.
 
 **If any of `skillA`, `skillB`, or `task` is missing, ask for it — never guess a task.** Running the wrong task wastes two headless sessions.
 
@@ -42,9 +39,9 @@ When invoked as `/benchmark-skills <skillA> <skillB> <task…>`, parse from `$AR
 
 2. Resolve both skill paths against known load paths (`.claude/skills/`, `.github/skills/`, `src/skills/`, plugin skill paths). If either is unresolvable, report the error and stop.
 
-3. Resolve `base`:
+3. Resolve `base` to the current HEAD:
    ```
-   base = <--base value, or: git rev-parse HEAD>
+   base = git rev-parse HEAD
    ```
 
 4. Generate a `run-id` from the current timestamp (e.g. `20260803-143021`).
@@ -69,7 +66,7 @@ When invoked as `/benchmark-skills <skillA> <skillB> <task…>`, parse from `$AR
 
 6. For each arm, run the quality layers in the worktree, before any teardown:
 
-   **`gates`** (if in `layers`) — run deterministic checks (tests / build / lint) → pass/fail per gate.
+   **`gates`** — run deterministic checks (tests / build / lint) → pass/fail per gate.
 
    **Commit the result:**
    ```
@@ -77,13 +74,13 @@ When invoked as `/benchmark-skills <skillA> <skillB> <task…>`, parse from `$AR
    git diff <base> > runs/<arm>-<run-id>.diff
    ```
 
-   **`review`** (if in `layers`) — code-review the diff using the **Review-layer subprocess** from the resolved host reference, run inside the arm's worktree so it inherits the host's project-context file and skills. Do **not** pass the arm label to the reviewer (arm-blind). Both skills are assumed to be non-review skills, so the same review skill auto-triggers identically in both arms. → findings by severity.
+   **`review`** — code-review the diff using the **Review-layer subprocess** from the resolved host reference, run inside the arm's worktree so it inherits the host's project-context file and skills. Do **not** pass the arm label to the reviewer (arm-blind). Both skills are assumed to be non-review skills, so the same review skill auto-triggers identically in both arms. → findings by severity.
 
-   **`judge`** (if in `layers`) — judge the diff against the task for **task-correctness only**.
+   **`judge`** (only if the user explicitly requested it) — judge the diff against the task for **task-correctness only**.
 
    **Telemetry** — parse `runs/<arm>-<run-id>.jsonl` per the **Telemetry parsing** section of the resolved host reference.
 
-7. Worktrees are **kept** unless `keep` is false. Never auto-remove — use `remove-worktrees` to clean up later.
+7. Worktrees are **always kept**. Never auto-remove — use `remove-worktrees` to clean up later.
 
 8. Emit the report, substituting the **Report metric rows** from the resolved host reference for the `<host cost/token rows>` line:
 
@@ -109,4 +106,4 @@ faster/cheaper; prefer B unless skillA has other advantages for this codebase.">
 1. Identical **prompt**, **base commit**, and **model** across arms.
 2. Each arm has exactly one of the two skills present. No other skill state differs between arms.
 3. **Arm-blind reviewer** — the review subprocess receives the diff and project context, never the arm label.
-4. N=1 results are **directional**, not statistical. Report them as such. Raise `runs` and compare distributions for confidence.
+4. Single-run results are **directional**, not statistical. Report them as such. If the user needs statistical confidence, they can request repeated runs and compare distributions.
