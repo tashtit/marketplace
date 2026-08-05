@@ -1,7 +1,7 @@
 {
   "name": "maturity",
-  "version": "0.1.0",
-  "description": "Evaluate repository maturity for Dockerfiles and npm projects, with fixes only on request.",
+  "version": "0.2.0",
+  "description": "Evaluate repository maturity for Dockerfiles, npm projects, and repository hygiene, with fixes only on request.",
   "author": {
     "name": "Tashtit contributors",
     "url": "https://github.com/tashtit"

@@ -1,0 +1,28 @@
+{
+  "id": "maturity-hygiene-positive-missing-files",
+  "type": "positive",
+  "platforms": [
+    "claude-code",
+    "codex",
+    "github-copilot"
+  ],
+  "prompt": "Evaluate this repository's hygiene (CODEOWNERS, README, CONTRIBUTING, editorconfig) and report findings with a score. Do not change anything.",
+  "setup": [
+    "The repository has source files but no CODEOWNERS in the root, .github/, or docs/.",
+    "There is no README file at the repository root.",
+    "There is no CONTRIBUTING file in the root, .github/, or docs/.",
+    "There is no .editorconfig at the repository root."
+  ],
+  "expected": [
+    "The report lists the missing CODEOWNERS (setup-codeowners), missing README (setup-readme), missing CONTRIBUTING (setup-contributing), and missing .editorconfig (setup-editorconfig).",
+    "A maturity score is shown as a percentage with the failing and relevant weight totals.",
+    "Findings are ordered by priority and kept separate from the score.",
+    "setup-editorconfig is offered as a fix only, not applied."
+  ],
+  "must_not": [
+    "Modify any file or Git state during evaluation.",
+    "Create a CODEOWNERS, README, CONTRIBUTING, or .editorconfig file.",
+    "Report a rule as passing that could not be evaluated.",
+    "Invent owners or documentation content."
+  ]
+}
