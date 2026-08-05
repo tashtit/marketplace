@@ -1,15 +1,21 @@
 ---
 name: api-design-standards
-description: Design, implement, or review asynchronous REST operations and safe API deprecation. Use when adding long-running endpoints, job status and polling, cancellation, callbacks or webhooks, versioning, or when deprecating and sunsetting endpoints with standard HTTP signals.
+description: Design, implement, or review the contract an HTTP API makes to its clients over time — how long-running work behaves and how endpoints retire. Use when adding async operations, job status and polling, cancellation, callbacks or webhooks, versioning, or when deprecating and sunsetting endpoints with standard HTTP signals.
 ---
 
 # API Design Standards
 
-Give an HTTP client a predictable way to start slow work, observe it, and stop
-it, and give a consumer an honest, machine-readable warning before an endpoint
-disappears. Apply explicit user requirements and repository or organization API
-policy first. Treat this skill as a vendor-neutral baseline and a Tashtit
-convention, not a certification.
+An API is a contract with its clients, and that contract has to hold across two
+axes of time: within a single call, and across the life of an endpoint. This
+skill governs both. **In-call behavior**: give a client a predictable way to
+start slow work, observe it, and stop it. **Over-time behavior**: give a client
+an honest, machine-readable warning — on a schedule — before an endpoint
+changes or disappears. Both are the same promise: the client is never
+surprised.
+
+Apply explicit user requirements and repository or organization API policy
+first. Treat this skill as a vendor-neutral baseline and a Tashtit convention,
+not a certification.
 
 Use `MUST`, `SHOULD`, and `MAY` deliberately. Do not turn one API's base path,
 gateway, framework, version count, or notice period into a universal rule.
@@ -26,7 +32,7 @@ Confirm what the request actually needs before adding machinery. A response
 that already fits inside a normal request timeout SHOULD stay synchronous;
 asynchronous plumbing is justified only when the work can outlast a request.
 
-## Asynchronous operations
+## In-call behavior: asynchronous operations
 
 When an operation can exceed a normal request timeout, do not hold the
 connection open.
@@ -36,6 +42,9 @@ connection open.
 - A kickoff that is accepted but not yet complete MUST return `202 Accepted`
   and MUST point the client to where progress can be observed, using a
   `Content-Location` (or `Location`) header with the job resource URL.
+- Where a single operation may be answered either inline or asynchronously, a
+  client MAY signal its preference with `Prefer: respond-async` (RFC 7240) and
+  the server SHOULD echo `Preference-Applied` when it honors it.
 - The job MUST be addressable as its own resource (for example
   `GET /jobs/{id}`), so status is a plain read, not a side effect.
 - If the same request completes fast enough to answer inline, returning the
@@ -64,6 +73,9 @@ parsing free text.
 - Clients poll the job resource. The server SHOULD bound polling cost: return
   `429 Too Many Requests` with a `Retry-After` header, or advertise a poll
   interval, rather than letting clients hammer the endpoint.
+- The server MAY advertise remaining budget with `RateLimit` and
+  `RateLimit-Policy` headers (IETF draft) so a client can self-throttle before
+  it is refused.
 - Reads of an unfinished job MUST stay cheap and MUST NOT mutate the job.
 - Do not block the status request until the job finishes; long-poll only if it
   is a deliberate, documented choice with a bounded timeout.
@@ -101,7 +113,7 @@ When a consumer should be told about completion instead of polling:
 
 See `references/async-operations.md` for concrete shapes and status codes.
 
-## API lifecycle and deprecation
+## Over-time behavior: API lifecycle and deprecation
 
 Removing or replacing a published endpoint is a breaking change for someone.
 Signal it in-band and on a schedule.
