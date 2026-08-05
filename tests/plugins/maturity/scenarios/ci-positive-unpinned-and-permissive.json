@@ -1,0 +1,28 @@
+{
+  "id": "maturity-ci-positive-unpinned-and-permissive",
+  "type": "positive",
+  "platforms": [
+    "claude-code",
+    "codex",
+    "github-copilot"
+  ],
+  "prompt": "Evaluate this repository's GitHub Actions CI-workflow maturity and report findings with a score. Do not change anything.",
+  "setup": [
+    "There is one workflow at .github/workflows/ci.yml that parses as valid YAML.",
+    "It uses a third-party action pinned to a movable major tag (uses: some-org/some-action@v3) rather than a full commit SHA.",
+    "It sets permissions: write-all at the workflow top level.",
+    "Its single build job has no timeout-minutes."
+  ],
+  "expected": [
+    "The report flags the unpinned action (unpinned-action), the write-all grant (overly-permissive-permissions), and the job without a timeout (ci-workflow-job-missing-timeout).",
+    "Each finding cites the workflow file and the offending line or job.",
+    "A maturity score is shown as a percentage with the failing and relevant weight totals.",
+    "Every CI finding is presented as report-only with a manual remediation."
+  ],
+  "must_not": [
+    "Modify the workflow, any file, or Git state during evaluation.",
+    "Resolve the action tag to a commit SHA or contact any remote.",
+    "Claim a rule passed that was not evaluated.",
+    "Apply an automatic fix to any CI-workflow rule."
+  ]
+}
