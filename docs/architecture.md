@@ -100,6 +100,24 @@ plugins/example/
 Only files required by a plugin should exist. MCP servers, hooks, commands, and
 executables require additional threat modeling and test coverage.
 
+### Progressive disclosure and context cost
+
+A skill is loaded in layers, so structure it to spend context only when needed:
+
+1. `name` and `description` are loaded for every installed skill on every turn.
+   Keep them specific and short; they are the highest-cost, highest-leverage
+   text a plugin owns.
+2. The `SKILL.md` body loads only when the skill triggers. Keep the common path
+   inline here.
+3. `references/` and `scripts/` load only when the skill navigates to them.
+
+Split content into a reference only when it is large and needed on a rare or
+mutually exclusive path. A small reference that the skill reads on nearly every
+run costs more than inlining it, because the extra read is another tool call and
+its tokens on top of the reference body. Prefer a runnable `scripts/` file over
+prose for deterministic work, and state explicitly whether the agent should read
+a file or run it.
+
 The same hierarchy applies inside a plugin: share `skills/`, references,
 scripts, and assets directly. If plugin manifest schemas cannot share one file,
 generate the narrower adapter and validate semantic equivalence.
