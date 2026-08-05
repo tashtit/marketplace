@@ -1,6 +1,6 @@
 ---
 name: repository-policy
-description: Design, apply, or review GitHub repository settings and rulesets safely. Use when configuring merge methods, auto-merge, head-branch deletion, pull-request review policy, collaborator access, suggested branch updates, wiki and projects features, or when creating or updating a repository ruleset or branch protection from a reviewed definition.
+description: Apply, create, or update GitHub repository merge policy, collaboration rules, and branch-protection rulesets from a reviewed definition, with explicit confirmation and recorded rollback. Use when configuring merge methods, auto-merge, head-branch deletion, PR review policy, collaborator access, or wiki and projects features, or when applying a ruleset. Not for org-wide policy, secrets, environments, webhooks, or read-only audits — for auditing or planning without applying, use repository-settings.
 ---
 
 # Repository Policy

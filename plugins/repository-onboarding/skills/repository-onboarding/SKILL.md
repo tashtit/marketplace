@@ -1,6 +1,6 @@
 ---
 name: repository-onboarding
-description: Assess an unfamiliar software repository and produce a concise, evidence-backed onboarding report without changing files or executing project code. Use when joining a repository, preparing a technical handoff, mapping build and test workflows, identifying ownership and operational context, or documenting unknowns before making changes.
+description: Assess an unfamiliar software repository and produce a concise, evidence-backed onboarding report without changing files, installing dependencies, or executing project code. Use when joining a repository, getting a codebase overview, preparing a technical handoff, mapping build and test workflows, identifying ownership and operational context, or documenting unknowns before making changes. Not for actually running builds or tests, or for implementing changes.
 ---
 
 # Repository Onboarding
