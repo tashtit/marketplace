@@ -1,0 +1,35 @@
+{
+  "name": "maturity",
+  "version": "0.1.0",
+  "description": "Evaluate repository maturity for Dockerfiles and npm projects, with fixes only on request.",
+  "author": {
+    "name": "Tashtit contributors",
+    "url": "https://github.com/tashtit"
+  },
+  "homepage": "https://github.com/tashtit/marketplace/tree/main/plugins/maturity",
+  "repository": "https://github.com/tashtit/marketplace",
+  "license": "Apache-2.0",
+  "keywords": [
+    "maturity",
+    "dockerfile",
+    "npm",
+    "lockfile",
+    "static-analysis"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Maturity",
+    "shortDescription": "Repository maturity evaluation and scoring",
+    "longDescription": "Statically evaluate a local checkout for Dockerfile and npm maturity issues, produce a prioritized findings report with a weighted maturity score, and apply deterministic fixes only when the user asks.",
+    "developerName": "Tashtit contributors",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Read-only evaluation",
+      "Weighted maturity scoring",
+      "Opt-in deterministic fixes"
+    ],
+    "defaultPrompt": [
+      "Evaluate this repository's Dockerfile and npm maturity and report findings with a score."
+    ]
+  }
+}

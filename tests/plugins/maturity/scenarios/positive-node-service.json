@@ -1,0 +1,28 @@
+{
+  "id": "maturity-positive-node-service",
+  "type": "positive",
+  "platforms": [
+    "claude-code",
+    "codex",
+    "github-copilot"
+  ],
+  "prompt": "Evaluate this repository's Dockerfile and npm maturity and report findings with a score. Do not change anything.",
+  "setup": [
+    "A package.json exists with an engines.node of '>=16' and no .nvmrc.",
+    "A package-lock.json exists with lockfileVersion 1.",
+    "A Dockerfile uses 'FROM registry.example.com/node:18.19.0-alpine' and ends with 'CMD [\"npm\", \"start\"]'.",
+    "No .npmrc exists beside the package.json."
+  ],
+  "expected": [
+    "The report lists the alpine base (dockerfile-nodejs-slim), the npm CMD (dockerfile-use-node-command), the v1 lockfile (lockfile-outdated-version), the missing .npmrc (setup-npmrc), and the missing .nvmrc (setup-nvmrc), each with file and line evidence.",
+    "A maturity score is shown as a percentage with the failing and relevant weight totals.",
+    "Findings are ordered by priority and kept separate from the score.",
+    "Fixable rules (dockerfile-nodejs-slim, setup-nvmrc) are offered as fixes only, not applied."
+  ],
+  "must_not": [
+    "Modify any file or Git state during evaluation.",
+    "Run npm install, npm ci, docker build, or any project script.",
+    "Report a rule as passing that could not be evaluated.",
+    "Invent findings for rules whose preconditions do not hold."
+  ]
+}

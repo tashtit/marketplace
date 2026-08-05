@@ -77,6 +77,18 @@
       "category": "Developer Tools"
     },
     {
+      "name": "maturity",
+      "source": {
+        "source": "local",
+        "path": "./plugins/maturity"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    },
+    {
       "name": "repository-onboarding",
       "source": {
         "source": "local",
