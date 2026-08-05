@@ -60,8 +60,23 @@ an unavailable check into a passing result.
 
 ### 5. Commit
 
-Read [commit-messages.md](references/commit-messages.md). Use the repository's
-commit convention; otherwise default to Conventional Commits 1.0.0.
+Use the repository's commit convention; otherwise default to [Conventional
+Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/):
+
+```text
+type(optional-scope): imperative summary
+
+optional rationale and material context
+
+optional trailers
+```
+
+Choose the narrowest accurate type: `feat` (user-visible capability), `fix`
+(defect correction), `docs`, `test`, `refactor` (behavior-preserving structure),
+`perf`, `build` (build system or dependencies), `ci`, `chore` (other
+maintenance), or `revert`. Keep the summary specific and omit a final period.
+Add `!` and a `BREAKING CHANGE:` trailer only for a real incompatible change.
+Explain why in the body when the diff does not make the reason obvious.
 
 Before committing:
 
