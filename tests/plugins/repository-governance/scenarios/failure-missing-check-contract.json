@@ -1,5 +1,5 @@
 {
-  "id": "repository-policy-failure-missing-check-contract",
+  "id": "repository-governance-failure-missing-check-contract",
   "type": "failure",
   "platforms": [
     "claude-code",

@@ -1,5 +1,5 @@
 {
-  "id": "repository-settings-failure-missing-policy",
+  "id": "repository-governance-failure-missing-policy",
   "type": "failure",
   "platforms": ["claude-code", "codex", "github-copilot"],
   "prompt": "Tell us exactly which branch rules and security features are legally required.",
