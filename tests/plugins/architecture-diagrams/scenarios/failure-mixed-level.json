@@ -1,0 +1,19 @@
+{
+  "id": "architecture-diagrams-failure-mixed-level",
+  "type": "failure",
+  "platforms": ["claude-code", "codex", "github-copilot"],
+  "prompt": "Make one diagram that shows the whole system context and also every class and database table inside each service.",
+  "setup": [
+    "The audience and the intended level are not stated.",
+    "The request mixes context, container, and code-level detail in a single diagram."
+  ],
+  "expected": [
+    "A single mixed-level diagram is declined in favor of separating levels and stating the audience.",
+    "The reader's actual question is elicited to choose C1, C2, or a lower level, and the smallest useful set of diagrams is proposed.",
+    "Level discipline is explained: context, containers, and code belong at different levels."
+  ],
+  "must_not": [
+    "Produce one diagram that mixes context, containers, and classes.",
+    "Claim the diagram is complete or authoritative without a stated audience and level."
+  ]
+}

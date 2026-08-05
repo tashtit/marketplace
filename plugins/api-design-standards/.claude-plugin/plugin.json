@@ -1,0 +1,25 @@
+{
+  "name": "api-design-standards",
+  "version": "0.1.0",
+  "description": "Standards for asynchronous REST APIs and versioned deprecation.",
+  "author": {
+    "name": "Tashtit contributors",
+    "url": "https://github.com/tashtit"
+  },
+  "homepage": "https://github.com/tashtit/marketplace/tree/main/plugins/api-design-standards",
+  "repository": "https://github.com/tashtit/marketplace",
+  "license": "Apache-2.0",
+  "keywords": ["api", "rest", "async", "deprecation", "openapi"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "API Design Standards",
+    "shortDescription": "Async REST jobs and safe API deprecation",
+    "longDescription": "Design and review long-running REST operations, job status and cancellation, callbacks and webhooks, versioning, and deprecation with sunset headers.",
+    "developerName": "Tashtit contributors",
+    "category": "Developer Tools",
+    "capabilities": ["Async API design", "API review", "Deprecation planning"],
+    "defaultPrompt": [
+      "Review this REST API for async job handling and safe deprecation."
+    ]
+  }
+}

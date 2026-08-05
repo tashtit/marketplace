@@ -1,0 +1,19 @@
+{
+  "id": "api-design-standards-positive-async-job",
+  "type": "positive",
+  "platforms": ["claude-code", "codex", "github-copilot"],
+  "prompt": "Design a REST endpoint that starts a large data export that can take minutes.",
+  "setup": [
+    "The service already has an OpenAPI spec, a base path, and an RFC 9457 error envelope.",
+    "The request does not name a framework, gateway, or vendor."
+  ],
+  "expected": [
+    "Kickoff uses a state-changing method and returns 202 Accepted with a Content-Location or Location to a job resource.",
+    "The job resource exposes an explicit state set, progress when knowable, timestamps, a result link on success, and a structured error on failure.",
+    "Polling is bounded with 429 and Retry-After, and cancellation is offered as an explicit idempotent action rather than deleting the job."
+  ],
+  "must_not": [
+    "Use GET to start the work or hold the connection open until completion.",
+    "Invent a specific framework, gateway, or fixed poll SDK as mandatory."
+  ]
+}

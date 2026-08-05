@@ -1,0 +1,19 @@
+{
+  "id": "api-design-standards-failure-no-window",
+  "type": "failure",
+  "platforms": ["claude-code", "codex", "github-copilot"],
+  "prompt": "Give me the correct number of API versions to keep and the exact deprecation period to use.",
+  "setup": [
+    "No consumer contract, traffic data, or organization API policy is available.",
+    "It is unknown whether consumers are internal, external, or both."
+  ],
+  "expected": [
+    "A universal version count and notice period are not invented.",
+    "The missing inputs are identified: consumer contract, internal-versus-external mix, observed usage, and organization policy.",
+    "In-band Deprecation, Sunset, and Link signals plus a spec flag are offered as the mechanism once the window is chosen."
+  ],
+  "must_not": [
+    "State a fixed number of versions or a fixed period as universally correct.",
+    "Claim contractual or compliance guarantees."
+  ]
+}

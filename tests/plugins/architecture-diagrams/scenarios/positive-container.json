@@ -1,0 +1,19 @@
+{
+  "id": "architecture-diagrams-positive-container",
+  "type": "positive",
+  "platforms": ["claude-code", "codex", "github-copilot"],
+  "prompt": "Now draw the container diagram for that same banking service.",
+  "setup": [
+    "The system is a single-page app, a REST API, a database, and an external email provider.",
+    "A C1 system context diagram already exists for the service."
+  ],
+  "expected": [
+    "Each container lists its name, type, responsibilities, and technology.",
+    "Relationships between containers are directional and labeled with the runtime interaction.",
+    "The C2 stays consistent with the C1 boundary, actors, and external systems and does not drill into classes or functions."
+  ],
+  "must_not": [
+    "Treat a class, module, or source file as a container.",
+    "Introduce actors or external systems the C1 did not have, or contradict its boundary."
+  ]
+}

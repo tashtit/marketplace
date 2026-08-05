@@ -1,0 +1,25 @@
+{
+  "name": "architecture-diagrams",
+  "version": "0.1.0",
+  "description": "Standards for C4 system context and container architecture diagrams.",
+  "author": {
+    "name": "Tashtit contributors",
+    "url": "https://github.com/tashtit"
+  },
+  "homepage": "https://github.com/tashtit/marketplace/tree/main/plugins/architecture-diagrams",
+  "repository": "https://github.com/tashtit/marketplace",
+  "license": "Apache-2.0",
+  "keywords": ["architecture", "c4", "diagrams", "documentation", "modeling"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Architecture Diagrams",
+    "shortDescription": "C4 system context and container diagrams",
+    "longDescription": "Create and review C4 System Context (C1) and Container (C2) diagrams with clear boundaries, actors, external systems, container responsibilities, technologies, and labeled runtime relationships.",
+    "developerName": "Tashtit contributors",
+    "category": "Developer Tools",
+    "capabilities": ["System context diagrams", "Container diagrams", "Diagram review"],
+    "defaultPrompt": [
+      "Create a C4 system context and container diagram for this system."
+    ]
+  }
+}
