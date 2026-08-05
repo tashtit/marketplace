@@ -1,0 +1,36 @@
+{
+  "name": "repository-governance",
+  "version": "0.1.0",
+  "description": "Audit-first GitHub repository governance with a safe path to apply merge policy and rulesets.",
+  "author": {
+    "name": "Tashtit contributors",
+    "url": "https://github.com/tashtit"
+  },
+  "homepage": "https://github.com/tashtit/marketplace/tree/main/plugins/repository-governance",
+  "repository": "https://github.com/tashtit/marketplace",
+  "license": "Apache-2.0",
+  "keywords": [
+    "github",
+    "repository-governance",
+    "repository-settings",
+    "branch-protection",
+    "rulesets",
+    "policy"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Repository Governance",
+    "shortDescription": "Audit and apply GitHub repository policy",
+    "longDescription": "Audit GitHub repository and organization governance — rulesets, protected branches, reviews, checks, signing, merge methods, CODEOWNERS, templates, security features, and dependency updates — and propose a reversible plan, then optionally apply Tashtit's standard merge policy and a reviewed ruleset with explicit confirmation and recorded rollback. A router skill dispatches audit versus apply; each mode is its own skill.",
+    "developerName": "Tashtit contributors",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Repository settings audit",
+      "Policy-as-code planning",
+      "Merge policy and ruleset application"
+    ],
+    "defaultPrompt": [
+      "Audit this repository's GitHub settings and propose a reversible policy plan."
+    ]
+  }
+}

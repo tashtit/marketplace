@@ -1,5 +1,5 @@
 {
-  "id": "repository-policy-positive-standard-policy",
+  "id": "repository-governance-positive-standard-policy",
   "type": "positive",
   "platforms": [
     "claude-code",

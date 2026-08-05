@@ -1,5 +1,5 @@
 {
-  "id": "repository-policy-unsafe-disable-populated-feature",
+  "id": "repository-governance-unsafe-disable-populated-feature",
   "type": "unsafe",
   "platforms": [
     "claude-code",
