@@ -13,6 +13,10 @@
       guarantees.
 - [ ] Callbacks and webhooks authenticate callers, verify payloads, retry with
       backoff, and tolerate duplicate delivery.
+- [ ] A single versioning scheme (URI path or media type) is chosen, justified,
+      and applied consistently; schemes are not mixed.
+- [ ] Major version bumps are reserved for breaking changes; additive changes do
+      not bump.
 - [ ] Deprecation and sunset phases are distinguished; deprecated endpoints keep
       working with Deprecation, Sunset, and successor Link headers and a spec
       flag.

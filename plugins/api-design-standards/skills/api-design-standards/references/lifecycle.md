@@ -1,8 +1,33 @@
 # API lifecycle and deprecation reference
 
-Header set and phase transitions for the lifecycle contract in `SKILL.md`.
-Dates, version counts, and windows are examples; set them from the real
-consumer contract.
+Versioning schemes, header set, and phase transitions for the lifecycle
+contract in `SKILL.md`. Dates, version counts, and windows are examples; set
+them from the real consumer contract.
+
+## Versioning schemes
+
+Pick one and keep it across the whole API.
+
+URI path — most visible, easy to route and cache:
+
+```http
+GET /api/v1/reports
+GET /api/v2/reports
+```
+
+Media type / content negotiation — one URL, versioned representation:
+
+```http
+GET /api/reports
+Accept: application/vnd.example.v2+json
+```
+
+- Bump the major version only for a breaking change (removed/renamed field,
+  tightened validation, changed type or meaning).
+- Additive, backward-compatible changes do not get a new version.
+- Shipping `/v2` and deprecating `/v1` are one event: publish the new version,
+  then start the old version's deprecation clock with a `Link` to the migration
+  guide.
 
 ## Two phases
 

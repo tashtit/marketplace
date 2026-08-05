@@ -1,0 +1,19 @@
+{
+  "id": "api-design-standards-positive-versioning",
+  "type": "positive",
+  "platforms": ["claude-code", "codex", "github-copilot"],
+  "prompt": "We need to add versioning to our public REST API and are about to make a breaking change to the reports response. How should we version it?",
+  "setup": [
+    "The API is currently unversioned and has external consumers.",
+    "The change removes a field, so it is not backward compatible."
+  ],
+  "expected": [
+    "A single explicit versioning scheme is chosen and justified (URI path such as /api/v1/ or media-type content negotiation), applied consistently across the API.",
+    "The breaking change is placed behind a new major version while the existing behavior stays available for current clients.",
+    "Additive, backward-compatible changes are called out as not requiring a version bump, and the new version is tied to a deprecation plan for the old one."
+  ],
+  "must_not": [
+    "Mix path and media-type versioning in the same API.",
+    "Ship the breaking change in place without a version bump or invent a universal version-count rule."
+  ]
+}

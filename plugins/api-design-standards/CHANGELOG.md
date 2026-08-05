@@ -14,5 +14,8 @@
 - Added an API lifecycle and deprecation contract using `Deprecation`,
   `Sunset`, and `Link` headers, OpenAPI `deprecated` flags, and `410 Gone`
   after sunset, without inventing fixed version or notice windows.
+- Added explicit versioning guidance: a single scheme (URI path such as
+  `/api/v1/` or media-type content negotiation), major bumps reserved for
+  breaking changes, and versioning tied to the deprecation flow.
 - Added authoritative references (RFC 9457, RFC 8594, RFC 7807, RFC 7240,
   RateLimit draft, OpenAPI) and maintainer evaluation scenarios.
