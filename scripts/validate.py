@@ -32,6 +32,9 @@ SCENARIO_FIELDS = {
     "must_not",
 }
 PLATFORMS = {"claude-code", "codex", "cursor", "github-copilot"}
+# Platforms a plugin targets by default when it declares no `platforms` list.
+# Cursor is optional research, so it is opt-in rather than a default target.
+CORE_TARGETS = {"claude-code", "codex", "github-copilot"}
 MATURITY_LEVELS = ("experimental", "candidate", "stable")
 # Experimental makes no behavioral claim, so it needs no recorded results.
 REVIEWED_MATURITY = set(MATURITY_LEVELS) - {"experimental"}
@@ -91,6 +94,14 @@ def require_text(path: Path, value: Any, field: str) -> str:
     return value
 
 
+def plugin_platforms(entry: dict[str, Any]) -> set[str]:
+    """Return a plugin's declared target platforms, defaulting to core targets."""
+    platforms = entry.get("platforms")
+    if platforms is None:
+        return set(CORE_TARGETS)
+    return set(platforms) & PLATFORMS
+
+
 def validate_marketplaces() -> dict[str, dict[str, dict[str, Any]]]:
     catalogs: dict[str, dict[str, dict[str, Any]]] = {}
 
@@ -119,6 +130,18 @@ def validate_marketplaces() -> dict[str, dict[str, dict[str, Any]]]:
                 expected_source = f"./plugins/{plugin_name}"
                 if entry.get("source") != expected_source:
                     fail(path, f"{plugin_name} source must be {expected_source!r}")
+                raw_platforms = entry.get("platforms")
+                if raw_platforms is not None:
+                    values = validate_string_list(
+                        path, raw_platforms, f"{plugin_name}.platforms"
+                    )
+                    unknown = sorted(set(values) - PLATFORMS)
+                    if unknown:
+                        fail(
+                            path,
+                            f"{plugin_name}.platforms has unknown platforms "
+                            f"{unknown}; expected values from {sorted(PLATFORMS)}",
+                        )
             else:
                 source = require_object(path, entry.get("source"), f"{plugin_name}.source")
                 if source != {"source": "local", "path": f"./plugins/{plugin_name}"}:
@@ -139,13 +162,17 @@ def validate_marketplaces() -> dict[str, dict[str, dict[str, Any]]]:
             fail(path, "plugins must be sorted by name")
         catalogs[platform] = entries
 
-    shared_names = set(catalogs.get("shared", {}))
+    codex_targets = {
+        name
+        for name, entry in catalogs.get("shared", {}).items()
+        if "codex" in plugin_platforms(entry)
+    }
     codex_names = set(catalogs.get("codex", {}))
-    if codex_names != shared_names:
+    if codex_names != codex_targets:
         fail(
             MARKETPLACES["codex"],
-            f"plugin set differs from shared marketplace: "
-            f"{sorted(codex_names ^ shared_names)}",
+            f"plugin set differs from codex-targeted shared plugins: "
+            f"{sorted(codex_names ^ codex_targets)}",
         )
 
     return catalogs
@@ -176,8 +203,16 @@ def validate_plugins(shared: dict[str, dict[str, Any]]) -> None:
 
         manifests = {
             "shared": plugin_dir / ".claude-plugin" / "plugin.json",
-            "codex": plugin_dir / ".codex-plugin" / "plugin.json",
         }
+        codex_manifest = plugin_dir / ".codex-plugin" / "plugin.json"
+        if "codex" in plugin_platforms(shared.get(name, {})):
+            manifests["codex"] = codex_manifest
+        elif codex_manifest.exists() or codex_manifest.is_symlink():
+            fail(
+                codex_manifest,
+                "plugin does not target codex, so its generated .codex-plugin "
+                "adapter must be absent",
+            )
 
         redundant_manifest = plugin_dir / "plugin.json"
         if redundant_manifest.exists() or redundant_manifest.is_symlink():

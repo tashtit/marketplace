@@ -17,6 +17,18 @@
       "category": "Developer Tools"
     },
     {
+      "name": "evalkit",
+      "source": "./plugins/evalkit",
+      "description": "Evaluate and compare skills and models with static reviews and worktree-isolated coding-task harnesses. Host-adaptive across Claude Code and GitHub Copilot CLI.",
+      "version": "0.1.0",
+      "license": "Apache-2.0",
+      "category": "Developer Tools",
+      "platforms": [
+        "claude-code",
+        "github-copilot"
+      ]
+    },
+    {
       "name": "git-workflow",
       "source": "./plugins/git-workflow",
       "description": "Safe, focused Git commits and review-ready pull request workflows.",

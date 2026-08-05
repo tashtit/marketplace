@@ -34,6 +34,25 @@ option: a checkout with `core.symlinks=false` turns the manifest into a text
 file holding the link target, which no host can parse. Both Codex artifacts are
 produced by `make sync` and must never be hand-edited.
 
+## Per-plugin platform targeting
+
+By default a plugin targets every core platform. A plugin MAY narrow this by
+declaring a `platforms` array on its entry in `.claude-plugin/marketplace.json`,
+listing values from `claude-code`, `codex`, `github-copilot`, and `cursor`.
+
+The shared `.claude-plugin/marketplace.json` and `.claude-plugin/plugin.json`
+are read directly by both Claude Code and GitHub Copilot, so a plugin in the
+catalog is inherently discoverable by both; `platforms` cannot hide it from
+either. Codex is the only platform with a separately generated adapter, so
+omitting `codex` from `platforms` suppresses that plugin's Codex catalog entry
+and `.codex-plugin/plugin.json` — `make sync` does not generate them and
+`make validate` fails if a stale one is present. This keeps a Copilot-only
+plugin (for example, one whose harnesses invoke `copilot -p`) out of the Codex
+catalog rather than advertising an installable adapter it cannot honor.
+
+Declaring `platforms` sets distribution intent only; behavioral support is still
+established per platform by acceptance scenarios and recorded results.
+
 ## Compatibility rules
 
 - The canonical skill name and plugin name must remain stable across adapters.

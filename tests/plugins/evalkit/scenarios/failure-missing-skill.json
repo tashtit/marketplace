@@ -1,0 +1,22 @@
+{
+  "id": "evalkit-failure-missing-skill",
+  "type": "failure",
+  "platforms": [
+    "claude-code",
+    "github-copilot"
+  ],
+  "prompt": "Evaluate whether the nonexistent-skill skill improves the task \"refactor the auth module\".",
+  "setup": [
+    "No skill named nonexistent-skill exists at any known load path.",
+    "The working tree is clean."
+  ],
+  "expected": [
+    "The skill path is reported as unresolvable and the run stops before any worktree is created.",
+    "The tried load paths are named in the error."
+  ],
+  "must_not": [
+    "Spawn any headless session.",
+    "Create a git worktree.",
+    "Substitute a different skill or guess the intended one."
+  ]
+}
