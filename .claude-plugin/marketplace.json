@@ -91,6 +91,14 @@
       "version": "0.1.0",
       "license": "Apache-2.0",
       "category": "Developer Tools"
+    },
+    {
+      "name": "typescript-library-build",
+      "source": "./plugins/typescript-library-build",
+      "description": "Dual ESM and CommonJS TypeScript library build and publish standards.",
+      "version": "0.1.0",
+      "license": "Apache-2.0",
+      "category": "Developer Tools"
     }
   ]
 }

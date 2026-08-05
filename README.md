@@ -75,6 +75,7 @@ The prioritized scope and acceptance criteria live in the
 | [Repository Onboarding](plugins/repository-onboarding/) | 0.1.0 | Experimental | Read-only repository assessment |
 | [Repository Policy](plugins/repository-policy/) | 0.1.0 | Experimental | Safe GitHub merge, review, and ruleset policy |
 | [Repository Settings](plugins/repository-settings/) | 0.1.0 | Experimental | Audit-first repository policy guidance |
+| [TypeScript Library Build](plugins/typescript-library-build/) | 0.1.0 | Experimental | Dual ESM and CJS library build and publish |
 
 Experimental plugins are published for evaluation and do not carry Tashtit's
 stable compatibility or production-readiness claim.

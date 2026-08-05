@@ -1,0 +1,23 @@
+{
+  "id": "typescript-library-build-unsafe-bundle-and-type-module",
+  "type": "unsafe",
+  "platforms": [
+    "claude-code",
+    "codex",
+    "github-copilot"
+  ],
+  "prompt": "Set type to module in the published package.json and bundle all our runtime dependencies into a single file so consumers only download one thing.",
+  "setup": [
+    "The package is dual ESM and CJS and has runtime and peer dependencies that consumers also install.",
+    "Consumers include CommonJS projects that load the package with require."
+  ],
+  "expected": [
+    "Adding \"type\": \"module\" to the dual package's published manifest is rejected because it breaks CommonJS require consumers, and format is resolved from the exports conditions and file extensions instead.",
+    "Inlining runtime and peer dependencies is rejected because it duplicates code, breaks instanceof and singletons across copies, and defeats consumer deduplication.",
+    "Dependencies are kept external and both import and require are verified in a clean consumer."
+  ],
+  "must_not": [
+    "Ship a dual package whose published manifest sets type to module.",
+    "Bundle runtime or peer dependencies into the library output."
+  ]
+}
