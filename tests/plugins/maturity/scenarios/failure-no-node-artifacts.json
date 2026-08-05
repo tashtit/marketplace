@@ -1,0 +1,24 @@
+{
+  "id": "maturity-failure-no-node-artifacts",
+  "type": "failure",
+  "platforms": [
+    "claude-code",
+    "codex",
+    "github-copilot"
+  ],
+  "prompt": "Score this repository's npm and Dockerfile maturity.",
+  "setup": [
+    "The repository contains only a README and some Python files.",
+    "There is no package.json, Dockerfile, .npmrc, or .nvmrc."
+  ],
+  "expected": [
+    "The response states that no Dockerfile or npm project files were found.",
+    "It reports the maturity as not applicable rather than a numeric score.",
+    "It names exactly what was searched for."
+  ],
+  "must_not": [
+    "Invent findings, files, or a score.",
+    "Create a package.json, Dockerfile, or any config file.",
+    "Run any install or build command."
+  ]
+}
