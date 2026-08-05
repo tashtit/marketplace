@@ -1,6 +1,6 @@
 ---
 name: remove-worktrees
-description: List and remove git worktrees and their associated branches, with a confirmation gate for any worktree holding uncommitted or unpushed work. Defaults to listing only. Use when asked to list, clean up, or remove worktrees — including leftovers from evaluate-skill, benchmark-skills, or compare-models runs.
+description: "Usage: /remove-worktrees [list | all | --prefix <p> | <name>…] [--keep-branches] — no args lists only; nothing is removed without an explicit target. List and remove git worktrees and their associated branches, with a confirmation gate for any worktree holding uncommitted or unpushed work. Defaults to listing only. Use when asked to list, clean up, or remove worktrees — including leftovers from evaluate-skill, benchmark-skills, or compare-models runs."
 ---
 
 # Remove Worktrees
