@@ -52,8 +52,11 @@ executing anything:
 - Repository hygiene: CODEOWNERS (root, `.github/`, or `docs/`), `README*`,
   `CONTRIBUTING*`, and `.editorconfig`.
 
-If no candidate files exist for a requested ecosystem, say so and stop rather
-than inventing findings.
+For the Dockerfile and npm ecosystems, a rule is only relevant when its target
+files exist; if a requested one of these ecosystems has no candidate files, say
+so and skip it rather than inventing findings. The repository-hygiene rules are
+always relevant — the *absence* of CODEOWNERS, README, CONTRIBUTING, or
+`.editorconfig` is itself the finding, so never skip hygiene for lack of files.
 
 ### 2. Evaluate
 
