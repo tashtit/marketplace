@@ -1,6 +1,6 @@
 ---
 name: engineering-standards
-description: Design, implement, or review production software changes against opinionated engineering standards for correctness, security, maintainability, testing, operations, and delivery. Use for implementation planning, code review, definition-of-done checks, risk assessment, and verification strategy.
+description: Design, implement, or review production software changes against opinionated engineering standards for correctness, security, maintainability, testing, operations, and delivery. Use when planning an implementation, reviewing a pull request or diff, running a definition-of-done check, assessing release risk, or asking whether a change is ready to ship or merge. Defer to a more specific standards skill (for example API design or GitHub Actions) when the request is narrowly scoped to that domain.
 ---
 
 # Engineering Standards
