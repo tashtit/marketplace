@@ -1,6 +1,6 @@
 ---
 name: compare-skills
-description: "Usage: /compare-skills <skillA> <skillB> — requires two skills; static, no task or worktrees. Compare two skills' authoring quality side-by-side by reading their files and synthesizing a difference summary. Static analysis only; runs no coding task and creates no worktrees. Use when asked which of two specific named skills is better written, or to diff two versions of a skill."
+description: "Usage: /compare-skills <skillA> <skillB> — requires two skills; static, no task or worktrees. Compare two skills' authoring quality side-by-side by reading their files and synthesizing a difference summary. Static analysis only; runs no coding task and creates no worktrees. Use when asked which of two specific named skills is better written, or to diff two versions of a skill. For a head-to-head run on a real coding task, use benchmark-skills instead. Do not trigger on casual mention of comparing skills."
 ---
 
 # Compare Skills

@@ -1,6 +1,6 @@
 ---
 name: review-skill
-description: "Usage: /review-skill <skill> — requires one skill; static, no task or worktrees. Review a single skill's authoring quality — structure, description and triggering effectiveness, and progressive disclosure — by reading its files. Static analysis only; runs no coding task and creates no worktrees. Use when asked to review, critique, or improve a specific named skill."
+description: "Usage: /review-skill <skill> — requires one skill; static, no task or worktrees. Review a single skill's authoring quality — structure, description and triggering effectiveness, and progressive disclosure — by reading its files. Static analysis only; runs no coding task and creates no worktrees. Use when asked to review, critique, or improve a specific named skill. To measure whether a skill changes coding-task outcomes, use evaluate-skill instead. Do not trigger on casual mention of reviewing a skill."
 ---
 
 # Review Skill
