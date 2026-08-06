@@ -36,7 +36,7 @@
       "name": "evalkit",
       "source": "./plugins/evalkit",
       "description": "Evaluate and compare skills and models with static reviews and worktree-isolated coding-task harnesses. Host-adaptive across Claude Code and GitHub Copilot CLI.",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "license": "Apache-2.0",
       "category": "Developer Tools",
       "platforms": [

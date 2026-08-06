@@ -69,7 +69,7 @@ This plugin does not target Codex.
 | Runaway cost from headless sessions on the wrong task | Dynamic harnesses confirm ambiguous requests and never guess a missing task or skill |
 | Biased review or judgement | Reviewer and judge receive the diff and project context only, never the arm label or model name |
 | Ambiguous destructive request treated as authorization | "Clean up my worktrees" defaults toward listing and never force-removes dirty work without explicit confirmation |
-| Invalid control arm | `evaluate-skill` checks that the skill is absent from all load paths in the `without` arm and warns if a globally installed copy would defeat the control |
+| Invalid control arm | `evaluate-skill` checks that the skill is absent from all load paths in the `without` arm, isolates plugin/global skills via the host's **Skill isolation** procedure (or stops), and a per-arm **fired-check** confirms the skill actually fired where present and not where absent — a run that never triggered the skill is reported inconclusive, not "no effect" |
 
 See [CHANGELOG.md](CHANGELOG.md). Maintainer-only evaluation material lives outside
 the distributed plugin in the

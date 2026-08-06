@@ -36,7 +36,9 @@ When invoked as `/evaluate-skill <skill> <task…>`, parse from `$ARGUMENTS`: `s
 
 1. Determine `skill` and `task` as described above. If either is missing, ask and stop.
 
-2. Resolve the skill path against known load paths (`.claude/skills/`, `.github/skills/`, `src/skills/`, plugin skill paths). If unresolvable, report the error and stop.
+2. Resolve the skill against known load paths (`.claude/skills/`, `.github/skills/`, `src/skills/`, plugin skill paths). If unresolvable, report the error and stop. Then **classify the source** — see the **Skill isolation** section of the resolved host reference:
+   - **Repo-local** — the skill lives inside the repo tree, so it is present in every worktree branched from `base` and the control is a single-file delete.
+   - **Plugin / global** — the skill is installed outside the repo (a plugin or a globally installed copy shared by every worktree and session). A worktree delete does **not** remove it, so isolate it per the host reference's **Skill isolation** procedure. If the host cannot isolate it, **stop** and tell the user this skill cannot be evaluated by the delete-based control — never produce a run whose control arm can still reach the skill.
 
 3. Resolve `base` to the current HEAD:
    ```
@@ -54,10 +56,12 @@ When invoked as `/evaluate-skill <skill> <task…>`, parse from `$ARGUMENTS`: `s
    # headless session per the resolved host reference → runs/with-<run-id>.jsonl
    ```
 
-   **Arm `without`** — skill deleted before work begins:
+   **Arm `without`** — skill removed before work begins:
    ```
    git worktree add -b eval/<skill>-without-<run-id> eval/without-<run-id> <base>
-   # delete <resolved skill path> inside the worktree
+   # make the skill unavailable in this arm:
+   #   repo-local    → delete <resolved skill path> inside the worktree
+   #   plugin/global → apply the host reference's Skill isolation procedure for this arm
    cd eval/without-<run-id>
    # headless session per the resolved host reference → runs/without-<run-id>.jsonl
    ```
@@ -78,13 +82,21 @@ When invoked as `/evaluate-skill <skill> <task…>`, parse from `$ARGUMENTS`: `s
 
    **Telemetry** — parse `runs/<arm>-<run-id>.jsonl` per the **Telemetry parsing** section of the resolved host reference.
 
-7. Worktrees are **always kept**. Never auto-remove — use `remove-worktrees` to clean up later.
+   **Fired-check** — from the same JSONL, determine whether the skill under test was actually **invoked** in this arm, using the **Skill-invocation detection** section of the resolved host reference. The task is run exactly as written and the skill is **never force-invoked**, so this check is what separates a real measurement from a skill that simply never triggered. Record `skill_fired` (yes/no) for each arm.
 
-8. Emit the report, substituting the **Report metric rows** from the resolved host reference for the `<host cost/token rows>` line:
+7. **Interpret the fired-check before reporting a verdict:**
+   - `skill_fired = no` in the **`with`** arm → the task never triggered the skill, so the arms were effectively identical. Report the run **inconclusive**, not "no effect": tell the user the task did not exercise the skill and suggest a task whose request matches the skill's stated triggers.
+   - `skill_fired = yes` in the **`without`** arm → the control leaked (a plugin/global copy was still reachable). Report the run **invalid**, fix isolation, and re-run — do not trust the delta.
+   - Only when the skill fired in `with` and did **not** fire in `without` is the delta a valid, directional measurement of the skill's real-world effect.
+
+8. Worktrees are **always kept**. Never auto-remove — use `remove-worktrees` to clean up later.
+
+9. Emit the report, substituting the **Report metric rows** from the resolved host reference for the `<host cost/token rows>` line:
 
 ```
 metric            | with                    | without
 ------------------|-------------------------|------------------------
+skill_fired       | yes                     | no
 gates_passed      | ...                     | ...
 review_findings   | 0c 1h 2m                | 0c 3h 5m
 <host cost/token rows>
@@ -95,12 +107,15 @@ files_changed     | ...                     | ...
 worktree          | eval/with-<run-id>      | eval/without-<run-id>
 ```
 
+If the fired-check flagged the run **inconclusive** or **invalid** (step 7), say so above the table so the metric deltas are not read as an attributable result.
+
 Both worktrees remain on disk; the user picks a winner and continues there or merges its branch.
 
 ## Validity guardrails
 
 1. Identical **prompt**, **base commit**, and **model** across arms.
-2. The skill must be absent from **all** load paths in the `without` arm. Under the repo-local assumption this is a single file delete; a globally installed copy would silently invalidate the control — check for one and warn if found.
+2. The skill must be absent from **all** load paths in the `without` arm. For a repo-local skill this is a single-file delete; a plugin or globally installed copy is shared by every worktree, so it must be isolated per the host reference's **Skill isolation** procedure (or the run stopped) — a reachable global copy silently invalidates the control. The `without`-arm fired-check confirms the removal actually took effect.
 3. **Arm-blind reviewer** — the review subprocess receives the diff and project context, never the arm label.
 4. Single-run results are **directional**, not statistical. Report them as such. If the user needs statistical confidence, they can request repeated runs and compare distributions.
 5. The skill under test is assumed to be a non-review skill, so the same review skill auto-triggers identically in both arms.
+6. **Fired-check.** The task is never modified to force the skill; triggering must happen naturally. A `with` arm where the skill never fired is **inconclusive** (the arms were identical), and a `without` arm where it did fire is **invalid** (leaked control). Only a run that fired in `with` and not in `without` yields an attributable delta.

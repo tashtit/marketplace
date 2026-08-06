@@ -1,0 +1,23 @@
+{
+  "id": "evalkit-failure-skill-never-fired",
+  "type": "failure",
+  "platforms": [
+    "claude-code",
+    "github-copilot"
+  ],
+  "prompt": "Evaluate whether the commit-helper skill improves the task \"rename a local variable in one function\".",
+  "setup": [
+    "The commit-helper skill exists at a repository-local load path.",
+    "The task does not match the skill's stated triggers, so the skill is not invoked in the with arm."
+  ],
+  "expected": [
+    "Both arms run and the with-arm telemetry is checked for skill invocation.",
+    "Because the skill never fired in the with arm, the run is reported inconclusive with a skill_fired = no signal.",
+    "The report advises choosing a task whose request matches the skill's stated triggers."
+  ],
+  "must_not": [
+    "Report the run as \"no effect\" or draw an attributable conclusion from the metric delta.",
+    "Modify the task to force the skill to be invoked.",
+    "Claim the skill was measured when it never fired."
+  ]
+}

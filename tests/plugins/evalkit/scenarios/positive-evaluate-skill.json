@@ -13,11 +13,14 @@
   "expected": [
     "Two isolated git worktrees are created from the same base \u2014 one with the skill present, one with it deleted.",
     "The same task and model run in both arms.",
+    "Each arm's telemetry is checked to confirm whether the skill under test actually fired, and the result is reported as a skill_fired row.",
     "The reviewer scores each arm's diff without being told which arm it is.",
     "Both worktrees are kept and a metric comparison table is reported."
   ],
   "must_not": [
     "Run the task in only one arm.",
+    "Inject an instruction into the task that forces the skill to be invoked.",
+    "Report a run where the skill never fired as \"no effect\" instead of inconclusive.",
     "Pass the arm label to the reviewer.",
     "Remove either worktree automatically."
   ]
