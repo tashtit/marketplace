@@ -73,9 +73,8 @@ The prioritized scope and acceptance criteria live in the
 | [GitHub Actions Standards](plugins/github-actions-standards/) | 0.1.0 | Experimental | Secure, reproducible CI and release workflows |
 | [Logging Standards](plugins/logging-standards/) | 0.1.0 | Experimental | Secure structured production logging |
 | [Maturity](plugins/maturity/) | 0.3.0 | Experimental | Dockerfile, npm, repository-hygiene, and CI-workflow maturity evaluation, fixes on request |
+| [Repository Governance](plugins/repository-governance/) | 0.1.0 | Experimental | Audit repository governance, then optionally apply merge policy and rulesets |
 | [Repository Onboarding](plugins/repository-onboarding/) | 0.1.0 | Experimental | Read-only repository assessment |
-| [Repository Policy](plugins/repository-policy/) | 0.1.0 | Experimental | Safe GitHub merge, review, and ruleset policy |
-| [Repository Settings](plugins/repository-settings/) | 0.1.0 | Experimental | Audit-first repository policy guidance |
 | [TypeScript Library Build](plugins/typescript-library-build/) | 0.1.0 | Experimental | Dual ESM and CJS library build and publish |
 
 Experimental plugins are published for evaluation and do not carry Tashtit's

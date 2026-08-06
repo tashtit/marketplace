@@ -77,25 +77,17 @@
       "category": "Developer Tools"
     },
     {
+      "name": "repository-governance",
+      "source": "./plugins/repository-governance",
+      "description": "Audit-first GitHub repository governance with a safe path to apply merge policy and rulesets.",
+      "version": "0.1.0",
+      "license": "Apache-2.0",
+      "category": "Developer Tools"
+    },
+    {
       "name": "repository-onboarding",
       "source": "./plugins/repository-onboarding",
       "description": "Read-only, evidence-backed onboarding for unfamiliar software repositories.",
-      "version": "0.1.0",
-      "license": "Apache-2.0",
-      "category": "Developer Tools"
-    },
-    {
-      "name": "repository-policy",
-      "source": "./plugins/repository-policy",
-      "description": "Safe, auditable GitHub repository merge, review, and ruleset policy.",
-      "version": "0.1.0",
-      "license": "Apache-2.0",
-      "category": "Developer Tools"
-    },
-    {
-      "name": "repository-settings",
-      "source": "./plugins/repository-settings",
-      "description": "Audit-first GitHub repository settings and policy-as-code guidance.",
       "version": "0.1.0",
       "license": "Apache-2.0",
       "category": "Developer Tools"

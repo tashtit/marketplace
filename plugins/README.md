@@ -12,9 +12,8 @@ Each directory in this folder is an independently versioned Tashtit plugin.
 | [GitHub Actions Standards](github-actions-standards/) | 0.1.0 | Experimental | Secure, reproducible CI and release workflows |
 | [Logging Standards](logging-standards/) | 0.1.0 | Experimental | Secure structured production logging |
 | [Maturity](maturity/) | 0.3.0 | Experimental | Dockerfile, npm, repository-hygiene, and CI-workflow maturity evaluation, fixes on request |
+| [Repository Governance](repository-governance/) | 0.1.0 | Experimental | Audit repository governance, then optionally apply merge policy and rulesets |
 | [Repository Onboarding](repository-onboarding/) | 0.1.0 | Experimental | Read-only, evidence-backed repository assessment |
-| [Repository Policy](repository-policy/) | 0.1.0 | Experimental | Safe GitHub merge, review, and ruleset policy |
-| [Repository Settings](repository-settings/) | 0.1.0 | Experimental | Audit-first repository policy guidance |
 | [TypeScript Library Build](typescript-library-build/) | 0.1.0 | Experimental | Dual ESM and CJS library build and publish |
 
 This table must match `.claude-plugin/marketplace.json`; `make validate` fails
