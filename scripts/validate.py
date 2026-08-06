@@ -21,6 +21,10 @@ PLUGIN_NAME = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 MARKDOWN_LINK = re.compile(r"!?\[[^\]]*]\(([^)]+)\)")
 ACTION_REFERENCE = re.compile(r"^\s*uses:\s+([^@\s]+)@([^\s#]+)", re.MULTILINE)
 FULL_SHA = re.compile(r"^[0-9a-f]{40}$")
+# A GitHub-authored action may use an exact release tag. A movable major tag
+# such as "v7" or a branch name stays forbidden because it is not immutable.
+GITHUB_AUTHORED_OWNERS = ("actions/", "github/")
+EXACT_RELEASE_TAG = re.compile(r"^v\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$")
 SCENARIO_TYPES = {"positive", "failure", "unsafe"}
 SCENARIO_FIELDS = {
     "id",
@@ -666,11 +670,30 @@ def validate_json_files() -> None:
 
 
 def validate_action_pins() -> None:
+    """Enforce the pinning rule documented in github-actions-standards.
+
+    Any remote action may use a full commit SHA. An action published by GitHub
+    itself may instead use an exact release tag, which this repository accepts
+    because CI holds no secrets, write permissions, or deployment authority.
+    """
     workflows = ROOT / ".github" / "workflows"
-    for path in workflows.glob("*.yml"):
+    for path in sorted(workflows.glob("*.yml")) + sorted(workflows.glob("*.yaml")):
         content = path.read_text(encoding="utf-8")
         for action, reference in ACTION_REFERENCE.findall(content):
-            if not FULL_SHA.fullmatch(reference):
+            if FULL_SHA.fullmatch(reference):
+                continue
+            if action.startswith(("./", "docker://")):
+                continue
+            github_authored = action.startswith(GITHUB_AUTHORED_OWNERS)
+            if github_authored and EXACT_RELEASE_TAG.fullmatch(reference):
+                continue
+            if github_authored:
+                fail(
+                    path,
+                    f"{action} must use a full 40-character commit SHA or an "
+                    f"exact release tag such as v1.2.3, not {reference!r}",
+                )
+            else:
                 fail(
                     path,
                     f"{action} must be pinned to a full 40-character commit SHA",

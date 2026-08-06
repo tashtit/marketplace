@@ -1,0 +1,38 @@
+name: 🏗️ CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: '${{ github.workflow }}-${{ github.ref }}'
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  repository:
+    name: Repository contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7.0.1
+        with: { persist-credentials: false }
+
+      - name: Set up Python
+        uses: actions/setup-python@v7.0.0
+        with: { python-version-file: .python-version }
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7.0.0
+        with: { node-version-file: .nvmrc, cache: npm }
+
+      - name: Install Node dependencies
+        run: make install
+
+      - name: Validate
+        run: make validate
