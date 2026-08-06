@@ -15,7 +15,8 @@ omitted until maintainers establish delivery capacity.
 - [x] Generate each Codex plugin manifest instead of relying on symlinks.
 - [x] Add CI validation for generated-adapter drift.
 - [x] Validate the documented plugin catalog tables against the marketplace.
-- [ ] Add JSON Schema, Markdown, and secret validation.
+- [x] Add Markdown style and committed-credential validation.
+- [ ] Add JSON Schema validation for canonical manifests.
 - [x] Add scenario test conventions and a local structural test harness.
 - [x] Gate maturity claims on recorded, version-pinned acceptance results.
 - [ ] Add an evaluation runner that executes scenarios and records results

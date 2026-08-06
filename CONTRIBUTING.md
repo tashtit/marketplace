@@ -59,13 +59,19 @@ In particular:
 
 ## Validation
 
-The repository validator has no third-party runtime dependencies. Before
-opening a pull request:
+The structural validator, secret scan, and sync are dependency-free Python 3.
+Markdown linting uses a single pinned npm dev dependency, so install it once
+before opening a pull request:
 
 ```bash
+make install
 make sync
 make validate
 ```
+
+`make install` runs `npm ci` against the committed lockfile, which pins
+`markdownlint-cli2` so every contributor and CI lint with identical rules.
+Re-run it only after the lockfile changes.
 
 `make sync` regenerates the unavoidable Codex artifacts from canonical sources:
 the Codex marketplace from `.claude-plugin/marketplace.json`, and each
@@ -77,8 +83,13 @@ Never edit a generated file by hand; change the canonical source and re-run
 syntax, marketplace alignment, the plugin catalog tables in `README.md` and
 `plugins/README.md`, plugin naming and manifest consistency, recorded acceptance
 results against the claimed maturity, safe links, canonical skill presence,
-local documentation links, and whitespace. CI runs the same validation on every
-push and pull request.
+local documentation links, committed credential material, Markdown style, and
+whitespace. CI runs the same validation on every push and pull request.
+
+`make scan-secrets` and `make lint-markdown` run those two steps individually.
+The secret scan matches issued credential material rather than the word
+"secret", so documenting `${{ secrets.TOKEN }}` is safe. When a match is an
+intentional example, append `pragma: allowlist secret` to that line.
 
 Nothing here executes an acceptance scenario. Raising a plugin's maturity above
 `experimental` requires recording a passing review for every scenario and claimed
