@@ -58,6 +58,16 @@ MATURITY_CLAIM = re.compile(
 
 errors: list[str] = []
 
+# Directories that never carry repository content: version control and editor
+# state, plus installed dependencies. Kept in one place so every traversal
+# skips the same paths.
+IGNORED_DIRECTORIES = {".git", ".idea", "node_modules"}
+
+
+def is_ignored(path: Path) -> bool:
+    """Report whether a path sits inside a directory that is never validated."""
+    return any(part in IGNORED_DIRECTORIES for part in path.parts)
+
 
 def fail(path: Path, message: str) -> None:
     """Record a validation error relative to the repository root."""
@@ -640,7 +650,7 @@ def validate_maturity_claims(maturity_by_plugin: dict[str, str]) -> None:
 
 def validate_json_files() -> None:
     for path in ROOT.rglob("*.json"):
-        if ".git" in path.parts or ".idea" in path.parts:
+        if is_ignored(path):
             continue
         data = load_json(path)
         try:
@@ -673,8 +683,7 @@ def validate_retired_branding() -> None:
         if (
             not path.is_file()
             or path.is_symlink()
-            or ".git" in path.parts
-            or ".idea" in path.parts
+            or is_ignored(path)
         ):
             continue
         try:
@@ -688,7 +697,7 @@ def validate_retired_branding() -> None:
 def validate_links() -> None:
     for directory, directory_names, file_names in os.walk(ROOT, followlinks=False):
         directory_path = Path(directory)
-        if ".git" in directory_path.parts or ".idea" in directory_path.parts:
+        if is_ignored(directory_path):
             directory_names[:] = []
             continue
         for name in [*directory_names, *file_names]:
@@ -717,7 +726,7 @@ def validate_links() -> None:
 
 def validate_markdown_links() -> None:
     for path in ROOT.rglob("*.md"):
-        if ".git" in path.parts or ".idea" in path.parts:
+        if is_ignored(path):
             continue
         content = path.read_text(encoding="utf-8")
         for raw_target in MARKDOWN_LINK.findall(content):

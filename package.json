@@ -1,0 +1,13 @@
+{
+  "name": "tashtit-marketplace",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Tooling for validating the Tashtit plugin marketplace.",
+  "license": "Apache-2.0",
+  "scripts": {
+    "lint:markdown": "markdownlint-cli2"
+  },
+  "devDependencies": {
+    "markdownlint-cli2": "0.22.0"
+  }
+}
