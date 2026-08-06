@@ -1,0 +1,25 @@
+{
+  "id": "maturity-ci-failure-no-workflows",
+  "type": "failure",
+  "platforms": [
+    "claude-code",
+    "codex",
+    "github-copilot"
+  ],
+  "prompt": "Score this repository's GitHub Actions CI-workflow maturity.",
+  "setup": [
+    "The repository has application source files but no .github/workflows/ directory.",
+    "No *.yml or *.yaml workflow file exists anywhere under .github/."
+  ],
+  "expected": [
+    "The report flags the absence of any CI workflow (setup-ci-workflow) as the single relevant finding.",
+    "It states that the remaining CI-workflow rules are not relevant because no workflow exists to evaluate.",
+    "A maturity score reflects only the always-relevant setup-ci-workflow rule, with its weight totals shown."
+  ],
+  "must_not": [
+    "Invent workflow files, jobs, actions, or permission findings.",
+    "Create a workflow file or any other file.",
+    "Report the unpinned-action, permissions, or timeout rules as passing or failing.",
+    "Run any command or contact a remote."
+  ]
+}

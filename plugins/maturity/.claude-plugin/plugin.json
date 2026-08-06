@@ -1,7 +1,7 @@
 {
   "name": "maturity",
-  "version": "0.2.0",
-  "description": "Evaluate repository maturity for Dockerfiles, npm projects, and repository hygiene, with fixes only on request.",
+  "version": "0.3.0",
+  "description": "Evaluate repository maturity for Dockerfiles, npm projects, repository hygiene, and CI workflows, with fixes only on request.",
   "author": {
     "name": "Tashtit contributors",
     "url": "https://github.com/tashtit"
@@ -14,13 +14,14 @@
     "dockerfile",
     "npm",
     "lockfile",
+    "github-actions",
     "static-analysis"
   ],
   "skills": "./skills/",
   "interface": {
     "displayName": "Maturity",
     "shortDescription": "Repository maturity evaluation and scoring",
-    "longDescription": "Statically evaluate a local checkout for Dockerfile and npm maturity issues, produce a prioritized findings report with a weighted maturity score, and apply deterministic fixes only when the user asks.",
+    "longDescription": "Statically evaluate a local checkout for Dockerfile, npm, repository-hygiene, and CI-workflow maturity issues, produce a prioritized findings report with a weighted maturity score, and apply deterministic fixes only when the user asks.",
     "developerName": "Tashtit contributors",
     "category": "Developer Tools",
     "capabilities": [

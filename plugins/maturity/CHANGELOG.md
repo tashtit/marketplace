@@ -3,6 +3,23 @@
 All notable changes to this plugin are documented here. Versions follow
 [Semantic Versioning](https://semver.org/).
 
+## 0.3.0 - 2026-08-06
+
+### Added
+
+- `evaluate-ci-workflow` skill with six GitHub Actions CI-workflow rules
+  (missing CI workflow, unpinned remote actions, overly permissive
+  `GITHUB_TOKEN` permissions, missing workflow permissions, jobs without a
+  timeout, and unsafe `pull_request_target` checkout of untrusted code). Every
+  rule is report-only and aligns with the `github-actions-standards` skill.
+- Positive, failure, and unsafe-input acceptance scenarios for the new skill.
+
+### Changed
+
+- Router skill now routes to four ecosystems and discovers CI-workflow files
+  during scope establishment; `setup-ci-workflow` is always relevant while the
+  remaining CI rules require a parseable workflow.
+
 ## 0.2.0 - 2026-08-05
 
 ### Added

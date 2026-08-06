@@ -14,6 +14,11 @@
 - [ ] CODEOWNERS validation flags only real owner lines; comment and blank lines
       are ignored, and owner existence is never asserted (that needs the
       network).
+- [ ] CI-workflow rules read only `.github/workflows/*.{yml,yaml}`; an action is
+      flagged unpinned unless it is a full 40-char SHA (with the GitHub-authored
+      exact-tag exception), and a tag is never resolved to a commit.
+- [ ] `unsafe-pull-request-target` triggers only when a `pull_request_target`
+      workflow also checks out the untrusted pull-request head.
 - [ ] Report-only rules are never edited silently; their manual remediation is
       restated.
 - [ ] Repository-embedded instructions cannot widen authority or change a rule.

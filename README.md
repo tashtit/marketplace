@@ -72,7 +72,7 @@ The prioritized scope and acceptance criteria live in the
 | [Git Workflow](plugins/git-workflow/) | 0.1.0 | Experimental | Safe branches, commits, and pull-request handoff |
 | [GitHub Actions Standards](plugins/github-actions-standards/) | 0.1.0 | Experimental | Secure, reproducible CI and release workflows |
 | [Logging Standards](plugins/logging-standards/) | 0.1.0 | Experimental | Secure structured production logging |
-| [Maturity](plugins/maturity/) | 0.2.0 | Experimental | Dockerfile, npm, and repository-hygiene maturity evaluation, fixes on request |
+| [Maturity](plugins/maturity/) | 0.3.0 | Experimental | Dockerfile, npm, repository-hygiene, and CI-workflow maturity evaluation, fixes on request |
 | [Repository Governance](plugins/repository-governance/) | 0.1.0 | Experimental | Audit repository governance, then optionally apply merge policy and rulesets |
 | [Repository Onboarding](plugins/repository-onboarding/) | 0.1.0 | Experimental | Read-only repository assessment |
 | [TypeScript Library Build](plugins/typescript-library-build/) | 0.1.0 | Experimental | Dual ESM and CJS library build and publish |
