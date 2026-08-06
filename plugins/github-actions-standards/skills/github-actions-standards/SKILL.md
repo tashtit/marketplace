@@ -41,8 +41,8 @@ For the primary continuous-integration workflow, Tashtit conventions are:
 
 - use `.github/workflows/ci.yml`;
 - use a stable workflow name such as `🏗️ CI`;
-- trigger on `pull_request`, push to the actual default branch, and
-  `workflow_dispatch`;
+- trigger on `workflow_dispatch`, `pull_request`, and push to the actual
+  default branch;
 - give every job a stable, simple identifier and an explicit
   `timeout-minutes`;
 - define workflow-level concurrency for ordinary CI;
@@ -120,12 +120,16 @@ the built-in `GITHUB_TOKEN` for GitHub operations. Use a GitHub App or another
 non-personal identity only when the built-in token cannot meet the documented
 requirement.
 
-Scoped permissions still leave the token reachable. `actions/checkout` writes
-the job's `GITHUB_TOKEN` into `.git/config` by default, so it stays available
-to every later step in that job, including build scripts and their transitive
-dependencies. Check out with `persist-credentials: false` unless a later step
-in the same job must authenticate as the repository; when it must, isolate
-that work in its own job with the narrowest permissions:
+Scoped permissions still leave the token reachable. `actions/checkout`
+persists the job's credential on the runner filesystem by default: versions
+before v6 write it into the checked-out `.git/config`, while v6 and later
+store it under `$RUNNER_TEMP`. In both cases it stays usable by every later
+step in that job, including build scripts and their transitive dependencies,
+and it can escape the run entirely when a step packages the workspace into an
+artifact. Check out with `persist-credentials: false` unless a later step in
+the same job must authenticate as the repository. When one must, declare
+`persist-credentials: true` explicitly so the intent is reviewable, and
+isolate that step in its own job with the narrowest permissions:
 
 ```yaml
 - uses: actions/checkout@<ref>
