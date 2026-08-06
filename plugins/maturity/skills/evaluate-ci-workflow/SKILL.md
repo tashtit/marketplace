@@ -60,11 +60,15 @@ cite. All rules are report-only.
 ### overly-permissive-permissions (High, weight 8, report-only)
 
 - Precondition: a parseable workflow exists.
-- Detect: a `permissions:` value of `read-all` or `write-all`, or a
-  `permissions:` map that grants `write-all`, at either the workflow top level
-  or any job. Report each location.
-- Why: a broad grant hands every job more `GITHUB_TOKEN` authority than it
-  needs, widening the blast radius if a step is compromised.
+- Detect: a blanket `GITHUB_TOKEN` grant — the scalar `permissions: read-all` or
+  `permissions: write-all` — at the workflow top level or on any job. Report
+  each location. A scoped `permissions:` map (for example `contents: read` with
+  `packages: write`) is the recommended least-privilege form and is not flagged
+  here; a job that needs no scoped `write` is instead covered by
+  `missing-workflow-permissions` when it declares nothing at all.
+- Why: `write-all` grants every scope at once and `read-all` grants every read
+  scope, so a compromised step in that job inherits far more authority than it
+  needs. A scoped map, by contrast, is auditable and least-privilege.
 - Remediation (manual): replace the broad grant with the exact permissions each
   job needs, preferring `permissions: {}` for jobs that do not use the token
   and `contents: read` for checkout-only jobs. Report only.
