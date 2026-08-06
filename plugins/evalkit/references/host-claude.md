@@ -53,6 +53,37 @@ tokens (in/out)   | ...k/...k               | ...k/...k
 cost (USD)        | $...                    | $...
 ```
 
+## Skill-invocation detection
+
+Determine whether a given skill actually **fired** in an arm by scanning its
+`runs/<arm>-<run-id>.jsonl` for a signal that names the skill under test (match on
+the skill's `name` front-matter value, not its directory):
+
+- A `tool_use` event with `name` == `Skill` whose `input.command` / `input.name`
+  names the skill, **or**
+- A `tool_use` `Read` of a path ending in that skill's `SKILL.md`.
+
+Presence of either ⇒ `skill_fired = yes`; absence of both ⇒ `skill_fired = no`.
+
+## Skill isolation
+
+Skills reach a session from two places: **repo-local** load paths inside the worktree
+(`.claude/skills/`, `.github/skills/`, `src/skills/`, …), and **plugins** installed
+under the user config dir (`$HOME/.claude/`), which every worktree and session shares.
+
+- **Repo-local** — isolate by deleting the skill's file/directory inside the arm's
+  worktree. Fully isolated; no shared state is touched.
+- **Plugin / global** — a worktree delete does not remove it. Isolate the arm by
+  running its headless `claude` session with `HOME` pointed at a **per-arm copy** of
+  the real home (so the copied `$HOME/.claude/` keeps its auth) in which the plugin
+  under test is removed for the arm that must lack the skill and left in place for the
+  arm that must have it. Never uninstall or edit the shared `$HOME/.claude/` in place —
+  that would corrupt other sessions and the parallel arm.
+
+Always verify isolation with **Skill-invocation detection**: the arm that must lack the
+skill must show `skill_fired = no`. If it fired anyway, isolation leaked — treat the
+run as invalid.
+
 ## Reviewer sub-agent
 
 The static skills use the bundled `skill-reviewer` agent (`agents/skill-reviewer.md`);

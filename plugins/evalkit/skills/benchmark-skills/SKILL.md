@@ -37,7 +37,9 @@ When invoked as `/benchmark-skills <skillA> <skillB> <task…>`, parse from `$AR
 
 1. Determine `skillA`, `skillB`, and `task` as described above. If any is missing, ask and stop.
 
-2. Resolve both skill paths against known load paths (`.claude/skills/`, `.github/skills/`, `src/skills/`, plugin skill paths). If either is unresolvable, report the error and stop.
+2. Resolve both skill paths against known load paths (`.claude/skills/`, `.github/skills/`, `src/skills/`, plugin skill paths). If either is unresolvable, report the error and stop. Then **classify each source** — see the **Skill isolation** section of the resolved host reference:
+   - **Repo-local** — the skill lives inside the repo tree, so removing the other skill from an arm is a single-file delete inside the worktree.
+   - **Plugin / global** — the skill is installed outside the repo and shared by every worktree, so a worktree delete does **not** remove it; isolate it per the host reference's **Skill isolation** procedure. If the host cannot isolate a plugin skill, **stop** and tell the user it cannot be benchmarked by the delete-based control — never run an arm that can still reach the skill it is supposed to exclude.
 
 3. Resolve `base` to the current HEAD:
    ```
@@ -51,7 +53,9 @@ When invoked as `/benchmark-skills <skillA> <skillB> <task…>`, parse from `$AR
    **Arm A** — only `skillA` present:
    ```
    git worktree add -b bench/A-<run-id> bench/A-<run-id> <base>
-   # delete <resolved skillB path> inside the worktree
+   # make skillB unavailable in this arm:
+   #   repo-local    → delete <resolved skillB path> inside the worktree
+   #   plugin/global → apply the host reference's Skill isolation procedure
    cd bench/A-<run-id>
    # headless session per the resolved host reference → runs/A-<run-id>.jsonl
    ```
@@ -59,7 +63,9 @@ When invoked as `/benchmark-skills <skillA> <skillB> <task…>`, parse from `$AR
    **Arm B** — only `skillB` present:
    ```
    git worktree add -b bench/B-<run-id> bench/B-<run-id> <base>
-   # delete <resolved skillA path> inside the worktree
+   # make skillA unavailable in this arm:
+   #   repo-local    → delete <resolved skillA path> inside the worktree
+   #   plugin/global → apply the host reference's Skill isolation procedure
    cd bench/B-<run-id>
    # headless session per the resolved host reference → runs/B-<run-id>.jsonl
    ```
@@ -80,13 +86,21 @@ When invoked as `/benchmark-skills <skillA> <skillB> <task…>`, parse from `$AR
 
    **Telemetry** — parse `runs/<arm>-<run-id>.jsonl` per the **Telemetry parsing** section of the resolved host reference.
 
-7. Worktrees are **always kept**. Never auto-remove — use `remove-worktrees` to clean up later.
+   **Fired-check** — from the same JSONL, determine whether the arm's skill was actually **invoked**, using the **Skill-invocation detection** section of the resolved host reference. The task is run exactly as written and neither skill is force-invoked, so this check is what separates a real comparison from a skill that simply never triggered. Record `skill_fired` (yes/no): `skillA` in arm A, `skillB` in arm B.
 
-8. Emit the report, substituting the **Report metric rows** from the resolved host reference for the `<host cost/token rows>` line:
+7. **Interpret the fired-check before recommending a winner:**
+   - If a skill did **not** fire in its own arm, that arm did not exercise the skill — do not read its metrics as that skill's result. Mark the arm **inconclusive** and tell the user the task did not trigger that skill; a fair head-to-head needs a task whose request matches both skills' stated triggers.
+   - If the excluded skill fired in an arm (e.g. `skillB` fired in arm A), isolation leaked — report the arm **invalid**, fix isolation, and re-run.
+   - Only compare the two arms as a head-to-head when each fired its own skill and neither fired the other.
+
+8. Worktrees are **always kept**. Never auto-remove — use `remove-worktrees` to clean up later.
+
+9. Emit the report, substituting the **Report metric rows** from the resolved host reference for the `<host cost/token rows>` line:
 
 ```
 metric            | A (<skillA>)       | B (<skillB>)
 ------------------|--------------------|-------------------
+skill_fired       | yes                | yes
 gates_passed      | ...                | ...
 review_findings   | 0c 1h 2m           | 0c 0h 1m
 <host cost/token rows>
@@ -101,9 +115,12 @@ worktree          | bench/A-<run-id>   | bench/B-<run-id>
 faster/cheaper; prefer B unless skillA has other advantages for this codebase.">
 ```
 
+If the fired-check flagged either arm **inconclusive** or **invalid** (step 7), say so above the table and withhold the recommendation for that pairing.
+
 ## Validity guardrails
 
 1. Identical **prompt**, **base commit**, and **model** across arms.
-2. Each arm has exactly one of the two skills present. No other skill state differs between arms.
+2. Each arm has exactly one of the two skills present. For repo-local skills this is a single-file delete; a plugin or globally installed skill is shared by every worktree, so it must be isolated per the host reference's **Skill isolation** procedure (or the run stopped). No other skill state differs between arms, and the per-arm fired-check confirms each arm ran its own skill and not the other.
 3. **Arm-blind reviewer** — the review subprocess receives the diff and project context, never the arm label.
 4. Single-run results are **directional**, not statistical. Report them as such. If the user needs statistical confidence, they can request repeated runs and compare distributions.
+5. **Fired-check.** Neither skill is force-invoked; triggering must happen naturally. An arm whose own skill never fired is **inconclusive**, and an arm where the excluded skill fired is **invalid**. Only compare arms that each fired their own skill and not the other.

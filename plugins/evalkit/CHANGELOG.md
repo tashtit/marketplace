@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.3.0 - 2026-08-06
+
+- Added a **fired-check** to `evaluate-skill` and `benchmark-skills`: the task is
+  still run exactly as written (no forced invocation), but each arm's telemetry is
+  now scanned to confirm the skill under test was actually invoked. A skill that
+  never triggered is reported **inconclusive** instead of "no effect," and a
+  control arm where an excluded skill leaked in is reported **invalid**. Added a
+  `skill_fired` row to both report tables and a `Skill-invocation detection`
+  section to `host-copilot.md` and `host-claude.md`.
+- Handled **plugin / globally installed** skills, which a worktree file-delete
+  cannot isolate: both dynamic skills now classify the skill source and, for
+  plugin/global skills, isolate the arm via the host reference's new `Skill
+  isolation` procedure (a per-arm `HOME` copy with the plugin removed) or stop
+  rather than run an invalid control. The fired-check verifies the isolation held.
+
 ## 0.2.0 - 2026-08-05
 
 - Lead every skill's description with a `Usage:` signature so required

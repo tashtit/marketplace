@@ -69,6 +69,39 @@ ai_units (AIU)    | ...                     | ...
 
 `ai_units (AIU)` is per-model-priced — the relevant cost dimension for `compare-models`.
 
+## Skill-invocation detection
+
+Determine whether a given skill actually **fired** in an arm by scanning its
+`runs/<arm>-<run-id>.jsonl` for a signal that names the skill under test (match on
+the skill's `name` front-matter value, not its directory):
+
+- A `tool.execution_start` event for the skill-invocation tool (`data.toolName` is
+  the `skill` tool) whose `data.arguments` / `data.input` names the skill, **or**
+- A `tool.execution_start` for a file read whose path ends in that skill's
+  `SKILL.md`, **or**
+- Any event whose payload otherwise references the skill's `name`.
+
+Presence of any of these ⇒ `skill_fired = yes`; absence of all ⇒ `skill_fired = no`.
+
+## Skill isolation
+
+Skills reach a session from two places: **repo-local** load paths inside the worktree
+(`.github/skills/`, `.claude/skills/`, `src/skills/`, …), and **plugins** installed
+under the user config dir (`$HOME/.copilot/`), which every worktree and session shares.
+
+- **Repo-local** — isolate by deleting the skill's file/directory inside the arm's
+  worktree. Fully isolated; no shared state is touched.
+- **Plugin / global** — a worktree delete does not remove it. Isolate the arm by
+  running its headless `copilot` session with `HOME` pointed at a **per-arm copy** of
+  the real home (so the copied `$HOME/.copilot/` keeps its auth/token) in which the
+  plugin under test is removed for the arm that must lack the skill and left in place
+  for the arm that must have it. Never uninstall or edit the shared `$HOME/.copilot/`
+  in place — that would corrupt other sessions and the parallel arm.
+
+Always verify isolation with **Skill-invocation detection**: the arm that must lack the
+skill must show `skill_fired = no`. If it fired anyway, isolation leaked — treat the
+run as invalid.
+
 ## Reviewer sub-agent
 
 The static skills use the bundled `skill-reviewer` agent (`agents/skill-reviewer.md`);
