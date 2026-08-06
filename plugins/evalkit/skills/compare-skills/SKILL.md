@@ -34,7 +34,7 @@ When invoked as `/compare-skills <skillA> <skillB>`, read both from `$ARGUMENTS`
 
 6. Emit the comparison:
 
-```
+```text
 skill comparison: <skillA> vs <skillB>
 
 dimension              | <skillA>            | <skillB>

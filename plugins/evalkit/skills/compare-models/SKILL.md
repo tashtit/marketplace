@@ -21,9 +21,9 @@ The headless CLI, its flags, the review-subprocess invocation, the telemetry sch
 
 ## Arguments
 
-| Param  | Required | Notes |
-|--------|----------|-------|
-| `task` | ✅       | The identical prompt passed to both arms. |
+| Param | Required | Notes |
+| --- | --- | --- |
+| `task` | ✅ | The identical prompt passed to both arms. |
 
 `task` is the only argument. The two models are **not** arguments — they are selected via picker after the task is known, so they can never be typos or unresolvable IDs.
 
@@ -44,7 +44,8 @@ When invoked as `/compare-models <task…>`, parse `task` from `$ARGUMENTS` as a
    If `modelA == modelB`, re-prompt: "Models must differ — pick a different model for Arm B." Do not error out cold.
 
 5. Resolve `base` to the current HEAD:
-   ```
+
+   ```bash
    base = git rev-parse HEAD
    ```
 
@@ -53,14 +54,16 @@ When invoked as `/compare-models <task…>`, parse `task` from `$ARGUMENTS` as a
 7. Run both arms **in parallel** (isolated worktrees). Use the **Headless invocation** from the resolved host reference for each session — passing `<modelA>` / `<modelB>` as the model — and capture JSONL to `runs/<arm>-<run-id>.jsonl`:
 
    **Arm A** — runs with `modelA`:
-   ```
+
+   ```bash
    git worktree add -b mcmp/A-<run-id> mcmp/A-<run-id> <base>
    cd mcmp/A-<run-id>
    # headless session (model = <modelA>) per the resolved host reference → runs/A-<run-id>.jsonl
    ```
 
    **Arm B** — runs with `modelB`:
-   ```
+
+   ```bash
    git worktree add -b mcmp/B-<run-id> mcmp/B-<run-id> <base>
    cd mcmp/B-<run-id>
    # headless session (model = <modelB>) per the resolved host reference → runs/B-<run-id>.jsonl
@@ -71,7 +74,8 @@ When invoked as `/compare-models <task…>`, parse `task` from `$ARGUMENTS` as a
    **`gates`** — run deterministic checks (tests / build / lint) → pass/fail per gate.
 
    **Commit the result:**
-   ```
+
+   ```bash
    git add -A && git commit -m "mcmp: <arm> arm result"
    git diff <base> > runs/<arm>-<run-id>.diff
    ```
@@ -86,7 +90,7 @@ When invoked as `/compare-models <task…>`, parse `task` from `$ARGUMENTS` as a
 
 10. Emit the report, substituting the **Report metric rows** from the resolved host reference for the `<host cost/token rows>` line:
 
-```
+```text
 metric            | A (<modelA>)       | B (<modelB>)
 ------------------|--------------------|-------------------
 gates_passed      | ...                | ...

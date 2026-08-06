@@ -11,14 +11,14 @@ Inspect and remove git worktrees (and their branches) that accumulate from harne
 
 ## Arguments
 
-| Param / subcommand  | Notes |
-|---------------------|-------|
-| *(no args)*         | Equivalent to `list` — print the worktree table and exit without removing anything. |
-| `list`              | Print the worktree table (name, branch, commit, age, status). No removals. |
-| `all`               | Remove every non-main worktree. Dirty worktrees are confirmed individually. |
+| Param / subcommand | Notes |
+| --- | --- |
+| *(no args)* | Equivalent to `list` — print the worktree table and exit without removing anything. |
+| `list` | Print the worktree table (name, branch, commit, age, status). No removals. |
+| `all` | Remove every non-main worktree. Dirty worktrees are confirmed individually. |
 | `--prefix <prefix>` | Remove all worktrees whose path starts with `<prefix>` (e.g. `eval/`, `bench/`, `mcmp/`). Case-sensitive; repeatable. |
-| `<name>…`           | One or more worktree paths to remove (e.g. `eval/with-20260803-143021`). |
-| `--keep-branches`   | Remove the worktree directory but leave the associated branch intact. |
+| `<name>…` | One or more worktree paths to remove (e.g. `eval/with-20260803-143021`). |
+| `--keep-branches` | Remove the worktree directory but leave the associated branch intact. |
 
 `all`, `--prefix`, and `<name>` are mutually exclusive — mixing them is a usage error.
 
@@ -61,7 +61,7 @@ When invoked as `/remove-worktrees [args]`, parse from `$ARGUMENTS`. When trigge
 
 ## List / summary table format
 
-```
+```text
 worktree                        branch                    commit   age      status
 ─────────────────────────────── ───────────────────────── ──────── ──────── ──────
 eval/with-20260803-143021       eval/with-20260803        a3f91c2  3d ago   clean
@@ -75,7 +75,7 @@ mcmp/B-20260805-090501          mcmp/B-20260805           c4b3e11  1d ago   clea
 ## Error handling
 
 | Condition | Behavior |
-|-----------|----------|
+| --- | --- |
 | No worktrees exist | Print "No worktrees found." and exit cleanly. |
 | Named worktree not found | Print "Unknown worktree: `<name>`." and abort before removing anything. |
 | `--prefix` matches nothing | Print "No worktrees match prefix '`<prefix>`'." and exit cleanly. |

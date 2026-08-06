@@ -9,7 +9,7 @@ below under a stable heading the skill refers to by name.
 One headless session per arm. Substitute `<task>`, `<model>`, and `<out>`
 (the arm's JSONL capture path):
 
-```
+```bash
 claude -p "<task>" \
        --model <model> \
        --permission-mode bypassPermissions \
@@ -25,7 +25,7 @@ claude -p "<task>" \
 Run the arm-blind code review as a headless `claude -p` subprocess **inside the
 arm's worktree** so it inherits `CLAUDE.md` and the project's skills:
 
-```
+```bash
 claude -p "<review instructions + the diff>" \
        --permission-mode bypassPermissions \
        --output-format stream-json
@@ -48,7 +48,7 @@ Parse `runs/<arm>-<run-id>.jsonl` — Claude Code stream-json:
 Substitute these host-specific rows into the skill's report table (in place of the
 generic cost/token rows):
 
-```
+```text
 tokens (in/out)   | ...k/...k               | ...k/...k
 cost (USD)        | $...                    | $...
 ```
