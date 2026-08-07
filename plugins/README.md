@@ -1,6 +1,9 @@
 # Plugins
 
 Each directory in this folder is an independently versioned Tashtit plugin.
+Every plugin README carries copy-paste installation commands for its own name;
+the marketplace-level instructions live in the
+[repository README](../README.md#installation).
 
 | Plugin | Version | Maturity | Purpose |
 | --- | --- | --- | --- |

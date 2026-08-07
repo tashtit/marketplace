@@ -33,3 +33,19 @@ or persistent storage are required by the plugin itself.
 See [CHANGELOG.md](CHANGELOG.md). Maintainer-only evaluation material lives
 outside the distributed plugin in the
 [repository test suite](../../tests/plugins/typescript-library-build/).
+
+## Installation
+
+```bash
+# Claude Code
+claude plugin marketplace add tashtit/marketplace
+claude plugin install typescript-library-build@tashtit
+
+# GitHub Copilot CLI
+copilot plugin marketplace add tashtit/marketplace
+copilot plugin install typescript-library-build@tashtit
+
+# OpenAI Codex CLI
+codex plugin marketplace add tashtit/marketplace
+codex plugin add typescript-library-build
+```

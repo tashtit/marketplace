@@ -21,3 +21,19 @@ read-only unless authoring is requested.
 See [CHANGELOG.md](CHANGELOG.md). Maintainer-only evaluation material lives
 outside the distributed plugin in the
 [repository test suite](../../tests/plugins/architecture-diagrams/).
+
+## Installation
+
+```bash
+# Claude Code
+claude plugin marketplace add tashtit/marketplace
+claude plugin install architecture-diagrams@tashtit
+
+# GitHub Copilot CLI
+copilot plugin marketplace add tashtit/marketplace
+copilot plugin install architecture-diagrams@tashtit
+
+# OpenAI Codex CLI
+codex plugin marketplace add tashtit/marketplace
+codex plugin add architecture-diagrams
+```

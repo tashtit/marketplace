@@ -5,6 +5,21 @@ reads a skill's files without running anything, and dynamic harnesses that run
 the same coding task under isolated git worktrees while varying exactly one
 factor, so any difference in the result is attributable to that factor.
 
+## Installation
+
+```bash
+# Claude Code
+claude plugin marketplace add tashtit/marketplace
+claude plugin install evalkit@tashtit
+
+# GitHub Copilot CLI
+copilot plugin marketplace add tashtit/marketplace
+copilot plugin install evalkit@tashtit
+```
+
+Evalkit is not published to the Codex catalog; it supports Claude Code and
+GitHub Copilot CLI only.
+
 ## Maturity
 
 **Experimental — 0.1.0.** Behavioral compatibility still requires review on the

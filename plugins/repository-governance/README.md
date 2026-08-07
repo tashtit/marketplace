@@ -10,6 +10,22 @@ regulatory policy remain authoritative. This plugin does not certify compliance
 or configuration security, and it does not turn one repository's required check
 name, integration id, reviewer, or branch into a universal rule.
 
+## Installation
+
+```bash
+# Claude Code
+claude plugin marketplace add tashtit/marketplace
+claude plugin install repository-governance@tashtit
+
+# GitHub Copilot CLI
+copilot plugin marketplace add tashtit/marketplace
+copilot plugin install repository-governance@tashtit
+
+# OpenAI Codex CLI
+codex plugin marketplace add tashtit/marketplace
+codex plugin add repository-governance
+```
+
 ## Skills
 
 - **`repository-governance`** — router. Selects audit versus apply from the

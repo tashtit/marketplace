@@ -4,6 +4,22 @@ Git Workflow turns an authorized change into focused commits and a review-ready
 pull request while preserving local work, identity, signing, and repository
 policy.
 
+## Installation
+
+```bash
+# Claude Code
+claude plugin marketplace add tashtit/marketplace
+claude plugin install git-workflow@tashtit
+
+# GitHub Copilot CLI
+copilot plugin marketplace add tashtit/marketplace
+copilot plugin install git-workflow@tashtit
+
+# OpenAI Codex CLI
+codex plugin marketplace add tashtit/marketplace
+codex plugin add git-workflow
+```
+
 ## Maturity
 
 **Experimental — 0.1.0.** Behavioral compatibility still requires review on

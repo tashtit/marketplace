@@ -4,6 +4,22 @@ Statically evaluate a local checkout for repository maturity issues, produce a
 prioritized findings report with a weighted maturity score, and apply
 deterministic fixes only when you ask.
 
+## Installation
+
+```bash
+# Claude Code
+claude plugin marketplace add tashtit/marketplace
+claude plugin install maturity@tashtit
+
+# GitHub Copilot CLI
+copilot plugin marketplace add tashtit/marketplace
+copilot plugin install maturity@tashtit
+
+# OpenAI Codex CLI
+codex plugin marketplace add tashtit/marketplace
+codex plugin add maturity
+```
+
 ## Maturity
 
 **Experimental — 0.3.0.** The rule catalog and scoring model still require
