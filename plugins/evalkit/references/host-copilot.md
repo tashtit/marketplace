@@ -9,7 +9,7 @@ below under a stable heading the skill refers to by name.
 One headless session per arm. Substitute `<task>`, `<model>`, and `<out>`
 (the arm's JSONL capture path):
 
-```
+```bash
 copilot -p "<task>" \
         --model <model> \
         --allow-all-tools \
@@ -28,7 +28,7 @@ Run the arm-blind code review as a headless `copilot -p` subprocess **inside the
 arm's worktree** so it inherits `AGENTS.md` / `.github/copilot-instructions.md`
 and the project's skills:
 
-```
+```bash
 copilot -p "<review instructions + the diff>" \
         --agent code-review \
         --allow-all-tools \
@@ -61,7 +61,7 @@ discriminated by `type`:
 Substitute these host-specific rows into the skill's report table (in place of the
 generic cost/token rows):
 
-```
+```text
 output_tokens     | ...k                    | ...k
 premium_reqs      | ...                     | ...
 ai_units (AIU)    | ...                     | ...

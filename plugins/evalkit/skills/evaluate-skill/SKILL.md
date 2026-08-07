@@ -21,10 +21,10 @@ The headless CLI, its flags, the review-subprocess invocation, the telemetry sch
 
 ## Arguments
 
-| Param   | Required | Notes |
-|---------|----------|-------|
-| `skill` | ✅       | Repo-local skill under test. |
-| `task`  | ✅       | The identical prompt passed to both arms. |
+| Param | Required | Notes |
+| --- | --- | --- |
+| `skill` | ✅ | Repo-local skill under test. |
+| `task` | ✅ | The identical prompt passed to both arms. |
 
 `skill` and `task` are the only arguments. The rest of the run is fixed by design so the usage stays simple: both arms use the **session's current model**, branch from the **current HEAD**, run the **gates and review** quality layers, do a **single run per arm**, and **keep** both worktrees afterward. If the user explicitly asks for something different — a different base commit, the judge layer, more than one run, or removing the worktrees afterward — honor that request; otherwise never prompt for these.
 
@@ -41,7 +41,8 @@ When invoked as `/evaluate-skill <skill> <task…>`, parse from `$ARGUMENTS`: `s
    - **Plugin / global** — the skill is installed outside the repo (a plugin or a globally installed copy shared by every worktree and session). A worktree delete does **not** remove it, so isolate it per the host reference's **Skill isolation** procedure. If the host cannot isolate it, **stop** and tell the user this skill cannot be evaluated by the delete-based control — never produce a run whose control arm can still reach the skill.
 
 3. Resolve `base` to the current HEAD:
-   ```
+
+   ```bash
    base = git rev-parse HEAD
    ```
 
@@ -50,14 +51,16 @@ When invoked as `/evaluate-skill <skill> <task…>`, parse from `$ARGUMENTS`: `s
 5. Run both arms **in parallel** (isolated worktrees). Both worktrees start from the same base with the skill present; the `without` arm deletes it before the session begins. Use the **Headless invocation** from the resolved host reference for each session, capturing JSONL to `runs/<arm>-<run-id>.jsonl`:
 
    **Arm `with`** — skill present (repo as-is):
-   ```
+
+   ```bash
    git worktree add -b eval/<skill>-with-<run-id> eval/with-<run-id> <base>
    cd eval/with-<run-id>
    # headless session per the resolved host reference → runs/with-<run-id>.jsonl
    ```
 
    **Arm `without`** — skill removed before work begins:
-   ```
+
+   ```bash
    git worktree add -b eval/<skill>-without-<run-id> eval/without-<run-id> <base>
    # make the skill unavailable in this arm:
    #   repo-local    → delete <resolved skill path> inside the worktree
@@ -71,7 +74,8 @@ When invoked as `/evaluate-skill <skill> <task…>`, parse from `$ARGUMENTS`: `s
    **`gates`** — run deterministic checks (tests / build / lint) → pass/fail per gate.
 
    **Commit the result:**
-   ```
+
+   ```bash
    git add -A && git commit -m "eval: <arm> arm result"
    git diff <base> > runs/<arm>-<run-id>.diff
    ```
@@ -93,7 +97,7 @@ When invoked as `/evaluate-skill <skill> <task…>`, parse from `$ARGUMENTS`: `s
 
 9. Emit the report, substituting the **Report metric rows** from the resolved host reference for the `<host cost/token rows>` line:
 
-```
+```text
 metric            | with                    | without
 ------------------|-------------------------|------------------------
 skill_fired       | yes                     | no

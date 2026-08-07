@@ -21,11 +21,11 @@ The headless CLI, its flags, the review-subprocess invocation, the telemetry sch
 
 ## Arguments
 
-| Param    | Required | Notes |
-|----------|----------|-------|
-| `skillA` | ✅       | First skill. Arm A. |
-| `skillB` | ✅       | Second skill. Arm B. |
-| `task`   | ✅       | The identical prompt passed to both arms. |
+| Param | Required | Notes |
+| --- | --- | --- |
+| `skillA` | ✅ | First skill. Arm A. |
+| `skillB` | ✅ | Second skill. Arm B. |
+| `task` | ✅ | The identical prompt passed to both arms. |
 
 `skillA`, `skillB`, and `task` are the only arguments. The rest of the run is fixed by design so the usage stays simple: both arms use the **session's current model**, branch from the **current HEAD**, run the **gates and review** quality layers, do a **single run per arm**, and **keep** both worktrees afterward. If the user explicitly asks for something different — a different base commit, the judge layer, more than one run, or removing the worktrees afterward — honor that request; otherwise never prompt for these.
 
@@ -42,7 +42,8 @@ When invoked as `/benchmark-skills <skillA> <skillB> <task…>`, parse from `$AR
    - **Plugin / global** — the skill is installed outside the repo and shared by every worktree, so a worktree delete does **not** remove it; isolate it per the host reference's **Skill isolation** procedure. If the host cannot isolate a plugin skill, **stop** and tell the user it cannot be benchmarked by the delete-based control — never run an arm that can still reach the skill it is supposed to exclude.
 
 3. Resolve `base` to the current HEAD:
-   ```
+
+   ```bash
    base = git rev-parse HEAD
    ```
 
@@ -51,7 +52,8 @@ When invoked as `/benchmark-skills <skillA> <skillB> <task…>`, parse from `$AR
 5. Run both arms **in parallel** (isolated worktrees). Both skills are repo-local and present at the base commit, so each arm deletes the other skill — a symmetric single-file operation. Use the **Headless invocation** from the resolved host reference for each session, capturing JSONL to `runs/<arm>-<run-id>.jsonl`:
 
    **Arm A** — only `skillA` present:
-   ```
+
+   ```bash
    git worktree add -b bench/A-<run-id> bench/A-<run-id> <base>
    # make skillB unavailable in this arm:
    #   repo-local    → delete <resolved skillB path> inside the worktree
@@ -61,7 +63,8 @@ When invoked as `/benchmark-skills <skillA> <skillB> <task…>`, parse from `$AR
    ```
 
    **Arm B** — only `skillB` present:
-   ```
+
+   ```bash
    git worktree add -b bench/B-<run-id> bench/B-<run-id> <base>
    # make skillA unavailable in this arm:
    #   repo-local    → delete <resolved skillA path> inside the worktree
@@ -75,7 +78,8 @@ When invoked as `/benchmark-skills <skillA> <skillB> <task…>`, parse from `$AR
    **`gates`** — run deterministic checks (tests / build / lint) → pass/fail per gate.
 
    **Commit the result:**
-   ```
+
+   ```bash
    git add -A && git commit -m "bench: <arm> arm result"
    git diff <base> > runs/<arm>-<run-id>.diff
    ```
@@ -97,7 +101,7 @@ When invoked as `/benchmark-skills <skillA> <skillB> <task…>`, parse from `$AR
 
 9. Emit the report, substituting the **Report metric rows** from the resolved host reference for the `<host cost/token rows>` line:
 
-```
+```text
 metric            | A (<skillA>)       | B (<skillB>)
 ------------------|--------------------|-------------------
 skill_fired       | yes                | yes

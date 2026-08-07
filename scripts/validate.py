@@ -21,6 +21,10 @@ PLUGIN_NAME = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 MARKDOWN_LINK = re.compile(r"!?\[[^\]]*]\(([^)]+)\)")
 ACTION_REFERENCE = re.compile(r"^\s*uses:\s+([^@\s]+)@([^\s#]+)", re.MULTILINE)
 FULL_SHA = re.compile(r"^[0-9a-f]{40}$")
+# A GitHub-authored action may use an exact release tag. A movable major tag
+# such as "v7" or a branch name stays forbidden because it is not immutable.
+GITHUB_AUTHORED_OWNERS = ("actions/", "github/")
+EXACT_RELEASE_TAG = re.compile(r"^v\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$")
 SCENARIO_TYPES = {"positive", "failure", "unsafe"}
 SCENARIO_FIELDS = {
     "id",
@@ -57,6 +61,16 @@ MATURITY_CLAIM = re.compile(
 )
 
 errors: list[str] = []
+
+# Directories that never carry repository content: version control and editor
+# state, plus installed dependencies. Kept in one place so every traversal
+# skips the same paths.
+IGNORED_DIRECTORIES = {".git", ".idea", "node_modules"}
+
+
+def is_ignored(path: Path) -> bool:
+    """Report whether a path sits inside a directory that is never validated."""
+    return any(part in IGNORED_DIRECTORIES for part in path.parts)
 
 
 def fail(path: Path, message: str) -> None:
@@ -640,7 +654,7 @@ def validate_maturity_claims(maturity_by_plugin: dict[str, str]) -> None:
 
 def validate_json_files() -> None:
     for path in ROOT.rglob("*.json"):
-        if ".git" in path.parts or ".idea" in path.parts:
+        if is_ignored(path):
             continue
         data = load_json(path)
         try:
@@ -656,11 +670,30 @@ def validate_json_files() -> None:
 
 
 def validate_action_pins() -> None:
+    """Enforce the pinning rule documented in github-actions-standards.
+
+    Any remote action may use a full commit SHA. An action published by GitHub
+    itself may instead use an exact release tag, which this repository accepts
+    because CI holds no secrets, write permissions, or deployment authority.
+    """
     workflows = ROOT / ".github" / "workflows"
-    for path in workflows.glob("*.yml"):
+    for path in sorted(workflows.glob("*.yml")) + sorted(workflows.glob("*.yaml")):
         content = path.read_text(encoding="utf-8")
         for action, reference in ACTION_REFERENCE.findall(content):
-            if not FULL_SHA.fullmatch(reference):
+            if FULL_SHA.fullmatch(reference):
+                continue
+            if action.startswith(("./", "docker://")):
+                continue
+            github_authored = action.startswith(GITHUB_AUTHORED_OWNERS)
+            if github_authored and EXACT_RELEASE_TAG.fullmatch(reference):
+                continue
+            if github_authored:
+                fail(
+                    path,
+                    f"{action} must use a full 40-character commit SHA or an "
+                    f"exact release tag such as v1.2.3, not {reference!r}",
+                )
+            else:
                 fail(
                     path,
                     f"{action} must be pinned to a full 40-character commit SHA",
@@ -673,8 +706,7 @@ def validate_retired_branding() -> None:
         if (
             not path.is_file()
             or path.is_symlink()
-            or ".git" in path.parts
-            or ".idea" in path.parts
+            or is_ignored(path)
         ):
             continue
         try:
@@ -688,7 +720,7 @@ def validate_retired_branding() -> None:
 def validate_links() -> None:
     for directory, directory_names, file_names in os.walk(ROOT, followlinks=False):
         directory_path = Path(directory)
-        if ".git" in directory_path.parts or ".idea" in directory_path.parts:
+        if is_ignored(directory_path):
             directory_names[:] = []
             continue
         for name in [*directory_names, *file_names]:
@@ -717,7 +749,7 @@ def validate_links() -> None:
 
 def validate_markdown_links() -> None:
     for path in ROOT.rglob("*.md"):
-        if ".git" in path.parts or ".idea" in path.parts:
+        if is_ignored(path):
             continue
         content = path.read_text(encoding="utf-8")
         for raw_target in MARKDOWN_LINK.findall(content):

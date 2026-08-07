@@ -1,10 +1,15 @@
 config:
   default: true
   line-length: false
+  # Most Markdown here is frontmatter-driven agent, skill, and template content
+  # whose body is a prompt payload rather than a document, so a leading H1 would
+  # change what the model receives.
+  first-line-heading: false
   no-duplicate-heading:
     siblings_only: true
   no-inline-html: false
 globs:
   - "**/*.md"
+  - "!node_modules"
   - "!LICENSE"
   - "!CODE_OF_CONDUCT.md"

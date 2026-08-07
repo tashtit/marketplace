@@ -15,7 +15,10 @@ Thumbs.db
 
 # Generated output
 .cache/
+__pycache__/
+*.pyc
 build/
 coverage/
 dist/
+node_modules/
 tmp/

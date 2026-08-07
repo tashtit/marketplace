@@ -41,8 +41,8 @@ For the primary continuous-integration workflow, Tashtit conventions are:
 
 - use `.github/workflows/ci.yml`;
 - use a stable workflow name such as `🏗️ CI`;
-- trigger on `pull_request`, push to the actual default branch, and
-  `workflow_dispatch`;
+- trigger on `workflow_dispatch`, `pull_request`, and push to the actual
+  default branch;
 - give every job a stable, simple identifier and an explicit
   `timeout-minutes`;
 - define workflow-level concurrency for ordinary CI;
@@ -74,6 +74,14 @@ repository decision, not a default.
 Keep job identifiers free of decoration because they become status-check
 contracts. Step names SHOULD be concise and diagnostic. Emojis MAY mark a few
 high-value steps but MUST NOT carry meaning by themselves.
+
+Quote string values in `with:`, `env:`, and runtime-version fields. Unquoted
+YAML scalars are type-coerced, which silently changes what an action receives:
+`node-version: 20.10` becomes the number `20.1`, and `no` becomes `false`.
+Booleans and numbers that are genuinely typed, such as
+`persist-credentials: false` or `timeout-minutes: 10`, stay unquoted. Note that
+a bare `on:` key is itself parsed as the boolean `true` by YAML loaders, so
+tooling that reads workflows MUST NOT assume the string key.
 
 ## Establish the trust boundary
 
@@ -111,6 +119,22 @@ never share a job with write permissions, protected secrets, or OIDC. Prefer
 the built-in `GITHUB_TOKEN` for GitHub operations. Use a GitHub App or another
 non-personal identity only when the built-in token cannot meet the documented
 requirement.
+
+Scoped permissions still leave the token reachable. `actions/checkout`
+persists the job's credential on the runner filesystem by default: versions
+before v6 write it into the checked-out `.git/config`, while v6 and later
+store it under `$RUNNER_TEMP`. In both cases it stays usable by every later
+step in that job, including build scripts and their transitive dependencies,
+and it can escape the run entirely when a step packages the workspace into an
+artifact. Check out with `persist-credentials: false` unless a later step in
+the same job must authenticate as the repository. When one must, declare
+`persist-credentials: true` explicitly so the intent is reviewable, and
+isolate that step in its own job with the narrowest permissions:
+
+```yaml
+- uses: actions/checkout@<ref>
+  with: { persist-credentials: false }
+```
 
 Prefer OIDC-issued, job-scoped credentials to long-lived cloud secrets. Bind
 the provider trust policy to the expected organization, repository, ref,
@@ -282,9 +306,10 @@ After editing:
 
 1. parse and lint every changed workflow with the repository's configured
    validator;
-2. inspect the diff for triggers, expression quoting, action pins,
-   permissions, secret flow, `if` conditions, `needs`, concurrency groups,
-   timeouts, artifact paths, and cleanup;
+2. inspect the diff for triggers, expression quoting, scalar quoting and YAML
+   type coercion, action pins, permissions, credential persistence, secret
+   flow, `if` conditions, `needs`, concurrency groups, timeouts, artifact
+   paths, and cleanup;
 3. run the repository's local checks that the workflow invokes when safe;
 4. verify required check names still match repository settings;
 5. observe a pull-request run and each trusted release path before claiming the
