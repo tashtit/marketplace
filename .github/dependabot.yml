@@ -8,19 +8,16 @@ updates:
       day: monday
       time: "06:00"
     open-pull-requests-limit: 5
-    labels:
-      - dependencies
+    labels: [dependencies]
     commit-message:
       prefix: ci
     groups:
       github-actions:
         applies-to: version-updates
-        patterns:
-          - "*"
+        patterns: ["*"]
       github-actions-security:
         applies-to: security-updates
-        patterns:
-          - "*"
+        patterns: ["*"]
 
   - package-ecosystem: npm
     directory: /
@@ -30,8 +27,7 @@ updates:
       time: "06:00"
     versioning-strategy: increase
     open-pull-requests-limit: 5
-    labels:
-      - dependencies
+    labels: [dependencies]
     commit-message:
       prefix: build
       prefix-development: chore
@@ -40,14 +36,11 @@ updates:
       npm-development:
         applies-to: version-updates
         dependency-type: development
-        patterns:
-          - "*"
+        patterns: ["*"]
       npm-production:
         applies-to: version-updates
         dependency-type: production
-        patterns:
-          - "*"
+        patterns: ["*"]
       npm-security:
         applies-to: security-updates
-        patterns:
-          - "*"
+        patterns: ["*"]
