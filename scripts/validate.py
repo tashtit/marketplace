@@ -57,8 +57,13 @@ RESULT_OUTCOMES = {"pass", "fail"}
 ISO_DATE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 SEMVER = re.compile(r"^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$")
 MATURITY_CLAIM = re.compile(
-    r"\b(Experimental|Candidate|Stable)\b\s*[—-]\s*(\d+\.\d+\.\d+[0-9A-Za-z.-]*)"
+    r"\b(Experimental|Candidate|Stable)\b\s*[—-]\s*"
+    r"(\d+\.\d+\.\d+(?:[0-9A-Za-z.-]*[0-9A-Za-z])?)"
 )
+FRONTMATTER_FIELD = re.compile(r"^([A-Za-z][A-Za-z0-9_-]*):\s*(.*)$")
+# The portable Agent Skills convention caps a skill description. A longer one
+# risks truncation or rejection by a host, which silently weakens triggering.
+SKILL_DESCRIPTION_LIMIT = 1024
 
 errors: list[str] = []
 
@@ -313,6 +318,86 @@ def validate_plugins(shared: dict[str, dict[str, Any]]) -> None:
         skill_file = plugin_dir / "skills" / name / "SKILL.md"
         if not skill_file.is_file():
             fail(skill_file, "canonical skill is missing")
+
+
+def parse_frontmatter(path: Path) -> dict[str, str]:
+    """Parse a SKILL.md frontmatter block of single-line key: value fields.
+
+    The frontmatter is what every supported host loads to decide whether a
+    skill triggers, so it is validated strictly: it must open the file, be
+    closed, and contain only blank lines and single-line scalar fields.
+    Anything more exotic risks parsing differently across hosts.
+    """
+    lines = path.read_text(encoding="utf-8").splitlines()
+    if not lines or lines[0].strip() != "---":
+        fail(path, "must begin with a '---' frontmatter block")
+        return {}
+    fields: dict[str, str] = {}
+    for line in lines[1:]:
+        if line.strip() == "---":
+            return fields
+        if not line.strip():
+            continue
+        match = FRONTMATTER_FIELD.match(line)
+        if not match:
+            fail(
+                path,
+                "frontmatter must contain only single-line 'key: value' "
+                f"fields; cannot parse: {line!r}",
+            )
+            continue
+        key, value = match.groups()
+        value = value.strip()
+        if len(value) >= 2 and value[0] == '"' and value[-1] == '"':
+            value = value[1:-1].replace('\\"', '"')
+        if key in fields:
+            fail(path, f"duplicate frontmatter field {key!r}")
+        fields[key] = value
+    fail(path, "frontmatter block is never closed with '---'")
+    return fields
+
+
+def validate_skill_frontmatter() -> None:
+    """Validate the trigger surface each host loads for every skill.
+
+    Hosts select skills from the frontmatter name and description alone and
+    flatten every installed skill into one namespace, so a malformed name, a
+    missing description, or a name collision breaks routing without producing
+    any load error a user would see.
+    """
+    seen: dict[str, Path] = {}
+    for path in sorted((ROOT / "plugins").glob("*/skills/*/SKILL.md")):
+        fields = parse_frontmatter(path)
+        name = fields.get("name", "")
+        if not name:
+            fail(path, "frontmatter must declare a name")
+        elif name != path.parent.name:
+            fail(
+                path,
+                f"frontmatter name {name!r} must match the skill directory "
+                f"{path.parent.name!r}",
+            )
+        elif not PLUGIN_NAME.fullmatch(name):
+            fail(path, "frontmatter name must use lowercase kebab-case")
+        elif name in seen:
+            fail(
+                path,
+                f"skill name {name!r} is already used by "
+                f"{seen[name].relative_to(ROOT)}; hosts flatten installed "
+                "skills into one namespace",
+            )
+        else:
+            seen[name] = path
+
+        description = fields.get("description", "")
+        if not description.strip():
+            fail(path, "frontmatter must declare a non-empty description")
+        elif len(description) > SKILL_DESCRIPTION_LIMIT:
+            fail(
+                path,
+                f"description is {len(description)} characters, above the "
+                f"{SKILL_DESCRIPTION_LIMIT}-character skill description limit",
+            )
 
 
 def parse_catalog_table(path: Path, prefix: str) -> dict[str, tuple[str, str]]:
@@ -629,8 +714,11 @@ def validate_acceptance(
     return maturity_by_plugin
 
 
-def validate_maturity_claims(maturity_by_plugin: dict[str, str]) -> None:
-    """Keep each plugin's advertised maturity aligned with its record."""
+def validate_maturity_claims(
+    shared: dict[str, dict[str, Any]],
+    maturity_by_plugin: dict[str, str],
+) -> None:
+    """Keep each plugin's advertised maturity and version aligned."""
     for name, maturity in sorted(maturity_by_plugin.items()):
         path = ROOT / "plugins" / name / "README.md"
         if not path.is_file():
@@ -643,12 +731,19 @@ def validate_maturity_claims(maturity_by_plugin: dict[str, str]) -> None:
                 "'<Experimental|Candidate|Stable> — <version>'",
             )
             continue
-        for level, _version in claims:
+        published_version = shared.get(name, {}).get("version")
+        for level, version in claims:
             if level.lower() != maturity:
                 fail(
                     path,
                     f"advertises maturity {level!r} but the acceptance record "
                     f"declares {maturity!r}",
+                )
+            if isinstance(published_version, str) and version != published_version:
+                fail(
+                    path,
+                    f"advertises version {version} but the published version "
+                    f"is {published_version}",
                 )
 
 
@@ -774,9 +869,10 @@ def main() -> int:
     catalogs = validate_marketplaces()
     shared = catalogs.get("shared", {})
     validate_plugins(shared)
+    validate_skill_frontmatter()
     scenario_index = validate_scenarios()
     maturity_by_plugin = validate_acceptance(shared, scenario_index)
-    validate_maturity_claims(maturity_by_plugin)
+    validate_maturity_claims(shared, maturity_by_plugin)
     validate_catalog_tables(shared, maturity_by_plugin)
     validate_json_files()
     validate_action_pins()

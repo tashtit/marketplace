@@ -1,6 +1,6 @@
 {
   "name": "repository-governance",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Audit-first GitHub repository governance with a safe path to apply merge policy and rulesets.",
   "author": {
     "name": "Tashtit contributors",

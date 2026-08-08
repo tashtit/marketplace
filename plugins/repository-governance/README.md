@@ -5,7 +5,7 @@ skill dispatches between two modes: an audit-first review that inventories
 governance and proposes a reversible plan, and a confirmed apply of Tashtit's
 standard merge policy and a reviewed ruleset.
 
-**Maturity: Experimental — 0.1.0.** Repository, organization, enterprise, and
+**Maturity: Experimental — 0.1.1.** Repository, organization, enterprise, and
 regulatory policy remain authoritative. This plugin does not certify compliance
 or configuration security, and it does not turn one repository's required check
 name, integration id, reviewer, or branch into a universal rule.

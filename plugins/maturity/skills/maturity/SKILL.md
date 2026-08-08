@@ -1,6 +1,6 @@
 ---
 name: maturity
-description: Evaluate a local checkout for repository maturity issues in Dockerfiles and npm projects (package.json, lockfiles, .npmrc, .nvmrc), then report prioritized findings and a weighted maturity score. Use when asked to assess repository maturity, audit a Dockerfile or npm setup, score technical debt, or check dependency and container hygiene before merging or releasing. Applies deterministic fixes only when the user explicitly asks. Not for running builds, installing dependencies, or contacting remote services during evaluation.
+description: Evaluate a local checkout for repository maturity issues in Dockerfiles, npm projects (package.json, lockfiles, .npmrc, .nvmrc), repository hygiene (CODEOWNERS, README, CONTRIBUTING, .editorconfig), and GitHub Actions CI workflows, then report prioritized findings and a weighted maturity score. Use when asked to assess repository maturity, audit a Dockerfile, npm setup, repository hygiene, or CI-workflow safety, score technical debt, or check dependency, container, or automation hygiene before merging or releasing. Applies deterministic fixes only when the user explicitly asks. Not for running builds, installing dependencies, or contacting remote services during evaluation.
 ---
 
 # Maturity

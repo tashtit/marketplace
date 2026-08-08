@@ -1,6 +1,6 @@
 ---
 name: github-actions-standards
-description: Design, implement, or review secure and reproducible GitHub Actions workflows. Use when creating or changing CI, test, build, artifact, matrix, release, deployment, or reusable workflows; choosing triggers, permissions, concurrency, runners, caching, secrets, OIDC, environments, or action pins; or diagnosing unsafe, flaky, redundant, slow, or incomplete automation under .github/workflows.
+description: Design, implement, or review secure and reproducible GitHub Actions workflows. Use when creating or changing CI, test, build, artifact, matrix, release, deployment, or reusable workflows; choosing triggers, permissions, concurrency, runners, caching, secrets, OIDC, environments, or action pins; or diagnosing unsafe, flaky, redundant, slow, or incomplete automation under .github/workflows. For a scored, read-only maturity audit of existing workflows, use the maturity plugin's evaluate-ci-workflow instead.
 ---
 
 # GitHub Actions Standards

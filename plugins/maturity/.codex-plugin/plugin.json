@@ -1,6 +1,6 @@
 {
   "name": "maturity",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Evaluate repository maturity for Dockerfiles, npm projects, repository hygiene, and CI workflows, with fixes only on request.",
   "author": {
     "name": "Tashtit contributors",
@@ -30,7 +30,7 @@
       "Opt-in deterministic fixes"
     ],
     "defaultPrompt": [
-      "Evaluate this repository's Dockerfile and npm maturity and report findings with a score."
+      "Evaluate this repository's Dockerfile, npm, repository-hygiene, and CI-workflow maturity and report findings with a score."
     ]
   }
 }

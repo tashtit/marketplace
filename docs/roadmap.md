@@ -59,11 +59,13 @@ omitted until maintainers establish delivery capacity.
 
 ### Repository settings
 
-- [ ] GitHub rulesets and protected-branch recommendations.
-- [ ] Required reviews, status checks, signed changes, and merge strategies.
-- [ ] CODEOWNERS, issue templates, security features, and dependency updates.
-- [ ] Audit-only mode before any settings mutation.
-- [ ] Policy-as-code examples with rollback instructions.
+Shipped as the `repository-governance` plugin.
+
+- [x] GitHub rulesets and protected-branch recommendations.
+- [x] Required reviews, status checks, signed changes, and merge strategies.
+- [x] CODEOWNERS, issue templates, security features, and dependency updates.
+- [x] Audit-only mode before any settings mutation.
+- [x] Policy-as-code examples with rollback instructions.
 
 ### Code style and maintainability
 

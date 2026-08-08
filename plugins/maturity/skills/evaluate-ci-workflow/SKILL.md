@@ -1,6 +1,6 @@
 ---
 name: evaluate-ci-workflow
-description: Evaluate a local checkout for GitHub Actions CI-workflow hygiene issues — missing CI workflow, unpinned remote actions, overly permissive or undeclared GITHUB_TOKEN permissions, jobs without a timeout, and unsafe pull_request_target checkout of untrusted code. Use when asked to audit or evaluate CI, GitHub Actions, workflow security, action pinning, or token permissions, or to score how safe and reproducible a repository's automation is. Reports findings only; does not edit workflows.
+description: Evaluate a local checkout for GitHub Actions CI-workflow hygiene issues — missing CI workflow, unpinned remote actions, overly permissive or undeclared GITHUB_TOKEN permissions, jobs without a timeout, and unsafe pull_request_target checkout of untrusted code. Use when asked to audit or evaluate CI, GitHub Actions, workflow security, action pinning, or token permissions, or to score how safe and reproducible a repository's automation is. Reports findings only; does not edit workflows — to design, fix, or harden workflows, use github-actions-standards.
 ---
 
 # Evaluate CI-workflow hygiene

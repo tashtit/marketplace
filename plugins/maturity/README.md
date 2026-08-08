@@ -6,7 +6,7 @@ deterministic fixes only when you ask.
 
 ## Maturity
 
-**Experimental — 0.3.0.** The rule catalog and scoring model still require
+**Experimental — 0.3.1.** The rule catalog and scoring model still require
 review on each target agent before any stability is claimed.
 
 ## Skills

@@ -3,7 +3,7 @@
 Design, implement, and review secure, reproducible GitHub Actions workflows for
 continuous integration, artifact verification, releases, and deployments.
 
-**Maturity: Experimental — 0.1.0.** Repository policy, supported runtimes,
+**Maturity: Experimental — 0.2.1.** Repository policy, supported runtimes,
 required checks, deployment environments, and release authority remain
 repository-specific. This plugin does not certify a workflow or supply chain.
 

@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.1 - 2026-08-08
+
+- Skill description now defers scored, read-only maturity audits to the
+  maturity plugin's `evaluate-ci-workflow`, so overlapping "audit our GitHub
+  Actions" requests route deterministically.
+- Corrected the README maturity claim, which still advertised 0.1.0.
+
 ## 0.2.0 - 2026-08-06
 
 - Added credential-persistence guidance: check out with

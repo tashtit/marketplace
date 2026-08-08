@@ -1,6 +1,6 @@
 ---
 name: repository-settings
-description: Audit or plan changes to GitHub repository and organization governance — rulesets, protected branches, required reviews and status checks, signing, merge strategies, CODEOWNERS, issue templates, security features, dependency updates, and policy-as-code. Use when reviewing or auditing repository settings, checking governance before a compliance or security review, or planning a change that could weaken protections. Produces an audit-only report by default; to apply changes with confirmation and rollback, use repository-policy.
+description: Audit or plan changes to GitHub repository and organization governance — rulesets, protected branches, required reviews and status checks, signing, merge strategies, CODEOWNERS, issue templates, security features, dependency updates, and policy-as-code. Use when reviewing or auditing repository settings, checking governance before a compliance or security review, or planning a change that could weaken protections. Produces an audit-only report by default; to apply changes with confirmation and rollback, use repository-policy. Audits GitHub-hosted configuration — for local-checkout file hygiene such as CODEOWNERS or README presence, use the maturity plugin's evaluate-repository-hygiene.
 ---
 
 # Repository Settings

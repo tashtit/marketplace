@@ -7,7 +7,7 @@ factor, so any difference in the result is attributable to that factor.
 
 ## Maturity
 
-**Experimental — 0.1.0.** Behavioral compatibility still requires review on the
+**Experimental — 0.3.0.** Behavioral compatibility still requires review on the
 target agent.
 
 ## Skills

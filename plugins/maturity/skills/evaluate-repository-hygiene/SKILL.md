@@ -1,6 +1,6 @@
 ---
 name: evaluate-repository-hygiene
-description: Evaluate a local checkout for repository hygiene issues — missing or malformed CODEOWNERS, missing README, missing CONTRIBUTING guide, and a missing .editorconfig. Use when asked to audit or evaluate repository hygiene, documentation, code ownership, or contributor onboarding, or to score how well a repository is set up for collaboration. Applies deterministic fixes only when the user explicitly asks.
+description: Evaluate a local checkout for repository hygiene issues — missing or malformed CODEOWNERS, missing README, missing CONTRIBUTING guide, and a missing .editorconfig. Use when asked to audit or evaluate repository hygiene, documentation, code ownership, or contributor onboarding, or to score how well a repository is set up for collaboration. Evaluates files in the local checkout only — to audit GitHub-hosted settings such as branch protection, rulesets, or merge policy, use repository-settings. Applies deterministic fixes only when the user explicitly asks.
 ---
 
 # Evaluate repository hygiene
