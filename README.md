@@ -16,6 +16,36 @@ identifier is `tashtit`.
 > and compatibility model are being established before the first stable plugin
 > release. Nothing is currently advertised as production-ready.
 
+## Installation
+
+Add the marketplace once per platform, then install plugins by name.
+`engineering-standards` below is an example; any name from
+[Available plugins](#available-plugins) works.
+
+### Claude Code
+
+```bash
+claude plugin marketplace add tashtit/marketplace
+claude plugin install engineering-standards@tashtit
+```
+
+### GitHub Copilot CLI
+
+```bash
+copilot plugin marketplace add tashtit/marketplace
+copilot plugin install engineering-standards@tashtit
+```
+
+### OpenAI Codex CLI
+
+```bash
+codex plugin marketplace add tashtit/marketplace
+codex plugin add engineering-standards
+```
+
+Every plugin except `evalkit` is published to the Codex catalog; `evalkit`
+supports Claude Code and GitHub Copilot CLI only.
+
 ## Why Tashtit
 
 Agent output should be safe to review, predictable to operate, and suitable for

@@ -30,3 +30,19 @@ service, or persistent storage are required by the plugin itself.
 See [CHANGELOG.md](CHANGELOG.md). Maintainer-only evaluation material lives
 outside the distributed plugin in the
 [repository test suite](../../tests/plugins/github-actions-standards/).
+
+## Installation
+
+```bash
+# Claude Code
+claude plugin marketplace add tashtit/marketplace
+claude plugin install github-actions-standards@tashtit
+
+# GitHub Copilot CLI
+copilot plugin marketplace add tashtit/marketplace
+copilot plugin install github-actions-standards@tashtit
+
+# OpenAI Codex CLI
+codex plugin marketplace add tashtit/marketplace
+codex plugin add github-actions-standards
+```

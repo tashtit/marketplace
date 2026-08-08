@@ -5,6 +5,22 @@ starts changing it. It discovers architecture, local workflows, delivery
 automation, ownership, operational context, and material unknowns, then returns
 a structured report tied to repository evidence.
 
+## Installation
+
+```bash
+# Claude Code
+claude plugin marketplace add tashtit/marketplace
+claude plugin install repository-onboarding@tashtit
+
+# GitHub Copilot CLI
+copilot plugin marketplace add tashtit/marketplace
+copilot plugin install repository-onboarding@tashtit
+
+# OpenAI Codex CLI
+codex plugin marketplace add tashtit/marketplace
+codex plugin add repository-onboarding
+```
+
 ## Maturity
 
 **Experimental — 0.1.0.** The packaging and safety contract are validated, but

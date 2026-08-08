@@ -10,6 +10,22 @@ plugin never treats a checklist as a compliance or production-readiness claim.
 The plugin requires no network, credentials, telemetry, or persistent storage.
 Review requests remain read-only; implementation happens only when requested.
 
+## Installation
+
+```bash
+# Claude Code
+claude plugin marketplace add tashtit/marketplace
+claude plugin install engineering-standards@tashtit
+
+# GitHub Copilot CLI
+copilot plugin marketplace add tashtit/marketplace
+copilot plugin install engineering-standards@tashtit
+
+# OpenAI Codex CLI
+codex plugin marketplace add tashtit/marketplace
+codex plugin add engineering-standards
+```
+
 ## Threat model
 
 | Threat | Control |

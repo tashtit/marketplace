@@ -20,3 +20,19 @@ read-only unless implementation is requested.
 See [CHANGELOG.md](CHANGELOG.md). Maintainer-only evaluation material lives
 outside the distributed plugin in the
 [repository test suite](../../tests/plugins/logging-standards/).
+
+## Installation
+
+```bash
+# Claude Code
+claude plugin marketplace add tashtit/marketplace
+claude plugin install logging-standards@tashtit
+
+# GitHub Copilot CLI
+copilot plugin marketplace add tashtit/marketplace
+copilot plugin install logging-standards@tashtit
+
+# OpenAI Codex CLI
+codex plugin marketplace add tashtit/marketplace
+codex plugin add logging-standards
+```
