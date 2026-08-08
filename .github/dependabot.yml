@@ -10,7 +10,6 @@ updates:
     open-pull-requests-limit: 5
     labels:
       - dependencies
-      - github_actions
     commit-message:
       prefix: ci
     groups:
@@ -33,7 +32,6 @@ updates:
     open-pull-requests-limit: 5
     labels:
       - dependencies
-      - javascript
     commit-message:
       prefix: build
       prefix-development: chore
