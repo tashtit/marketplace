@@ -485,7 +485,9 @@ def validate_string_list(path: Path, value: Any, field: str) -> list[str]:
     return value
 
 
-def validate_scenarios() -> dict[str, dict[str, set[str]]]:
+def validate_scenarios(
+    shared: dict[str, dict[str, Any]],
+) -> dict[str, dict[str, set[str]]]:
     """Validate scenario shape and index each plugin's scenario platforms.
 
     The returned index is what makes the acceptance gate enforceable: it states
@@ -501,6 +503,7 @@ def validate_scenarios() -> dict[str, dict[str, set[str]]]:
         if path.is_dir() and not path.name.startswith(".")
     ):
         plugin_scenarios = index.setdefault(plugin_dir.name, {})
+        declared_platforms = plugin_platforms(shared.get(plugin_dir.name, {}))
         tests_root = ROOT / "tests" / "plugins" / plugin_dir.name
         review_path = tests_root / "REVIEW.md"
         if not review_path.is_file():
@@ -549,6 +552,16 @@ def validate_scenarios() -> dict[str, dict[str, set[str]]]:
                     path,
                     f"unsupported platforms {unknown_platforms}; "
                     f"expected values from {sorted(PLATFORMS)}",
+                )
+            undeclared_platforms = sorted(
+                (set(platforms) & PLATFORMS) - declared_platforms
+            )
+            if undeclared_platforms:
+                fail(
+                    path,
+                    f"platforms {undeclared_platforms} are not declared by "
+                    f"{plugin_dir.name}; expected values from "
+                    f"{sorted(declared_platforms)}",
                 )
             if scenario_id:
                 plugin_scenarios[scenario_id] = set(platforms) & PLATFORMS
@@ -870,7 +883,7 @@ def main() -> int:
     shared = catalogs.get("shared", {})
     validate_plugins(shared)
     validate_skill_frontmatter()
-    scenario_index = validate_scenarios()
+    scenario_index = validate_scenarios(shared)
     maturity_by_plugin = validate_acceptance(shared, scenario_index)
     validate_maturity_claims(shared, maturity_by_plugin)
     validate_catalog_tables(shared, maturity_by_plugin)
