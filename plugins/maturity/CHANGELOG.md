@@ -3,6 +3,18 @@
 All notable changes to this plugin are documented here. Versions follow
 [Semantic Versioning](https://semver.org/).
 
+## 0.3.1 - 2026-08-08
+
+### Changed
+
+- Router skill description now names all four ecosystems (Dockerfiles, npm,
+  repository hygiene, and CI workflows) so general maturity requests route
+  through it; it previously mentioned only Dockerfiles and npm.
+- `evaluate-ci-workflow` and `evaluate-repository-hygiene` descriptions now
+  state their boundaries with `github-actions-standards` and
+  `repository-settings`, so overlapping requests route deterministically.
+- Default prompt now covers all four ecosystems.
+
 ## 0.3.0 - 2026-08-06
 
 ### Added

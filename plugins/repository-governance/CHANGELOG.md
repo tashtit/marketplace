@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.1 - 2026-08-08
+
+- `repository-settings` description now states that it audits GitHub-hosted
+  configuration and defers local-checkout file hygiene to the maturity
+  plugin's `evaluate-repository-hygiene`, so overlapping CODEOWNERS audit
+  requests route deterministically.
+
 ## 0.1.0 - 2026-08-05
 
 - Merged the `repository-settings` and `repository-policy` plugins into one
