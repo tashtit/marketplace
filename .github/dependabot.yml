@@ -8,9 +8,39 @@ updates:
       day: monday
       time: "06:00"
     open-pull-requests-limit: 5
+    labels: [dependencies]
     commit-message:
       prefix: ci
     groups:
       github-actions:
-        patterns:
-          - "*"
+        applies-to: version-updates
+        patterns: ["*"]
+      github-actions-security:
+        applies-to: security-updates
+        patterns: ["*"]
+
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+    versioning-strategy: increase
+    open-pull-requests-limit: 5
+    labels: [dependencies]
+    commit-message:
+      prefix: build
+      prefix-development: chore
+      include: scope
+    groups:
+      npm-development:
+        applies-to: version-updates
+        dependency-type: development
+        patterns: ["*"]
+      npm-production:
+        applies-to: version-updates
+        dependency-type: production
+        patterns: ["*"]
+      npm-security:
+        applies-to: security-updates
+        patterns: ["*"]
