@@ -4,8 +4,15 @@
       runtimes are discovered rather than invented.
 - [ ] The primary CI uses explicit triggers, concurrency, timeouts, stable job
       names, least-privilege permissions, and real dependency edges.
+- [ ] String values in `with:`, `env:`, and runtime-version fields are quoted
+      so YAML type coercion cannot change them; genuinely typed booleans and
+      numbers stay unquoted.
 - [ ] Untrusted PR code cannot access secrets, write tokens, OIDC, protected
       environments, or persistent runners.
+- [ ] Checkout uses `persist-credentials: false` unless a later step in the
+      same job must authenticate as the repository, in which case
+      `persist-credentials: true` is declared explicitly and isolated in its
+      own least-privilege job.
 - [ ] Secrets do not appear in source, command arguments, or logs; derived
       values are masked before output and exposure response is documented.
 - [ ] Non-GitHub actions and cross-repository reusable workflows use verified
