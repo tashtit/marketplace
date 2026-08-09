@@ -15,7 +15,7 @@ scan-secrets:
 	node scripts/scan-secrets.js
 
 test:
-	node --test tests/scripts/
+	node --test tests/scripts/*.test.js
 
 validate:
 	node scripts/sync.js --check
