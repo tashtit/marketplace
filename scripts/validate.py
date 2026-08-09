@@ -19,7 +19,11 @@ MARKETPLACES = {
 }
 PLUGIN_NAME = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 MARKDOWN_LINK = re.compile(r"!?\[[^\]]*]\(([^)]+)\)")
-ACTION_REFERENCE = re.compile(r"^\s*uses:\s+([^@\s]+)@([^\s#]+)", re.MULTILINE)
+# A step may open with "- uses:" or carry "uses:" on its own line; both forms
+# reference an action and both must satisfy the pinning rule.
+ACTION_REFERENCE = re.compile(
+    r"^\s*(?:-\s+)?uses:\s+([^@\s]+)@([^\s#]+)", re.MULTILINE
+)
 FULL_SHA = re.compile(r"^[0-9a-f]{40}$")
 # A GitHub-authored action may use an exact release tag. A movable major tag
 # such as "v7" or a branch name stays forbidden because it is not immutable.
