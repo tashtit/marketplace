@@ -1,7 +1,7 @@
 // Unit tests for scripts/scan-secrets.js.
 //
 // Every synthetic credential below is assembled by concatenation so that
-// this file, which the scanner itself scans on every `make validate`, never
+// this file, which the scanner itself scans on every `npm run validate`, never
 // contains a contiguous string matching any rule.
 
 import assert from 'node:assert/strict';

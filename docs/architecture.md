@@ -76,8 +76,8 @@ distribution artifact is required:
 - `.agents/plugins/marketplace.json` is generated for Codex because its
   marketplace schema includes different source and policy fields.
 
-Run `make sync` to regenerate every Codex artifact: the catalog above and each
-plugin's `.codex-plugin/plugin.json`. `make validate` and CI fail if any of them
+Run `npm run sync` to regenerate every Codex artifact: the catalog above and each
+plugin's `.codex-plugin/plugin.json`. `npm run validate` and CI fail if any of them
 differs from the canonical source. Because JSON carries no comment syntax, these
 files cannot carry an in-file generated marker; they are marked as generated here
 and in `plugins/README.md`, and must never be hand-edited.

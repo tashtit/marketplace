@@ -32,7 +32,7 @@ manifest at `.codex-plugin/plugin.json`, so each one is generated from the
 plugin's canonical `.claude-plugin/plugin.json`. Symlinking the two is not an
 option: a checkout with `core.symlinks=false` turns the manifest into a text
 file holding the link target, which no host can parse. Both Codex artifacts are
-produced by `make sync` and must never be hand-edited.
+produced by `npm run sync` and must never be hand-edited.
 
 ## Per-plugin platform targeting
 
@@ -45,8 +45,8 @@ are read directly by both Claude Code and GitHub Copilot, so a plugin in the
 catalog is inherently discoverable by both; `platforms` cannot hide it from
 either. Codex is the only platform with a separately generated adapter, so
 omitting `codex` from `platforms` suppresses that plugin's Codex catalog entry
-and `.codex-plugin/plugin.json` — `make sync` does not generate them and
-`make validate` fails if a stale one is present. This keeps a Copilot-only
+and `.codex-plugin/plugin.json` — `npm run sync` does not generate them and
+`npm run validate` fails if a stale one is present. This keeps a Copilot-only
 plugin (for example, one whose harnesses invoke `copilot -p`) out of the Codex
 catalog rather than advertising an installable adapter it cannot honor.
 
