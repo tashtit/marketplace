@@ -208,8 +208,13 @@ def render(value: dict[str, Any]) -> str:
     return json.dumps(value, indent=2, ensure_ascii=False) + "\n"
 
 
-def collect_artifacts() -> list[tuple[Path, str]]:
-    """Pair every generated path with the content its canonical source implies."""
+def collect_artifacts() -> tuple[list[tuple[Path, str]], list[Path]]:
+    """Pair every generated path with the content its canonical source implies.
+
+    Also returns the generated adapters that must no longer exist, so that a
+    plugin dropping codex from its platforms is remediated by `make sync`
+    instead of leaving an adapter that only `make validate` complains about.
+    """
     marketplace = load_shared_marketplace()
     codex_targets = {
         plugin["name"]
@@ -219,17 +224,18 @@ def collect_artifacts() -> list[tuple[Path, str]]:
     artifacts = [
         (CODEX_MARKETPLACE_PATH, render(build_codex_marketplace(marketplace)))
     ]
+    obsolete: list[Path] = []
     for plugin_dir in plugin_directories():
+        adapter = plugin_dir / CODEX_MANIFEST_DIR / "plugin.json"
         if plugin_dir.name not in codex_targets:
+            if adapter.is_file() or adapter.is_symlink():
+                obsolete.append(adapter)
             continue
         shared_manifest = plugin_dir / SHARED_MANIFEST_DIR / "plugin.json"
         artifacts.append(
-            (
-                plugin_dir / CODEX_MANIFEST_DIR / "plugin.json",
-                load_shared_manifest(shared_manifest, plugin_dir.name),
-            )
+            (adapter, load_shared_manifest(shared_manifest, plugin_dir.name))
         )
-    return artifacts
+    return artifacts, obsolete
 
 
 def sync_artifact(path: Path, expected: str, check: bool) -> bool:
@@ -265,6 +271,26 @@ def sync_artifact(path: Path, expected: str, check: bool) -> bool:
     return True
 
 
+def remove_obsolete(path: Path, check: bool) -> bool:
+    """Remove one adapter whose plugin no longer targets codex."""
+    if check:
+        print(
+            f"{relative(path)}: plugin no longer targets codex, so its "
+            "generated adapter must be removed",
+            file=sys.stderr,
+        )
+        return False
+    path.unlink()
+    try:
+        path.parent.rmdir()
+    except OSError:
+        # The directory holds files this script does not generate; validation
+        # will report them if they are a problem.
+        pass
+    print(f"removed {relative(path)}")
+    return True
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -275,7 +301,7 @@ def main() -> int:
     args = parser.parse_args()
 
     try:
-        artifacts = collect_artifacts()
+        artifacts, obsolete = collect_artifacts()
     except SyncError as error:
         print(f"canonical source validation failed: {error}", file=sys.stderr)
         return 1
@@ -285,6 +311,9 @@ def main() -> int:
         for path, expected in artifacts
         if not sync_artifact(path, expected, args.check)
     ]
+    stale.extend(
+        path for path in obsolete if not remove_obsolete(path, args.check)
+    )
     if stale:
         print(
             "Generated Codex adapters are stale; run `make sync` and include "
