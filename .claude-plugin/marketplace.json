@@ -56,7 +56,7 @@
       "name": "github-actions-standards",
       "source": "./plugins/github-actions-standards",
       "description": "Secure, reproducible GitHub Actions CI and release standards.",
-      "version": "0.3.0",
+      "version": "0.4.0",
       "license": "Apache-2.0",
       "category": "Developer Tools"
     },

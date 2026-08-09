@@ -97,14 +97,36 @@ untrusted input.
 - Do not use `pull_request_target` to build, install, test, or execute pull
   request code. If target-context automation is necessary, keep it
   metadata-only and never checkout or execute the untrusted head.
-- Do not interpolate untrusted GitHub expressions directly into a `run` script.
-  Pass values through an environment variable, quote them in the target shell,
-  validate their expected form, and avoid `eval`.
+- Do not interpolate a GitHub expression directly into a `run` script. Bind the
+  value to an `env:` entry on the step and read it back with ordinary shell
+  expansion, quoted: `"${VARNAME}"`, never `${{ env.VARNAME }}`.
 - Do not expose secrets or write tokens to fork code.
 - Do not run untrusted contributions on a persistent self-hosted runner unless
   the organization provides documented single-use isolation and cleanup.
 - Treat downloaded artifacts and restored caches as untrusted until their
   producer and contents are established.
+
+An expression is substituted into the script text before any shell parses it,
+so a value carrying a quote, `$(…)`, a backtick, or a newline becomes runner
+code rather than an argument. A shell variable stays data. This applies to
+`${{ env.VARNAME }}` too, even for a variable the workflow defines itself: the
+substitution happens the same way, and a workflow-level or job-level `env`
+value can still originate in event payload, a matrix entry, a prior step's
+output, or a reusable-workflow input. Prefer the binding, quote the expansion,
+validate the expected form, and avoid `eval`:
+
+```yaml
+- env:
+    PR_TITLE: '${{ github.event.pull_request.title }}'
+  run: |
+    printf 'title: %s\n' "${PR_TITLE}"
+```
+
+Bind literal configuration the same way rather than reading it back through an
+expression, so a later change to where the value comes from cannot turn a safe
+line into an injection point. Expressions remain correct outside `run` — in
+`if:`, `with:`, `env:`, and other workflow-syntax fields, which are not shell
+input.
 
 Use GitHub-hosted runners by default. Use self-hosted runners only for a
 documented capability, network, compliance, or performance need, and record
@@ -130,15 +152,24 @@ before v6 write it into the checked-out `.git/config`, while v6 and later
 store it under `$RUNNER_TEMP`. In both cases it stays usable by every later
 step in that job, including build scripts and their transitive dependencies,
 and it can escape the run entirely when a step packages the workspace into an
-artifact. Check out with `persist-credentials: false` unless a later step in
-the same job must authenticate as the repository. When one must, declare
-`persist-credentials: true` explicitly so the intent is reviewable, and
-isolate that step in its own job with the narrowest permissions:
+artifact.
+
+Every `actions/checkout` step SHOULD therefore set `persist-credentials`
+explicitly, so the choice is a reviewed decision rather than an inherited
+default. Consider each checkout in turn and ask whether any later step in the
+same job must authenticate as the repository — push a commit or tag, fetch
+another private repository, call the API through git credentials. When none
+does, which is the common case for build and test jobs, choose `false`:
 
 ```yaml
 - uses: actions/checkout@<ref>
   with: { persist-credentials: false }
 ```
+
+When one does, declare `persist-credentials: true` and say in a comment which
+step needs it, then isolate that step in its own job with the narrowest
+permissions. Auditing a workflow includes flagging any checkout that leaves the
+setting unstated.
 
 Prefer OIDC-issued, job-scoped credentials to long-lived cloud secrets. Bind
 the provider trust policy to the expected organization, repository, ref,
@@ -313,10 +344,10 @@ After editing:
 
 1. parse and lint every changed workflow with the repository's configured
    validator;
-2. inspect the diff for triggers, expression quoting, scalar quoting and YAML
-   type coercion, action pins, permissions, credential persistence, secret
-   flow, `if` conditions, `needs`, concurrency groups, timeouts, artifact
-   paths, and cleanup;
+2. inspect the diff for triggers, expressions reaching `run` scripts, scalar
+   quoting and YAML type coercion, action pins, permissions, explicit
+   `persist-credentials` on every checkout, secret flow, `if` conditions,
+   `needs`, concurrency groups, timeouts, artifact paths, and cleanup;
 3. run the repository's local checks that the workflow invokes when safe;
 4. verify required check names still match repository settings;
 5. observe a pull-request run and each trusted release path before claiming the

@@ -15,6 +15,7 @@
     "The primary CI has explicit PR, default-branch push, and manual triggers, PR-aware concurrency, timeouts, and least-privilege job permissions.",
     "Jobs use short undecorated lowercase identifiers with no job-level display names, and checks that share a toolchain run in one job.",
     "Dependencies use the lockfile, remote actions use full commit SHAs, and supported runtimes drive a fail-fast-false compatibility matrix.",
+    "Every checkout sets persist-credentials explicitly, using false wherever no later step in that job must authenticate as the repository.",
     "The packed artifact is uploaded once and exercised in a clean consumer before a trusted, protected, OIDC-based release consumes the verified output.",
     "Validation, artifact absence, retention, release serialization, and recovery behavior are explicit."
   ],
