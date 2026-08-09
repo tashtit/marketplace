@@ -8,6 +8,7 @@ this file identifies a GitHub requirement.
 
 - [Source basis](#source-basis)
 - [Trigger and checkout decisions](#trigger-and-checkout-decisions)
+- [Expressions in `run` scripts](#expressions-in-run-scripts)
 - [Permissions and credentials](#permissions-and-credentials)
 - [Action and reusable-workflow pins](#action-and-reusable-workflow-pins)
 - [Concurrency and timeouts](#concurrency-and-timeouts)
@@ -83,6 +84,50 @@ skipped. GitHub also limits changed-file evaluation. Before adding a filter,
 verify required-check behavior and prove the filter cannot exclude code that
 affects the deliverable.
 
+## Expressions in `run` scripts
+
+GitHub evaluates `${{ … }}` while assembling the step, then writes the result
+into the script file the runner executes. The shell therefore parses attacker
+influence as syntax. GitHub's script-injection guidance names the mitigation:
+bind the value to an environment variable and let the shell expand it.
+
+```yaml
+# unsafe: the title becomes part of the script
+- run: echo "title: ${{ github.event.pull_request.title }}"
+
+# unsafe: env.* is substituted the same way
+- env:
+    PR_TITLE: '${{ github.event.pull_request.title }}'
+  run: echo "title: ${{ env.PR_TITLE }}"
+
+# safe: the shell reads a variable, and the value stays data
+- env:
+    PR_TITLE: '${{ github.event.pull_request.title }}'
+  run: |
+    printf 'title: %s\n' "${PR_TITLE}"
+```
+
+`${{ env.VARNAME }}` deserves specific attention because it looks like a
+variable read and is not. Whether the entry was defined at workflow, job, or
+step level, the expression is expanded before the shell runs, so the binding
+buys nothing. It also hides provenance during review: a workflow-level `env`
+value can be a literal today and a `github.event.*` value, matrix entry, step
+output, or reusable-workflow input after the next change, which silently
+converts the line into an injection. Reading `"${VARNAME}"` is correct in both
+states, so use it unconditionally inside `run`.
+
+Quote the expansion. `${VARNAME}` unquoted still word-splits and glob-expands
+in POSIX shells. On `shell: pwsh` or `shell: powershell` the equivalent read is
+`$env:VARNAME`; on `shell: cmd` it is `%VARNAME%`. Composite-action `run` steps
+follow the same rule, with `inputs.*` bound through `env` rather than
+interpolated.
+
+Expressions stay correct outside `run` scripts. Workflow-syntax fields such as
+`if:`, `with:`, `env:`, `name:`, and `concurrency.group` are consumed by
+Actions itself, not by a shell. `if:` still deserves care because it evaluates
+its argument, so compare untrusted values rather than embedding them in a
+constructed expression.
+
 ## Permissions and credentials
 
 GitHub calculates `GITHUB_TOKEN` permissions from enterprise, organization,
@@ -104,6 +149,25 @@ Do not copy a generic release permission set. Derive it from the chosen
 publisher. For example, creating a GitHub release normally needs
 `contents: write`; commenting on issues is a separate capability and must not
 be granted merely because another release tool once used it.
+
+`actions/checkout` persists the job's `GITHUB_TOKEN` on the runner unless
+`persist-credentials: false` is set. Before v6 it lands in the workspace
+`.git/config` as an extraheader; from v6 it moves to `$RUNNER_TEMP`, which
+keeps it out of an archived workspace but leaves it usable by every subsequent
+step in the job. Neither location is scoped to the step that needs it, so any
+later command — a build script, a test helper, a transitive dependency — can
+authenticate as the repository with whatever the job's `permissions` allow.
+
+Treat the setting as a per-checkout decision and state it either way. Consider
+what the job does after checkout: a job that only reads the tree wants `false`;
+a job that pushes a commit or tag, fetches another private repository, or
+drives git-authenticated tooling needs `true` and should carry a comment naming
+the step that requires it, sit in its own job, and hold the narrowest
+`permissions` for that work. A checkout with no `persist-credentials` key is a
+review finding on its own — the default is permissive and the intent is
+unrecorded. Alternatives to persistence include a step-scoped token in `env`
+for a single `gh` or `git push` invocation, or a separate credential such as a
+GitHub App installation token when the built-in token is not appropriate.
 
 Environment secrets become available only after the environment's protection
 rules pass. Use that boundary for deployments instead of placing production
@@ -238,7 +302,10 @@ and their tag cannot then be modified.
 - [ ] Path filters cannot strand or bypass required checks.
 - [ ] Untrusted code cannot reach secrets, write tokens, OIDC, protected
       environments, or persistent runners.
-- [ ] Untrusted expressions do not flow directly into shell code.
+- [ ] No `run` script interpolates an expression, including `${{ env.X }}`;
+      values are bound through `env:` and read as quoted `"${VARNAME}"`.
+- [ ] Every `actions/checkout` sets `persist-credentials` explicitly, and any
+      `true` names the step that needs it.
 - [ ] Secrets avoid source and command-line arguments; derived values are
       masked before output and exposure response is defined.
 - [ ] Every non-GitHub action and cross-repository reusable workflow uses a

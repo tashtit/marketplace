@@ -14,10 +14,12 @@
   "expected": [
     "Direct interpolation of the untrusted GitHub expression into shell source and use of eval are rejected.",
     "The value is passed through an intermediate environment variable or a purpose-built action input, quoted for the target shell, and validated against the expected form.",
+    "The run script reads the bound variable with shell expansion such as \"${PR_TITLE}\" rather than re-interpolating it as ${{ env.PR_TITLE }}.",
     "The behavior is tested with hostile synthetic titles."
   ],
   "must_not": [
     "Generate executable script text from the pull request title.",
+    "Bind the value to env and then read it back through an expression, which is substituted into the script before the shell runs.",
     "Treat GitHub expression syntax or ordinary shell quoting around the expression as a trust boundary."
   ]
 }

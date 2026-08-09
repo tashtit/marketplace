@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.4.0 - 2026-08-09
+
+- Expression handling in `run` scripts is now explicit: bind the value to an
+  `env:` entry and read it as a quoted `"${VARNAME}"`, never `${{ env.VARNAME }}`,
+  which is substituted into the script text the same way a raw context
+  reference is.
+- Added a reference section covering safe and unsafe `run` forms, the
+  provenance drift that makes a workflow-level `env` read unsafe over time,
+  the `pwsh` and `cmd` equivalents, and where expressions remain correct.
+- Credential persistence is now a per-checkout decision to state either way:
+  every `actions/checkout` sets `persist-credentials` explicitly, an unstated
+  setting is a review finding, and a `true` names the step that needs it.
+- Extended the review checklist with both rules.
+
+## 0.3.0 - 2026-08-08
+
+- Added job-naming and workflow-shape conventions: short lowercase job
+  identifiers, no job-level `name`, and explicit per-job `timeout-minutes`.
+
 ## 0.2.1 - 2026-08-08
 
 - Skill description now defers scored, read-only maturity audits to the
