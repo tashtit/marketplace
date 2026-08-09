@@ -1,4 +1,4 @@
-.PHONY: sync validate install lint-markdown scan-secrets
+.PHONY: sync validate install lint-markdown scan-secrets test
 
 install:
 	npm ci
@@ -13,6 +13,9 @@ lint-markdown:
 
 scan-secrets:
 	python3 scripts/scan_secrets.py
+
+test:
+	python3 -m unittest discover -s tests/scripts -b
 
 validate:
 	python3 scripts/sync.py --check

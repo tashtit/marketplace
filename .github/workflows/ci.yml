@@ -36,3 +36,22 @@ jobs:
 
       - name: Validate
         run: make validate
+
+  tests:
+    name: Script tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7.0.1
+        with: { persist-credentials: false }
+
+      - name: Set up Python
+        uses: actions/setup-python@v7.0.0
+        with: { python-version-file: '.python-version' }
+
+      - name: Run script unit tests
+        run: make test

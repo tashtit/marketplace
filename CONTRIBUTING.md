@@ -68,6 +68,7 @@ nvm use
 make install
 make sync
 make validate
+make test
 ```
 
 `.nvmrc` and `.python-version` are the canonical runtime versions. CI reads the
@@ -92,6 +93,13 @@ results against the claimed maturity, safe links, canonical skill presence,
 local documentation links, committed credential material, Markdown style, and
 whitespace. CI runs the same validation on every pull request, on pushes to
 `main`, and on manual dispatch.
+
+`make test` runs the unit tests for the repository scripts in `tests/scripts/`
+with Python's built-in `unittest`, so it needs no extra dependencies. The tests
+build a miniature marketplace in a temporary directory and assert that each
+validator check still fails when it should, which protects the scripts
+themselves from regressing. Extend them whenever `scripts/` changes behavior.
+CI runs them as a separate job on the same events as validation.
 
 `make scan-secrets` and `make lint-markdown` run those two steps individually.
 The secret scan matches issued credential material rather than the word
