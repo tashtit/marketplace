@@ -114,7 +114,7 @@ with no matching declaration, so a stale record cannot linger.
 | Every declared dependency has a reviewed record | `scripts/check-dependencies.js`, in `npm run validate` | Hard failure |
 | No record without a declaration | same | Hard failure |
 | Recorded version matches the manifest | same | Warning |
-| Vulnerable or non-allowlisted dependency introduced by a pull request | `deps` job in CI | Hard failure on the pull request |
+| Vulnerable or non-allowlisted dependency introduced by a pull request | `deps` job in CI | Hard failure on the pull request, once the job is active |
 | Actions pinned to an immutable reference | `scripts/validate.js` | Hard failure |
 | Grouped, scheduled update pull requests | `.github/dependabot.yml` | Not a check |
 
@@ -128,9 +128,19 @@ The check reads committed files only. It cannot tell whether the recorded
 evidence is true, so it never substitutes for the review — it only guarantees
 that a reviewer was asked.
 
-The `deps` CI job needs GitHub's dependency graph enabled for the repository.
-If the job reports that the dependency graph is unavailable, enable it in
-repository settings rather than deleting the job.
+The `deps` CI job runs GitHub's dependency review, which needs the
+base-versus-head dependency graph. That API is available on public
+repositories, and on private ones only with GitHub Advanced Security. While
+this repository is private and unlicensed for Advanced Security the job is
+skipped by an explicit condition, and it begins enforcing on its own once the
+repository is public.
+
+Until then the automated part of the gate is the reviewed-record check, which
+runs on every validation. Treat the skipped job as coverage this repository
+does not yet have, not as a passing check: a reviewer is still responsible for
+advisories and licenses on a dependency change. To turn it on sooner, either
+publish the repository or license Advanced Security for it — do not relax the
+condition to make the job run and fail.
 
 ## Adding a record
 
