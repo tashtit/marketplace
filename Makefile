@@ -4,7 +4,7 @@ install:
 	npm ci
 
 sync:
-	python3 scripts/sync.py
+	node scripts/sync.js
 
 lint-markdown:
 	@test -x node_modules/.bin/markdownlint-cli2 \
@@ -12,14 +12,14 @@ lint-markdown:
 	node_modules/.bin/markdownlint-cli2
 
 scan-secrets:
-	python3 scripts/scan_secrets.py
+	node scripts/scan-secrets.js
 
 test:
-	python3 -m unittest discover -s tests/scripts -b
+	node --test tests/scripts/
 
 validate:
-	python3 scripts/sync.py --check
-	python3 scripts/validate.py
+	node scripts/sync.js --check
+	node scripts/validate.js
 	$(MAKE) scan-secrets
 	$(MAKE) lint-markdown
 	git diff --check
