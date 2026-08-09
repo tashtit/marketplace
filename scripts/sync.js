@@ -8,7 +8,7 @@
 // - `.codex-plugin/plugin.json` per plugin, whose content matches the shared
 //   manifest but whose location is fixed by the host.
 //
-// Both are generated here and drift-checked by `make validate`. Repository
+// Both are generated here and drift-checked by `npm run validate`. Repository
 // symlinks are deliberately not used: Git materializes them as plain text
 // files when `core.symlinks=false`, which is the default whenever a checkout
 // cannot create symlinks, and a host would then read the link target instead
@@ -253,8 +253,8 @@ export function collectArtifacts() {
   // Pair every generated path with the content its canonical source implies.
   //
   // Also returns the generated adapters that must no longer exist, so that a
-  // plugin dropping codex from its platforms is remediated by `make sync`
-  // instead of leaving an adapter that only `make validate` complains about.
+  // plugin dropping codex from its platforms is remediated by `npm run sync`
+  // instead of leaving an adapter that only `npm run validate` complains about.
   const marketplace = loadSharedMarketplace();
   const codexTargets = new Set(
     marketplace.plugins
@@ -423,7 +423,7 @@ export function main() {
   );
   if (stale.length > 0) {
     process.stderr.write(
-      'Generated Codex adapters are stale; run `make sync` and include ' +
+      'Generated Codex adapters are stale; run `npm run sync` and include ' +
         'the result\n',
     );
     return 1;

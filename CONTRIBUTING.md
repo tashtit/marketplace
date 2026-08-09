@@ -65,10 +65,10 @@ it once before opening a pull request:
 
 ```bash
 nvm use
-make install
-make sync
-make validate
-make test
+npm ci
+npm run sync
+npm run validate
+npm test
 ```
 
 `.nvmrc` is the canonical runtime version. CI reads the same file through
@@ -76,17 +76,17 @@ make test
 in the workflow. `nvm use` is optional if your Node already satisfies
 `.nvmrc`.
 
-`make install` runs `npm ci` against the committed lockfile, which pins
+`npm ci` installs against the committed lockfile, which pins
 `markdownlint-cli2` so every contributor and CI lint with identical rules.
 Re-run it only after the lockfile changes.
 
-`make sync` regenerates the unavoidable Codex artifacts from canonical sources:
+`npm run sync` regenerates the unavoidable Codex artifacts from canonical sources:
 the Codex marketplace from `.claude-plugin/marketplace.json`, and each
 `.codex-plugin/plugin.json` from that plugin's `.claude-plugin/plugin.json`.
 Never edit a generated file by hand; change the canonical source and re-run
-`make sync`.
+`npm run sync`.
 
-`make validate` fails when any generated file drifts and also checks JSON
+`npm run validate` fails when any generated file drifts and also checks JSON
 syntax, marketplace alignment, the plugin catalog tables in `README.md` and
 `plugins/README.md`, plugin naming and manifest consistency, recorded acceptance
 results against the claimed maturity, safe links, canonical skill presence,
@@ -94,14 +94,14 @@ local documentation links, committed credential material, Markdown style, and
 whitespace. CI runs the same validation on every pull request, on pushes to
 `main`, and on manual dispatch.
 
-`make test` runs the unit tests for the repository scripts in `tests/scripts/`
+`npm test` runs the unit tests for the repository scripts in `tests/scripts/`
 with Node's built-in `node:test` runner, so it needs no extra dependencies.
 The tests build a miniature marketplace in a temporary directory and assert
 that each validator check still fails when it should, which protects the
 scripts themselves from regressing. Extend them whenever `scripts/` changes
 behavior. CI runs them in the same job as validation.
 
-`make scan-secrets` and `make lint-markdown` run those two steps individually.
+`npm run scan:secrets` and `npm run lint:markdown` run those two steps individually.
 The secret scan matches issued credential material rather than the word
 "secret", so documenting `${{ secrets.TOKEN }}` is safe. When a match is an
 intentional example, append `pragma: allowlist secret` to that line.

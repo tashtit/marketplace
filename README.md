@@ -121,7 +121,7 @@ plugins/<plugin-name>/
 
 Tashtit reuses one file wherever platforms accept the same standard location.
 When a format or a required location cannot be shared, provider files are
-generated with `make sync` and checked for drift in CI; they are never
+generated with `npm run sync` and checked for drift in CI; they are never
 maintained as hand-copied implementations, and never as repository symlinks.
 See the [architecture](docs/architecture.md) for the full deduplication policy.
 
@@ -139,7 +139,7 @@ stability:
 
 Only stable plugins may use the `production-ready` label. Every plugin is
 currently experimental, so no behavioral review is being claimed yet; reviews
-are recorded in `tests/plugins/<name>/acceptance.json` and `make validate`
+are recorded in `tests/plugins/<name>/acceptance.json` and `npm run validate`
 rejects an unearned maturity claim.
 
 ## Contributing

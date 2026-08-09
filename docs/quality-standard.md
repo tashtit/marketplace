@@ -101,7 +101,7 @@ so each plugin MUST carry `tests/plugins/<name>/acceptance.json`:
   `plugin_version`, `commit` (full 40-character SHA), `reviewed_on` (ISO 8601
   date), `reviewer`, and `outcome` (`pass` or `fail`), with optional `notes`.
 
-`make validate` requires a `pass` for every scenario and claimed platform **at
+`npm run validate` requires a `pass` for every scenario and claimed platform **at
 the currently published version** before a plugin may declare `candidate` or
 `stable`, and it rejects a maturity that disagrees with the plugin README or the
 published catalog tables. Results are version-pinned deliberately: changing a

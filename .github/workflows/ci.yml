@@ -27,10 +27,10 @@ jobs:
         with: { node-version-file: '.nvmrc', cache: 'npm' }
 
       - name: Install dependencies
-        run: make install
+        run: npm ci
 
       - name: Validate
-        run: make validate
+        run: npm run validate
 
       - name: Run script unit tests
-        run: make test
+        run: npm test
