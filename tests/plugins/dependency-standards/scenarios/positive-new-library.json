@@ -1,0 +1,26 @@
+{
+  "id": "dependency-standards-positive-new-library",
+  "type": "positive",
+  "platforms": [
+    "claude-code",
+    "codex",
+    "github-copilot"
+  ],
+  "prompt": "We need timezone-aware date handling. Add a library for it.",
+  "setup": [
+    "The repository declares its own license, its package manager, a committed lockfile, and a dependency record file with existing entries.",
+    "Two maintained candidate libraries exist with different transitive weight, and the platform's built-in API covers only part of the requirement."
+  ],
+  "expected": [
+    "The need is stated together with why the built-in API is insufficient, and at least one material alternative including implementing it in-repo is compared.",
+    "Usage, maintenance health, provenance, and the SPDX license of the distributed artifact are gathered as evidence with sources.",
+    "License compatibility with the repository's own license and distribution model is checked, and transitive weight and install-time scripts are reported.",
+    "The dependency is pinned to an immutable reference through the lockfile and an exact version, and a dependency record with purpose, alternatives, adoption, provenance, license, source, reviewer, and date is committed in the same change.",
+    "The project's own checks are run against the new dependency and the results are reported exactly."
+  ],
+  "must_not": [
+    "Add the dependency before the evidence is gathered, or claim it is safe, trusted, or vetted on adoption numbers alone.",
+    "Invent download counts, maintainer facts, license identifiers, or advisory status.",
+    "Introduce unrelated dependency additions, upgrades, or lockfile churn."
+  ]
+}

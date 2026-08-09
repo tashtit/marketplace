@@ -6,11 +6,12 @@
   "license": "Apache-2.0",
   "type": "module",
   "scripts": {
+    "check:deps": "node scripts/check-dependencies.js",
     "lint:markdown": "markdownlint-cli2",
     "scan:secrets": "node scripts/scan-secrets.js",
     "sync": "node scripts/sync.js",
     "test": "node --test tests/scripts/*.test.js",
-    "validate": "node scripts/sync.js --check && node scripts/validate.js && node scripts/scan-secrets.js && markdownlint-cli2 && git diff --check"
+    "validate": "node scripts/sync.js --check && node scripts/validate.js && node scripts/check-dependencies.js && node scripts/scan-secrets.js && markdownlint-cli2 && git diff --check"
   },
   "devDependencies": {
     "markdownlint-cli2": "0.23.2"

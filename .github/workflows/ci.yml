@@ -34,3 +34,27 @@ jobs:
 
       - name: Run script unit tests
         run: npm test
+
+  # Blocks a pull request that pulls in a vulnerable or non-allowlisted
+  # dependency. It needs the base-versus-head dependency graph, which only
+  # exists for a pull request, so the job is skipped on push and dispatch.
+  # `npm run validate` enforces the complementary rule that every declared
+  # dependency carries a reviewed record.
+  deps:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7.0.1
+        with: { persist-credentials: false }
+
+      - name: Review dependency changes
+        uses: actions/dependency-review-action@v5.0.0
+        with:
+          fail-on-severity: 'high'
+          allow-licenses: '0BSD, Apache-2.0, BSD-2-Clause, BSD-3-Clause, CC0-1.0, ISC, MIT, MPL-2.0, Unlicense'
+          comment-summary-in-pr: 'never'

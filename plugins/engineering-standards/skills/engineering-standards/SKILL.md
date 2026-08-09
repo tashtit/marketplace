@@ -1,6 +1,6 @@
 ---
 name: engineering-standards
-description: Design, implement, or review production software changes against opinionated engineering standards for correctness, security, maintainability, testing, operations, and delivery. Use when planning an implementation, reviewing a pull request or diff, running a definition-of-done check, assessing release risk, or asking whether a change is ready to ship or merge. Defer to a more specific standards skill (for example API design or GitHub Actions) when the request is narrowly scoped to that domain.
+description: Design, implement, or review production software changes against opinionated engineering standards for correctness, security, maintainability, testing, operations, and delivery. Use when planning an implementation, reviewing a pull request or diff, running a definition-of-done check, assessing release risk, or asking whether a change is ready to ship or merge. Defer to a more specific standards skill (for example API design, GitHub Actions, or dependency intake) when the request is narrowly scoped to that domain.
 ---
 
 # Engineering Standards
@@ -44,7 +44,10 @@ production-readiness, or security certification from checklist completion.
 ### Maintainability
 
 - Match established structure and naming; avoid speculative abstraction.
-- Keep dependencies justified, pinned according to policy, and removable.
+- Keep dependencies justified, pinned according to policy, and removable. Route
+  adding, updating, or reviewing a dependency to the dependency-standards
+  skill, which gates a new dependency on need, alternatives, usage, provenance,
+  and license evidence.
 - Separate generated artifacts from canonical sources and validate drift.
 - Document decisions that future maintainers cannot recover from the code.
 

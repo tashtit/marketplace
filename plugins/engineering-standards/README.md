@@ -4,7 +4,7 @@ Opinionated defaults for planning, implementing, and reviewing production
 software across correctness, security, maintainability, verification, and
 operations.
 
-**Maturity: Experimental — 0.1.0.** Repository policy takes precedence, and the
+**Maturity: Experimental — 0.2.0.** Repository policy takes precedence, and the
 plugin never treats a checklist as a compliance or production-readiness claim.
 
 The plugin requires no network, credentials, telemetry, or persistent storage.

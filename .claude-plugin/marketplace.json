@@ -25,10 +25,18 @@
       "category": "Developer Tools"
     },
     {
+      "name": "dependency-standards",
+      "source": "./plugins/dependency-standards",
+      "description": "Evidence-based intake, update, and removal standards for third-party dependencies.",
+      "version": "0.1.0",
+      "license": "Apache-2.0",
+      "category": "Developer Tools"
+    },
+    {
       "name": "engineering-standards",
       "source": "./plugins/engineering-standards",
       "description": "Opinionated production engineering standards for implementation and review.",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "license": "Apache-2.0",
       "category": "Developer Tools"
     },

@@ -1,0 +1,69 @@
+{
+  "dependencies": [
+    {
+      "ecosystem": "github-actions",
+      "name": "actions/checkout",
+      "version": "v7.0.1",
+      "purpose": "Check out the repository in CI so validation and tests run against the pull request's own content.",
+      "alternatives": [
+        "A hand-written git clone step using the runner token: same trust in the runner, more code, and no ref, submodule, or sparse-checkout handling.",
+        "No checkout: not possible for a repository-content workflow."
+      ],
+      "adoption": "GitHub-authored and the default checkout mechanism for Actions; ~8.6k stars and used by essentially every public workflow. Verified 2026-08-09.",
+      "provenance": "Published by the github.com/actions organization. Tag v7.0.1 resolves to commit 3d3c42e5aac5ba805825da76410c181273ba90b1. Repository policy permits an exact release tag for a GitHub-authored action because CI holds no secrets, write permissions, or deployment authority; the step also sets persist-credentials: false.",
+      "license": "MIT",
+      "source": "https://github.com/actions/checkout",
+      "reviewed_by": "@titan-ron",
+      "reviewed_on": "2026-08-09"
+    },
+    {
+      "ecosystem": "github-actions",
+      "name": "actions/dependency-review-action",
+      "version": "v5.0.0",
+      "purpose": "Fail a pull request that introduces a dependency with a known high-severity vulnerability or a license outside the allowed set, using GitHub's dependency-graph diff between base and head.",
+      "alternatives": [
+        "npm audit in the existing job: npm-only, no license policy, and no base-versus-head diff, so it reports pre-existing findings on unrelated pull requests.",
+        "osv-scanner: adds a second scanner dependency, still needs a separate license check, and duplicates data GitHub already computes for this repository."
+      ],
+      "adoption": "GitHub-authored and the reference implementation of GitHub's own dependency review documentation. Verified 2026-08-09.",
+      "provenance": "Published by the github.com/actions organization. Tag v5.0.0 resolves to commit a1d282b36b6f3519aa1f3fc636f609c47dddb294. It runs in a pull-request-only job with contents: read and no secrets.",
+      "license": "MIT",
+      "source": "https://github.com/actions/dependency-review-action",
+      "reviewed_by": "@titan-ron",
+      "reviewed_on": "2026-08-09"
+    },
+    {
+      "ecosystem": "github-actions",
+      "name": "actions/setup-node",
+      "version": "v7.0.0",
+      "purpose": "Install the Node.js version declared in .nvmrc and cache npm downloads, so CI runs the same runtime contributors do.",
+      "alternatives": [
+        "The runner's preinstalled Node.js: drifts from .nvmrc without warning and pins the toolchain to the runner image.",
+        "A manual nvm or download step: reimplements version resolution and caching with no security benefit."
+      ],
+      "adoption": "GitHub-authored and the standard Node.js toolchain action; ~4.9k stars. Verified 2026-08-09.",
+      "provenance": "Published by the github.com/actions organization. Tag v7.0.0 resolves to commit 820762786026740c76f36085b0efc47a31fe5020. It reads .nvmrc and the npm cache only.",
+      "license": "MIT",
+      "source": "https://github.com/actions/setup-node",
+      "reviewed_by": "@titan-ron",
+      "reviewed_on": "2026-08-09"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "markdownlint-cli2",
+      "version": "0.23.2",
+      "purpose": "Lint every Markdown file against one pinned rule set, because plugin and skill content is almost entirely Markdown and style drift is otherwise invisible in review.",
+      "alternatives": [
+        "remark-lint: a larger plugin tree and a configuration surface this repository does not need.",
+        "No Markdown linting: rejected, since Markdown is the product here and the repository ships style rules contributors cannot apply by hand consistently.",
+        "A repository-local rule script: would reimplement the markdownlint rule set that the standards already reference."
+      ],
+      "adoption": "Maintained by the author of markdownlint itself; the npm registry records a release on 2026-07-27, so the package tracks the current rule set. Single-maintainer package (davidanson), which is the main health risk and is accepted because it is a development-only linter with a clear exit. Verified 2026-08-09.",
+      "provenance": "Registry metadata resolves to github.com/DavidAnson/markdownlint-cli2, the repository that publishes the markdownlint family. Installed only through npm ci against the committed lockfile, which pins the resolved tarball and its integrity hash.",
+      "license": "MIT",
+      "source": "https://github.com/DavidAnson/markdownlint-cli2",
+      "reviewed_by": "@titan-ron",
+      "reviewed_on": "2026-08-09"
+    }
+  ]
+}
