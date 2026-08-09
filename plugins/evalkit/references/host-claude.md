@@ -31,7 +31,7 @@ claude -p "<review instructions + the diff>" \
        --output-format stream-json
 ```
 
-Never pass the arm label (or, for `compare-models`, the model name) to the
+Never pass the arm label (or, for `tashtit-compare-models`, the model name) to the
 reviewer or judge.
 
 ## Telemetry parsing

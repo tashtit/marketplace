@@ -342,8 +342,10 @@ describe('main against a fixture repository', () => {
   it('fails on an overlong skill description', (t) => {
     const root = setUp(t);
     support.writeText(
-      path.join(root, 'plugins', 'alpha', 'skills', 'alpha', 'SKILL.md'),
-      '---\nname: alpha\ndescription: ' + 'x'.repeat(1100) + '\n---\n\nBody.\n',
+      path.join(root, 'plugins', 'alpha', 'skills', 'tashtit-alpha', 'SKILL.md'),
+      '---\nname: tashtit-alpha\ndescription: ' +
+        'x'.repeat(1100) +
+        '\n---\n\nBody.\n',
     );
     const { result, stderr } = runMain(root);
     assert.equal(result, 1);
@@ -353,12 +355,23 @@ describe('main against a fixture repository', () => {
   it('fails on a duplicate skill name', (t) => {
     const root = setUp(t);
     support.writeText(
-      path.join(root, 'plugins', 'beta', 'skills', 'beta', 'SKILL.md'),
-      '---\nname: alpha\ndescription: Duplicate of alpha.\n---\n\nBody.\n',
+      path.join(root, 'plugins', 'beta', 'skills', 'tashtit-beta', 'SKILL.md'),
+      '---\nname: tashtit-alpha\ndescription: Duplicate of alpha.\n---\n\nBody.\n',
     );
     const { result, stderr } = runMain(root);
     assert.equal(result, 1);
     assert.match(stderr, /must match the skill directory/);
+  });
+
+  it('fails on a skill name without the tashtit- prefix', (t) => {
+    const root = setUp(t);
+    support.writeText(
+      path.join(root, 'plugins', 'alpha', 'skills', 'extra', 'SKILL.md'),
+      '---\nname: extra\ndescription: Unprefixed fixture skill.\n---\n\nBody.\n',
+    );
+    const { result, stderr } = runMain(root);
+    assert.equal(result, 1);
+    assert.match(stderr, /must carry the 'tashtit-' provenance prefix/);
   });
 
   it('fails on a broken markdown link', (t) => {

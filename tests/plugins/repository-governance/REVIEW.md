@@ -8,7 +8,7 @@
 - [ ] Ambiguous intent produces an audit inventory and plan before any mutation
       is offered.
 
-## Audit mode (`repository-settings`)
+## Audit mode (`tashtit-repository-settings`)
 
 - [ ] The response begins in audit-only mode and identifies scope, evidence,
       authorization, and policy gaps.
@@ -31,7 +31,7 @@
 - [ ] No universal compliance, review-count, signature, merge, or platform
       claim is invented.
 
-## Apply mode (`repository-policy`)
+## Apply mode (`tashtit-repository-policy`)
 
 - [ ] Current settings and existing rulesets are read before any change is
       proposed, and admin permission is confirmed.

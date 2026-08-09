@@ -1,6 +1,6 @@
 {
   "name": "logging-standards",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Secure structured logging standards for production applications.",
   "author": {
     "name": "Tashtit contributors",

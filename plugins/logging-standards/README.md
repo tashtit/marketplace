@@ -3,7 +3,7 @@
 Design, implement, and review secure structured logging across services, jobs,
 message consumers, and external boundaries.
 
-**Maturity: Experimental — 0.1.0.** Retention and data classification always
+**Maturity: Experimental — 0.2.0.** Retention and data classification always
 depend on applicable policy; this plugin makes no compliance claim.
 
 The skill defines a portable event contract and decision rules for severity,

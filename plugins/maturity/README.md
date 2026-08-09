@@ -22,21 +22,21 @@ codex plugin add maturity
 
 ## Maturity
 
-**Experimental — 0.3.1.** The rule catalog and scoring model still require
+**Experimental — 0.4.0.** The rule catalog and scoring model still require
 review on each target agent before any stability is claimed.
 
 ## Skills
 
-`skills/maturity/SKILL.md` is the router. It defines the read-only safety
+`skills/tashtit-maturity/SKILL.md` is the router. It defines the read-only safety
 contract, the weighted scoring model, and the report format, then dispatches to
 one or more ecosystem sub-skills.
 
 | Skill | What it evaluates |
 | --- | --- |
-| `evaluate-dockerfile` | Node.js Dockerfile hygiene: Alpine vs slim base, source copied before install, end-of-life Node.js, drift from `.nvmrc`, npm used as the container command. |
-| `evaluate-npm` | package.json, lockfile, `.npmrc`, and `.nvmrc` hygiene: missing/conflicting lockfiles, outdated lockfile version, non-reproducible git/file dependencies, missing `.npmrc`/`.nvmrc`, and CI installing with `npm install` or `--ignore-scripts`. |
-| `evaluate-repository-hygiene` | Collaboration and documentation hygiene: missing or malformed CODEOWNERS, missing README, missing CONTRIBUTING, and missing `.editorconfig`. |
-| `evaluate-ci-workflow` | GitHub Actions CI-workflow hygiene: missing CI workflow, unpinned remote actions, overly permissive or undeclared `GITHUB_TOKEN` permissions, jobs without a timeout, and unsafe `pull_request_target` checkout of untrusted code. |
+| `tashtit-evaluate-dockerfile` | Node.js Dockerfile hygiene: Alpine vs slim base, source copied before install, end-of-life Node.js, drift from `.nvmrc`, npm used as the container command. |
+| `tashtit-evaluate-npm` | package.json, lockfile, `.npmrc`, and `.nvmrc` hygiene: missing/conflicting lockfiles, outdated lockfile version, non-reproducible git/file dependencies, missing `.npmrc`/`.nvmrc`, and CI installing with `npm install` or `--ignore-scripts`. |
+| `tashtit-evaluate-repository-hygiene` | Collaboration and documentation hygiene: missing or malformed CODEOWNERS, missing README, missing CONTRIBUTING, and missing `.editorconfig`. |
+| `tashtit-evaluate-ci-workflow` | GitHub Actions CI-workflow hygiene: missing CI workflow, unpinned remote actions, overly permissive or undeclared `GITHUB_TOKEN` permissions, jobs without a timeout, and unsafe `pull_request_target` checkout of untrusted code. |
 
 Each rule carries a stable id, priority (Critical/High/Medium/Low), and weight.
 The score is `1 − (failing weight / relevant weight)` over the rules whose

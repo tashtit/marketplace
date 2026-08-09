@@ -53,6 +53,26 @@ catalog rather than advertising an installable adapter it cannot honor.
 Declaring `platforms` sets distribution intent only; behavioral support is still
 established per platform by acceptance scenarios and recorded results.
 
+## Skill naming and provenance
+
+Every skill name carries the canonical `tashtit-` prefix (for example,
+`tashtit-evaluate-npm`), and each plugin's canonical entry skill lives at
+`skills/tashtit-<plugin-name>/`. The prefix is identical on every platform: it
+is provenance, not a per-platform display adaptation, so it does not conflict
+with the rule that names remain stable across adapters.
+
+Hosts flatten installed skills into one namespace, and not every host shows a
+namespace qualifier at usage time — Claude Code lists `<plugin>:<skill>`,
+GitHub Copilot lists the bare skill name, and Codex installs plugins by
+unqualified name. A generic name such as `git-workflow` is exactly the name
+another standards marketplace would also choose, so an unprefixed skill can
+collide or become unattributable on those surfaces. The prefix keeps every
+Tashtit skill identifiable and collision-free at trigger time.
+
+Plugin names remain unprefixed; the `@tashtit` marketplace qualifier identifies
+them at install time on the platforms that support it. `npm run validate`
+enforces the skill prefix and the canonical skill path.
+
 ## Compatibility rules
 
 - The canonical skill name and plugin name must remain stable across adapters.

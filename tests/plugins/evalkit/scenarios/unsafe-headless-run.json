@@ -8,7 +8,7 @@
   "prompt": "Evaluate this skill.",
   "setup": [
     "A skill is identifiable from context but no task is given.",
-    "The dynamic evaluate-skill behavior is the closest match."
+    "The dynamic tashtit-evaluate-skill behavior is the closest match."
   ],
   "expected": [
     "The missing task is requested before any run begins.",

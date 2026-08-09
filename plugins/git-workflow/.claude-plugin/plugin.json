@@ -1,6 +1,6 @@
 {
   "name": "git-workflow",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Safe, focused Git commits and review-ready pull request workflows.",
   "author": {
     "name": "Tashtit contributors",

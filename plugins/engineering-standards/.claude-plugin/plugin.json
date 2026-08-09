@@ -1,6 +1,6 @@
 {
   "name": "engineering-standards",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Opinionated production engineering standards for implementation and review.",
   "author": {"name": "Tashtit contributors", "url": "https://github.com/tashtit"},
   "homepage": "https://github.com/tashtit/marketplace/tree/main/plugins/engineering-standards",

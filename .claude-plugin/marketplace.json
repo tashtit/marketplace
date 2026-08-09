@@ -12,7 +12,7 @@
       "name": "api-design-standards",
       "source": "./plugins/api-design-standards",
       "description": "Standards for asynchronous REST APIs and versioned deprecation.",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "license": "Apache-2.0",
       "category": "Developer Tools"
     },
@@ -20,7 +20,7 @@
       "name": "architecture-diagrams",
       "source": "./plugins/architecture-diagrams",
       "description": "Standards for C4 system context and container architecture diagrams.",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "license": "Apache-2.0",
       "category": "Developer Tools"
     },
@@ -28,7 +28,7 @@
       "name": "engineering-standards",
       "source": "./plugins/engineering-standards",
       "description": "Opinionated production engineering standards for implementation and review.",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "license": "Apache-2.0",
       "category": "Developer Tools"
     },
@@ -36,7 +36,7 @@
       "name": "evalkit",
       "source": "./plugins/evalkit",
       "description": "Evaluate and compare skills and models with static reviews and worktree-isolated coding-task harnesses. Host-adaptive across Claude Code and GitHub Copilot CLI.",
-      "version": "0.3.0",
+      "version": "0.4.0",
       "license": "Apache-2.0",
       "category": "Developer Tools",
       "platforms": [
@@ -48,7 +48,7 @@
       "name": "git-workflow",
       "source": "./plugins/git-workflow",
       "description": "Safe, focused Git commits and review-ready pull request workflows.",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "license": "Apache-2.0",
       "category": "Developer Tools"
     },
@@ -56,7 +56,7 @@
       "name": "github-actions-standards",
       "source": "./plugins/github-actions-standards",
       "description": "Secure, reproducible GitHub Actions CI and release standards.",
-      "version": "0.3.0",
+      "version": "0.4.0",
       "license": "Apache-2.0",
       "category": "Developer Tools"
     },
@@ -64,7 +64,7 @@
       "name": "logging-standards",
       "source": "./plugins/logging-standards",
       "description": "Secure structured logging standards for production applications.",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "license": "Apache-2.0",
       "category": "Developer Tools"
     },
@@ -72,7 +72,7 @@
       "name": "maturity",
       "source": "./plugins/maturity",
       "description": "Evaluate repository maturity for Dockerfiles, npm projects, repository hygiene, and CI workflows, with fixes only on request.",
-      "version": "0.3.1",
+      "version": "0.4.0",
       "license": "Apache-2.0",
       "category": "Developer Tools"
     },
@@ -80,7 +80,7 @@
       "name": "repository-governance",
       "source": "./plugins/repository-governance",
       "description": "Audit-first GitHub repository governance with a safe path to apply merge policy and rulesets.",
-      "version": "0.1.1",
+      "version": "0.2.0",
       "license": "Apache-2.0",
       "category": "Developer Tools"
     },
@@ -88,7 +88,7 @@
       "name": "repository-onboarding",
       "source": "./plugins/repository-onboarding",
       "description": "Read-only, evidence-backed onboarding for unfamiliar software repositories.",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "license": "Apache-2.0",
       "category": "Developer Tools"
     },
@@ -96,7 +96,7 @@
       "name": "typescript-library-build",
       "source": "./plugins/typescript-library-build",
       "description": "Dual ESM and CommonJS TypeScript library build and publish standards.",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "license": "Apache-2.0",
       "category": "Developer Tools"
     }

@@ -37,7 +37,7 @@ copilot -p "<review instructions + the diff>" \
         --log-level none
 ```
 
-Never pass the arm label (or, for `compare-models`, the model name) to the
+Never pass the arm label (or, for `tashtit-compare-models`, the model name) to the
 reviewer or judge.
 
 ## Telemetry parsing
@@ -67,7 +67,7 @@ premium_reqs      | ...                     | ...
 ai_units (AIU)    | ...                     | ...
 ```
 
-`ai_units (AIU)` is per-model-priced — the relevant cost dimension for `compare-models`.
+`ai_units (AIU)` is per-model-priced — the relevant cost dimension for `tashtit-compare-models`.
 
 ## Skill-invocation detection
 

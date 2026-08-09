@@ -5,7 +5,7 @@ skill dispatches between two modes: an audit-first review that inventories
 governance and proposes a reversible plan, and a confirmed apply of Tashtit's
 standard merge policy and a reviewed ruleset.
 
-**Maturity: Experimental — 0.1.1.** Repository, organization, enterprise, and
+**Maturity: Experimental — 0.2.0.** Repository, organization, enterprise, and
 regulatory policy remain authoritative. This plugin does not certify compliance
 or configuration security, and it does not turn one repository's required check
 name, integration id, reviewer, or branch into a universal rule.
@@ -30,12 +30,12 @@ codex plugin add repository-governance
 
 - **`repository-governance`** — router. Selects audit versus apply from the
   request and hands off to the matching skill.
-- **`repository-settings`** — audit-only by default. Collects read-only evidence
+- **`tashtit-repository-settings`** — audit-only by default. Collects read-only evidence
   for rulesets and protected branches, reviews, checks, signing, merge methods,
   CODEOWNERS, templates, security features, and dependency updates, then proposes
   a scoped plan with owners, confirmation, verification, snapshots, and rollback.
   It never mutates settings without explicit confirmation and a tested rollback.
-- **`repository-policy`** — apply. Applies Tashtit's default merge policy
+- **`tashtit-repository-policy`** — apply. Applies Tashtit's default merge policy
   (squash-only with the pull-request title and commit details, auto-merge,
   head-branch deletion, suggested branch updates), disables unused wiki and
   projects, restricts collaboration to pull requests, and applies a

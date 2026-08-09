@@ -3,6 +3,21 @@
 All notable changes to this plugin are documented here. Versions follow
 [Semantic Versioning](https://semver.org/).
 
+## 0.4.0 - 2026-08-09
+
+### Changed
+
+- **Breaking:** renamed skill `maturity` to `tashtit-maturity`.
+- **Breaking:** renamed skill `evaluate-ci-workflow` to `tashtit-evaluate-ci-workflow`.
+- **Breaking:** renamed skill `evaluate-dockerfile` to `tashtit-evaluate-dockerfile`.
+- **Breaking:** renamed skill `evaluate-npm` to `tashtit-evaluate-npm`.
+- **Breaking:** renamed skill `evaluate-repository-hygiene` to `tashtit-evaluate-repository-hygiene`.
+- Every Tashtit skill name now carries the `tashtit-` provenance prefix.
+  Hosts flatten installed skills into one namespace and GitHub Copilot
+  displays only the bare skill name, so unprefixed names can collide with
+  or be indistinguishable from skills shipped by other marketplaces. See
+  the skill naming policy in `docs/compatibility.md`.
+
 ## 0.3.1 - 2026-08-08
 
 ### Changed

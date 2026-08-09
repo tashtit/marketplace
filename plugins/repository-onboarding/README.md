@@ -23,7 +23,7 @@ codex plugin add repository-onboarding
 
 ## Maturity
 
-**Experimental — 0.1.0.** The packaging and safety contract are validated, but
+**Experimental — 0.2.0.** The packaging and safety contract are validated, but
 behavioral compatibility has not yet been independently verified across every
 target agent. Do not describe this release as stable or production-ready.
 

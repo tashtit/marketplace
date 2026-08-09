@@ -7,17 +7,17 @@ the marketplace-level instructions live in the
 
 | Plugin | Version | Maturity | Purpose |
 | --- | --- | --- | --- |
-| [API Design Standards](api-design-standards/) | 0.1.0 | Experimental | Async REST jobs and safe API deprecation |
-| [Architecture Diagrams](architecture-diagrams/) | 0.1.0 | Experimental | C4 system context and container diagrams |
-| [Engineering Standards](engineering-standards/) | 0.1.0 | Experimental | Evidence-backed production change review |
-| [Evalkit](evalkit/) | 0.3.0 | Experimental | Host-adaptive static skill review and worktree-isolated skill/model benchmarks (Claude Code + Copilot CLI) |
-| [Git Workflow](git-workflow/) | 0.1.0 | Experimental | Safe branches, commits, and pull-request handoff |
-| [GitHub Actions Standards](github-actions-standards/) | 0.3.0 | Experimental | Secure, reproducible CI and release workflows |
-| [Logging Standards](logging-standards/) | 0.1.0 | Experimental | Secure structured production logging |
-| [Maturity](maturity/) | 0.3.1 | Experimental | Dockerfile, npm, repository-hygiene, and CI-workflow maturity evaluation, fixes on request |
-| [Repository Governance](repository-governance/) | 0.1.1 | Experimental | Audit repository governance, then optionally apply merge policy and rulesets |
-| [Repository Onboarding](repository-onboarding/) | 0.1.0 | Experimental | Read-only, evidence-backed repository assessment |
-| [TypeScript Library Build](typescript-library-build/) | 0.1.0 | Experimental | Dual ESM and CJS library build and publish |
+| [API Design Standards](api-design-standards/) | 0.2.0 | Experimental | Async REST jobs and safe API deprecation |
+| [Architecture Diagrams](architecture-diagrams/) | 0.2.0 | Experimental | C4 system context and container diagrams |
+| [Engineering Standards](engineering-standards/) | 0.2.0 | Experimental | Evidence-backed production change review |
+| [Evalkit](evalkit/) | 0.4.0 | Experimental | Host-adaptive static skill review and worktree-isolated skill/model benchmarks (Claude Code + Copilot CLI) |
+| [Git Workflow](git-workflow/) | 0.2.0 | Experimental | Safe branches, commits, and pull-request handoff |
+| [GitHub Actions Standards](github-actions-standards/) | 0.4.0 | Experimental | Secure, reproducible CI and release workflows |
+| [Logging Standards](logging-standards/) | 0.2.0 | Experimental | Secure structured production logging |
+| [Maturity](maturity/) | 0.4.0 | Experimental | Dockerfile, npm, repository-hygiene, and CI-workflow maturity evaluation, fixes on request |
+| [Repository Governance](repository-governance/) | 0.2.0 | Experimental | Audit repository governance, then optionally apply merge policy and rulesets |
+| [Repository Onboarding](repository-onboarding/) | 0.2.0 | Experimental | Read-only, evidence-backed repository assessment |
+| [TypeScript Library Build](typescript-library-build/) | 0.2.0 | Experimental | Dual ESM and CJS library build and publish |
 
 This table must match `.claude-plugin/marketplace.json`; `npm run validate` fails
 on drift.

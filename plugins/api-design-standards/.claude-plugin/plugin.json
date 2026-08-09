@@ -1,6 +1,6 @@
 {
   "name": "api-design-standards",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Standards for asynchronous REST APIs and versioned deprecation.",
   "author": {
     "name": "Tashtit contributors",

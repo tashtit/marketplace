@@ -91,7 +91,7 @@ plugins/example/
 ├── .claude-plugin/plugin.json
 ├── .codex-plugin/plugin.json
 ├── skills/
-│   └── example/
+│   └── tashtit-example/
 │       ├── SKILL.md
 │       ├── references/
 │       └── scripts/

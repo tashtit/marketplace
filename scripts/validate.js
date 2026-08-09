@@ -524,7 +524,7 @@ export function validatePlugins(shared) {
       validateManifestComponents(manifests[platform], pluginDir, manifest);
     }
 
-    const skillFile = path.join(pluginDir, 'skills', name, 'SKILL.md');
+    const skillFile = path.join(pluginDir, 'skills', `tashtit-${name}`, 'SKILL.md');
     if (!isFile(skillFile)) {
       fail(skillFile, 'canonical skill is missing');
     }
@@ -614,6 +614,13 @@ export function validateSkillFrontmatter() {
       );
     } else if (!PLUGIN_NAME.test(name)) {
       fail(skillPath, 'frontmatter name must use lowercase kebab-case');
+    } else if (!name.startsWith('tashtit-')) {
+      fail(
+        skillPath,
+        `skill name ${show(name)} must carry the 'tashtit-' provenance ` +
+          'prefix; hosts flatten installed skills into one namespace, ' +
+          'so unprefixed names can collide with other marketplaces',
+      );
     } else if (seen.has(name)) {
       fail(
         skillPath,

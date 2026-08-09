@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.4.0 - 2026-08-09
+
+### Changed
+
+- **Breaking:** renamed skill `evalkit` to `tashtit-evalkit`.
+- **Breaking:** renamed skill `benchmark-skills` to `tashtit-benchmark-skills`.
+- **Breaking:** renamed skill `compare-models` to `tashtit-compare-models`.
+- **Breaking:** renamed skill `compare-skills` to `tashtit-compare-skills`.
+- **Breaking:** renamed skill `evaluate-skill` to `tashtit-evaluate-skill`.
+- **Breaking:** renamed skill `remove-worktrees` to `tashtit-remove-worktrees`.
+- **Breaking:** renamed skill `review-skill` to `tashtit-review-skill`.
+- Every Tashtit skill name now carries the `tashtit-` provenance prefix.
+  Hosts flatten installed skills into one namespace and GitHub Copilot
+  displays only the bare skill name, so unprefixed names can collide with
+  or be indistinguishable from skills shipped by other marketplaces. See
+  the skill naming policy in `docs/compatibility.md`.
+
 ## 0.3.0 - 2026-08-06
 
 - Added a **fired-check** to `evaluate-skill` and `benchmark-skills`: the task is

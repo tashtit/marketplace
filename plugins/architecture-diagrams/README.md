@@ -3,7 +3,7 @@
 Create and review high-level architecture diagrams using the C4 model at the
 System Context (C1) and Container (C2) levels.
 
-**Maturity: Experimental — 0.1.0.** The right level of detail and audience for a
+**Maturity: Experimental — 0.2.0.** The right level of detail and audience for a
 diagram depend on the system and its readers; this plugin makes no completeness
 or certification claim.
 

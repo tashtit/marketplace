@@ -4,7 +4,7 @@ Set up, implement, and review a dual ESM and CommonJS build and publish pipeline
 for a TypeScript or JavaScript library so that both `import` and `require`
 consumers get correct code and types.
 
-**Maturity: Experimental — 0.1.0.** The registry, package manager, test runner,
+**Maturity: Experimental — 0.2.0.** The registry, package manager, test runner,
 release tool, supported runtime range, and repository release authority remain
 repository-specific. This plugin does not certify a package or its supply chain.
 

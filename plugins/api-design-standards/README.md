@@ -4,7 +4,7 @@ Design, implement, and review the contract an HTTP API makes to its clients
 over time: how long-running work behaves within a call, and how endpoints
 retire across the life of the API.
 
-**Maturity: Experimental — 0.1.0.** Versioning windows, retention of removed
+**Maturity: Experimental — 0.2.0.** Versioning windows, retention of removed
 endpoints, and consumer-notice periods always depend on applicable contracts
 and organization policy; this plugin makes no compliance claim.
 

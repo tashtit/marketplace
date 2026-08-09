@@ -1,6 +1,6 @@
 {
   "name": "architecture-diagrams",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Standards for C4 system context and container architecture diagrams.",
   "author": {
     "name": "Tashtit contributors",

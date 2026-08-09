@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.2.0 - 2026-08-09
+
+### Changed
+
+- **Breaking:** renamed skill `repository-governance` to `tashtit-repository-governance`.
+- **Breaking:** renamed skill `repository-policy` to `tashtit-repository-policy`.
+- **Breaking:** renamed skill `repository-settings` to `tashtit-repository-settings`.
+- Every Tashtit skill name now carries the `tashtit-` provenance prefix.
+  Hosts flatten installed skills into one namespace and GitHub Copilot
+  displays only the bare skill name, so unprefixed names can collide with
+  or be indistinguishable from skills shipped by other marketplaces. See
+  the skill naming policy in `docs/compatibility.md`.
+
 ## 0.1.1 - 2026-08-08
 
 - `repository-settings` description now states that it audits GitHub-hosted

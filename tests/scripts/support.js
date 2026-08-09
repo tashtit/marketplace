@@ -115,9 +115,9 @@ export function buildRepo(root, plugins = ['alpha']) {
     writeJson(path.join(pluginDir, '.claude-plugin', 'plugin.json'), manifest);
     writeJson(path.join(pluginDir, '.codex-plugin', 'plugin.json'), manifest);
     writeText(
-      path.join(pluginDir, 'skills', name, 'SKILL.md'),
+      path.join(pluginDir, 'skills', `tashtit-${name}`, 'SKILL.md'),
       '---\n' +
-        `name: ${name}\n` +
+        `name: tashtit-${name}\n` +
         `description: Fixture skill for ${name}.\n` +
         '---\n' +
         '\n' +
