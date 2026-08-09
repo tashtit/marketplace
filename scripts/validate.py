@@ -118,7 +118,11 @@ def plugin_platforms(entry: dict[str, Any]) -> set[str]:
     platforms = entry.get("platforms")
     if platforms is None:
         return set(CORE_TARGETS)
-    return set(platforms) & PLATFORMS
+    # validate_marketplaces records the error for a malformed declaration;
+    # fall back to the default so validation can continue past it.
+    if not isinstance(platforms, list):
+        return set(CORE_TARGETS)
+    return {item for item in platforms if isinstance(item, str)} & PLATFORMS
 
 
 def validate_marketplaces() -> dict[str, dict[str, dict[str, Any]]]:
@@ -581,6 +585,28 @@ def validate_scenarios(
     return index
 
 
+def validate_test_directories() -> None:
+    """Reject test trees for plugins that no longer exist.
+
+    A deleted or renamed plugin would otherwise leave its acceptance record,
+    scenarios, and review checklist behind forever, silently advertising
+    coverage for something the marketplace no longer ships.
+    """
+    tests_root = ROOT / "tests" / "plugins"
+    if not tests_root.is_dir():
+        return
+    plugin_names = {
+        path.name
+        for path in (ROOT / "plugins").iterdir()
+        if path.is_dir() and not path.name.startswith(".")
+    }
+    for path in sorted(tests_root.iterdir()):
+        if not path.is_dir() or path.name.startswith("."):
+            continue
+        if path.name not in plugin_names:
+            fail(path, "test directory has no matching plugin under plugins/")
+
+
 def validate_acceptance_results(
     path: Path,
     scenarios: dict[str, set[str]],
@@ -861,7 +887,11 @@ def validate_markdown_links() -> None:
             continue
         content = path.read_text(encoding="utf-8")
         for raw_target in MARKDOWN_LINK.findall(content):
-            target = raw_target.strip().split(maxsplit=1)[0].strip("<>")
+            tokens = raw_target.split(maxsplit=1)
+            if not tokens:
+                fail(path, "markdown link target is blank")
+                continue
+            target = tokens[0].strip("<>")
             if (
                 not target
                 or target.startswith(("#", "http://", "https://", "mailto:"))
@@ -884,6 +914,7 @@ def main() -> int:
     validate_plugins(shared)
     validate_skill_frontmatter()
     scenario_index = validate_scenarios(shared)
+    validate_test_directories()
     maturity_by_plugin = validate_acceptance(shared, scenario_index)
     validate_maturity_claims(shared, maturity_by_plugin)
     validate_catalog_tables(shared, maturity_by_plugin)
