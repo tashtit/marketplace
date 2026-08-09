@@ -40,11 +40,12 @@ proceed safely.
 For the primary continuous-integration workflow, Tashtit conventions are:
 
 - use `.github/workflows/ci.yml`;
-- use a stable workflow name such as `🏗️ CI`;
+- use a short, stable workflow name such as `CI`;
 - trigger on `workflow_dispatch`, `pull_request`, and push to the actual
   default branch;
-- give every job a stable, simple identifier and an explicit
-  `timeout-minutes`;
+- give every job a short, stable, lowercase identifier such as `build`,
+  `test`, or `release`, and an explicit `timeout-minutes`;
+- do not set a job-level `name`; the identifier is the display name;
 - define workflow-level concurrency for ordinary CI;
 - cancel superseded pull-request runs, but let trusted branch runs finish;
 - define exact job-level `permissions`;
@@ -71,9 +72,12 @@ tested check design ensure skipped runs cannot leave a required check pending
 or silently bypass relevant validation. A docs-only optimization is a
 repository decision, not a default.
 
-Keep job identifiers free of decoration because they become status-check
-contracts. Step names SHOULD be concise and diagnostic. Emojis MAY mark a few
-high-value steps but MUST NOT carry meaning by themselves.
+A job's status check appears as `<workflow name> / <job id>`, so both halves
+are contracts: keep the workflow name short and stable, keep job identifiers
+undecorated lowercase tokens, and do not hide an identifier behind a job-level
+`name`. Step names SHOULD be concise and diagnostic. Emojis MAY mark a few
+high-value steps but MUST NOT appear in workflow or job names and MUST NOT
+carry meaning by themselves.
 
 Quote string values in `with:`, `env:`, and runtime-version fields. Unquoted
 YAML scalars are type-coerced, which silently changes what an action receives:
@@ -222,10 +226,13 @@ support. Set `fail-fast: false` when seeing all compatibility failures is more
 valuable than saving minutes. Run expensive coverage collection once unless
 each matrix dimension has a distinct coverage contract.
 
-Split an orthogonal or materially slower check into its own job when parallel
-execution improves feedback or the job needs different permissions, runner,
-timeout, service, or failure diagnostics. Do not split jobs merely for visual
-symmetry; repeated checkout and installation have real cost.
+Prefer a single job while every check shares one toolchain and setup and the
+combined runtime stays short; a repository's structural validation and its
+unit tests usually belong together. Split an orthogonal or materially slower
+check into its own job when parallel execution improves feedback or the job
+needs different permissions, runner, timeout, service, or failure
+diagnostics. Do not split jobs merely for visual symmetry; repeated checkout
+and installation have real cost.
 
 Coverage remains a gate only when thresholds are enforced by the test command
 or an enabled external service. Never claim coverage publishing succeeded when
