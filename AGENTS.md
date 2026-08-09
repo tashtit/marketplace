@@ -48,5 +48,7 @@ but shallow guidance.
 
 ## Validation
 
-Run `make validate` and inspect the complete diff before requesting review.
-Run `make sync` after changing the canonical marketplace or any plugin manifest.
+Run `make validate` and `make test`, then inspect the complete diff before
+requesting review. Run `make sync` after changing the canonical marketplace or
+any plugin manifest. When changing a script in `scripts/`, extend the unit
+tests in `tests/scripts/` so the changed check is covered.
