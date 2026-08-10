@@ -80,9 +80,15 @@ When invoked as `/evaluate-skill <skill> <task…>`, parse from `$ARGUMENTS`: `s
    **Commit the result:**
 
    ```bash
-   git add -A && git commit -m "eval: <arm> arm result"
+   # exclude the arm's enablement pin, if one was written — it is arm-revealing
+   git add -A -- ':(exclude)<pin-path>' && git commit -m "eval: <arm> arm result"
    git diff <base> > runs/<arm>-<run-id>.diff
    ```
+
+   `<pin-path>` is the settings file the **Skill isolation** procedure wrote for this
+   arm (omit the pathspec entirely for a loose skill, where no pin exists). Excluding
+   it keeps the pin out of the committed diff, so the arm-blind reviewer never sees
+   `enabledPlugins` differing between arms and `files_changed` is not inflated.
 
    **`review`** — code-review the diff using the **Review-layer subprocess** from the resolved host reference, run inside the arm's worktree so it inherits the host's project-context file and skills. Do **not** pass the arm label to the reviewer (arm-blind). → findings by severity (critical / high / medium).
 

@@ -106,7 +106,7 @@ Copilot merges settings from three scopes, `local` highest:
 |-------|----------------------------------------------|-----------------|------------|
 | user  | `$HOME/.copilot/settings.json`               | no (shared)     | low        |
 | repo  | `<repo>/.github/copilot/settings.json`       | yes             | mid        |
-| local | `<repo>/.github/copilot/settings.local.json` | no (gitignored) | high       |
+| local | `<repo>/.github/copilot/settings.local.json` | not by default  | high       |
 
 `enabledPlugins` is a `"<plugin>@<marketplace>": <bool>` map merged **per key**
 (`{...lower, ...higher}`), so a `local`-scope entry deterministically overrides
@@ -121,11 +121,21 @@ worktree:
 { "enabledPlugins": { "<plugin>@<marketplace>": false } }
 ```
 
-Because `settings.local.json` is the gitignored `local` scope, writing it into the
-worktree does **not** appear in `git diff <base>`, so the arm-blind review layer and
-`files_changed` metric stay clean. The plugin files are already present via the
-shared `$HOME/.copilot/installed-plugins/`, so no `HOME` copy is needed — only
-enablement is pinned.
+The pin must stay out of the captured diff, or the arm-blind review layer sees
+`enabledPlugins` set to `true` in one arm and `false` in the other and can infer the
+arm label. **Do not assume the file is gitignored** —
+`.github/copilot/settings.local.json` is only ignored if the target repo happens to
+ignore it, and most do not. Instead exclude it explicitly when staging the arm's
+result, per the **Commit the result** step in the calling skill:
+
+```bash
+git add -A -- ':(exclude).github/copilot/settings.local.json'
+```
+
+The file stays on disk and in effect for the session; it is simply never staged, so
+it does not reach `git diff <base>` or inflate `files_changed`. The plugin files are
+already present via the shared `$HOME/.copilot/installed-plugins/`, so no `HOME` copy
+is needed — only enablement is pinned.
 
 **Preconditions — stop rather than produce an invalid run if any fail:**
 

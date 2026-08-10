@@ -87,7 +87,7 @@ Claude merges settings from three scopes, `local` highest:
 |---------|--------------------------------------|-----------------|------------|
 | user    | `$HOME/.claude/settings.json`        | no (shared)     | low        |
 | project | `<repo>/.claude/settings.json`       | yes             | mid        |
-| local   | `<repo>/.claude/settings.local.json` | no (gitignored) | high       |
+| local   | `<repo>/.claude/settings.local.json` | not by default  | high       |
 
 `enabledPlugins` is a `"<plugin>@<marketplace>": <bool>` map merged **per key**, so a
 `local`-scope entry overrides whatever `user` or `project` scope set — `true` forces
@@ -101,10 +101,21 @@ the skill on, `false` forces it off. Isolate each arm by writing
 { "enabledPlugins": { "<plugin>@<marketplace>": false } }
 ```
 
-Because `settings.local.json` is the gitignored `local` scope, writing it into the
-worktree does **not** appear in `git diff <base>`, so the arm-blind review layer and
-`files_changed` metric stay clean. The plugin files are already present via the
-shared `$HOME/.claude/plugins/`, so no `HOME` copy is needed — only enablement is pinned.
+The pin must stay out of the captured diff, or the arm-blind review layer sees
+`enabledPlugins` set to `true` in one arm and `false` in the other and can infer the
+arm label. **Do not assume the file is gitignored** — `.claude/settings.local.json`
+is only ignored if the target repo happens to ignore it, and most do not. Instead
+exclude it explicitly when staging the arm's result, per the **Commit the result**
+step in the calling skill:
+
+```bash
+git add -A -- ':(exclude).claude/settings.local.json'
+```
+
+The file stays on disk and in effect for the session; it is simply never staged, so
+it does not reach `git diff <base>` or inflate `files_changed`. The plugin files are
+already present via the shared `$HOME/.claude/plugins/`, so no `HOME` copy is
+needed — only enablement is pinned.
 
 When writing `settings.local.json`, **merge-write** — do not replace the whole file.
 Read any existing `.claude/settings.local.json` in the worktree, add or update only

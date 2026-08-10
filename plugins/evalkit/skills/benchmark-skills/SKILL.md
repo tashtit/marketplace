@@ -80,9 +80,15 @@ When invoked as `/benchmark-skills <skillA> <skillB> <task…>`, parse from `$AR
    **Commit the result:**
 
    ```bash
-   git add -A && git commit -m "bench: <arm> arm result"
+   # exclude the arm's enablement pin, if one was written — it is arm-revealing
+   git add -A -- ':(exclude)<pin-path>' && git commit -m "bench: <arm> arm result"
    git diff <base> > runs/<arm>-<run-id>.diff
    ```
+
+   `<pin-path>` is the settings file the **Skill isolation** procedure wrote for this
+   arm (omit the pathspec entirely for loose skills, where no pin exists). Excluding
+   it keeps the pin out of the committed diff, so the arm-blind reviewer never sees
+   `enabledPlugins` differing between arms and `files_changed` is not inflated.
 
    **`review`** — code-review the diff using the **Review-layer subprocess** from the resolved host reference, run inside the arm's worktree so it inherits the host's project-context file and skills. Do **not** pass the arm label to the reviewer (arm-blind). Both skills are assumed to be non-review skills, so the same review skill auto-triggers identically in both arms. → findings by severity.
 
