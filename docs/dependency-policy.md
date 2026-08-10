@@ -62,8 +62,8 @@ before a substantial change; a new dependency MUST have one.
 | Source-available | BUSL-1.1, SSPL, Elastic-2.0 | Not allowed; these are not open source. |
 | Unclear | absent, custom, conflicting | Not allowed until resolved and re-reviewed. |
 
-The same list is enforced on pull requests by the `deps` CI job. Changing it is
-a policy decision, so the list in this table and the one in
+The same list is enforced on pull requests by the dependency review step in
+CI. Changing it is a policy decision, so the list in this table and the one in
 [`.github/workflows/ci.yml`](../.github/workflows/ci.yml) MUST be changed
 together.
 
@@ -114,7 +114,7 @@ with no matching declaration, so a stale record cannot linger.
 | Every declared dependency has a reviewed record | `scripts/check-dependencies.js`, in `npm run validate` | Hard failure |
 | No record without a declaration | same | Hard failure |
 | Recorded version matches the manifest | same | Warning |
-| Vulnerable or non-allowlisted dependency introduced by a pull request | `deps` job in CI | Hard failure on the pull request |
+| Vulnerable or non-allowlisted dependency introduced by a pull request | dependency review step in the CI `test` job | Hard failure on the pull request |
 | Actions pinned to an immutable reference | `scripts/validate.js` | Hard failure |
 | Grouped, scheduled update pull requests | `.github/dependabot.yml` | Not a check |
 
@@ -128,18 +128,19 @@ The check reads committed files only. It cannot tell whether the recorded
 evidence is true, so it never substitutes for the review — it only guarantees
 that a reviewer was asked.
 
-The `deps` CI job runs GitHub's dependency review, which needs the
-base-versus-head dependency graph. That API is available on public
-repositories, and on private ones only with GitHub Advanced Security, where it
-otherwise fails with a setup error instead of a finding. The job is therefore
-conditioned on repository visibility: it enforces while this repository is
-public, and skips rather than failing red if it is ever made private without
-an Advanced Security license.
+The dependency review step in the CI `test` job needs the base-versus-head
+dependency graph. That API is available on public repositories, and on private
+ones only with GitHub Advanced Security, where it otherwise fails with a setup
+error instead of a finding. The step is therefore conditioned on repository
+visibility: it enforces while this repository is public, and skips rather than
+failing red if it is ever made private without an Advanced Security license.
+It runs after validation and the unit tests so that a denied dependency does
+not hide the other results.
 
-A skipped `deps` job is coverage this repository does not have, not a passing
-check. If you see one, a reviewer is responsible for advisories and licenses on
-the dependency change, and the fix is to restore the prerequisite — not to
-relax the condition so the job runs and fails.
+A skipped dependency review is coverage this repository does not have, not a
+passing check. If you see one, a reviewer is responsible for advisories and
+licenses on the dependency change, and the fix is to restore the prerequisite —
+not to relax the condition so the step runs and fails.
 
 ## Adding a record
 
