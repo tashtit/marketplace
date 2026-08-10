@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.1 - 2026-08-10
+
+- Version bump only. No behavior, skill, or documentation changes since 0.4.0.
+
 ## 0.4.0 - 2026-08-10
 
 - Replaced the plugin/global skill-isolation approach in `evaluate-skill` and

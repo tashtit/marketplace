@@ -22,7 +22,7 @@ GitHub Copilot CLI only.
 
 ## Maturity
 
-**Experimental — 0.4.0.** Behavioral compatibility still requires review on the
+**Experimental — 0.4.1.** Behavioral compatibility still requires review on the
 target agent.
 
 ## Skills
