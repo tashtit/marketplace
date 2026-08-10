@@ -114,7 +114,7 @@ with no matching declaration, so a stale record cannot linger.
 | Every declared dependency has a reviewed record | `scripts/check-dependencies.js`, in `npm run validate` | Hard failure |
 | No record without a declaration | same | Hard failure |
 | Recorded version matches the manifest | same | Warning |
-| Vulnerable or non-allowlisted dependency introduced by a pull request | `deps` job in CI | Hard failure on the pull request, once the job is active |
+| Vulnerable or non-allowlisted dependency introduced by a pull request | `deps` job in CI | Hard failure on the pull request |
 | Actions pinned to an immutable reference | `scripts/validate.js` | Hard failure |
 | Grouped, scheduled update pull requests | `.github/dependabot.yml` | Not a check |
 
@@ -130,17 +130,16 @@ that a reviewer was asked.
 
 The `deps` CI job runs GitHub's dependency review, which needs the
 base-versus-head dependency graph. That API is available on public
-repositories, and on private ones only with GitHub Advanced Security. While
-this repository is private and unlicensed for Advanced Security the job is
-skipped by an explicit condition, and it begins enforcing on its own once the
-repository is public.
+repositories, and on private ones only with GitHub Advanced Security, where it
+otherwise fails with a setup error instead of a finding. The job is therefore
+conditioned on repository visibility: it enforces while this repository is
+public, and skips rather than failing red if it is ever made private without
+an Advanced Security license.
 
-Until then the automated part of the gate is the reviewed-record check, which
-runs on every validation. Treat the skipped job as coverage this repository
-does not yet have, not as a passing check: a reviewer is still responsible for
-advisories and licenses on a dependency change. To turn it on sooner, either
-publish the repository or license Advanced Security for it — do not relax the
-condition to make the job run and fail.
+A skipped `deps` job is coverage this repository does not have, not a passing
+check. If you see one, a reviewer is responsible for advisories and licenses on
+the dependency change, and the fix is to restore the prerequisite — not to
+relax the condition so the job runs and fails.
 
 ## Adding a record
 

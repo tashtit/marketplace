@@ -40,9 +40,10 @@ jobs:
   # the base-versus-head dependency graph exists only for a pull request, and
   # the dependency review API is unavailable on a private repository without
   # GitHub Advanced Security, where it fails with a setup error instead of a
-  # finding. The job therefore starts enforcing by itself when this repository
-  # becomes public. Until then the gate is the reviewed record every declared
-  # dependency must carry, which `npm run validate` enforces on every run.
+  # finding. The visibility guard keeps that failure mode out of CI if this
+  # repository is ever made private again. `npm run validate` enforces the
+  # complementary rule that every declared dependency carries a reviewed
+  # record.
   deps:
     if: github.event_name == 'pull_request' && github.event.repository.visibility == 'public'
     runs-on: ubuntu-latest
