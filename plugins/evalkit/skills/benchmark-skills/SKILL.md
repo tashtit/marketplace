@@ -38,8 +38,8 @@ When invoked as `/benchmark-skills <skillA> <skillB> <task…>`, parse from `$AR
 1. Determine `skillA`, `skillB`, and `task` as described above. If any is missing, ask and stop.
 
 2. Resolve both skill paths against known load paths (`.claude/skills/`, `.github/skills/`, `src/skills/`, plugin skill paths). If either is unresolvable, report the error and stop. Then **classify each source** — see the **Skill isolation** section of the resolved host reference:
-   - **Repo-local** — the skill lives inside the repo tree, so removing the other skill from an arm is a single-file delete inside the worktree.
-   - **Plugin / global** — the skill is installed outside the repo and shared by every worktree, so a worktree delete does **not** remove it; isolate it per the host reference's **Skill isolation** procedure. If the host cannot isolate a plugin skill, **stop** and tell the user it cannot be benchmarked by the delete-based control — never run an arm that can still reach the skill it is supposed to exclude.
+   - **Loose skill** — a `SKILL.md` inside the repo tree, so an arm removes the other skill with a single-file delete in the worktree.
+   - **Plugin skill** — installed outside the repo and enabled through an `enabledPlugins` map shared by every worktree. A worktree delete does **not** remove it; instead each arm's enablement is **pinned by writing the host's highest-precedence settings file into the worktree** (the host reference's **Skill isolation** procedure). If a plugin skill's files are not installed, or a managed scope force-enables it so enablement cannot be pinned, **stop** and tell the user — never run an arm that can still reach the skill it is supposed to exclude.
 
 3. Resolve `base` to the current HEAD:
 
@@ -49,15 +49,15 @@ When invoked as `/benchmark-skills <skillA> <skillB> <task…>`, parse from `$AR
 
 4. Generate a `run-id` from the current timestamp (e.g. `20260803-143021`).
 
-5. Run both arms **in parallel** (isolated worktrees). Both skills are repo-local and present at the base commit, so each arm deletes the other skill — a symmetric single-file operation. Use the **Headless invocation** from the resolved host reference for each session, capturing JSONL to `runs/<arm>-<run-id>.jsonl`:
+5. Run both arms **in parallel** (isolated worktrees). Each arm must have exactly one of the two skills present — a loose skill is toggled by deleting its file, a plugin skill by pinning its enablement per the host reference (on for the arm that keeps it, off for the arm that excludes it). Use the **Headless invocation** from the resolved host reference for each session, capturing JSONL to `runs/<arm>-<run-id>.jsonl`:
 
    **Arm A** — only `skillA` present:
 
    ```bash
    git worktree add -b bench/A-<run-id> bench/A-<run-id> <base>
-   # make skillB unavailable in this arm:
-   #   repo-local    → delete <resolved skillB path> inside the worktree
-   #   plugin/global → apply the host reference's Skill isolation procedure
+   # keep skillA, exclude skillB in this arm:
+   #   loose skill   → delete <resolved skillB path>; ensure skillA is present
+   #   plugin skill  → pin skillA ON and skillB OFF via the Skill isolation procedure
    cd bench/A-<run-id>
    # headless session per the resolved host reference → runs/A-<run-id>.jsonl
    ```
@@ -66,9 +66,9 @@ When invoked as `/benchmark-skills <skillA> <skillB> <task…>`, parse from `$AR
 
    ```bash
    git worktree add -b bench/B-<run-id> bench/B-<run-id> <base>
-   # make skillA unavailable in this arm:
-   #   repo-local    → delete <resolved skillA path> inside the worktree
-   #   plugin/global → apply the host reference's Skill isolation procedure
+   # keep skillB, exclude skillA in this arm:
+   #   loose skill   → delete <resolved skillA path>; ensure skillB is present
+   #   plugin skill  → pin skillB ON and skillA OFF via the Skill isolation procedure
    cd bench/B-<run-id>
    # headless session per the resolved host reference → runs/B-<run-id>.jsonl
    ```
@@ -80,9 +80,17 @@ When invoked as `/benchmark-skills <skillA> <skillB> <task…>`, parse from `$AR
    **Commit the result:**
 
    ```bash
-   git add -A && git commit -m "bench: <arm> arm result"
+   # <pin-pathspec>: see the resolved host reference's Skill isolation section
+   git add -A <pin-pathspec> && git commit -m "bench: <arm> arm result"
    git diff <base> > runs/<arm>-<run-id>.diff
    ```
+
+   If the host's **Skill isolation** procedure put an enablement pin inside the
+   worktree, `<pin-pathspec>` is `-- ':(exclude)<pin-path>'` — the pin is arm-revealing
+   and must not reach the diff. Omit it when the pin lives outside the worktree (Claude
+   Code's `--settings`) or when isolating loose skills, where no pin exists. Then run
+   the host reference's **pin-leak check** if it defines one, and treat a leak as an
+   invalid run rather than reviewing a diff that reveals the arm.
 
    **`review`** — code-review the diff using the **Review-layer subprocess** from the resolved host reference, run inside the arm's worktree so it inherits the host's project-context file and skills. Do **not** pass the arm label to the reviewer (arm-blind). Both skills are assumed to be non-review skills, so the same review skill auto-triggers identically in both arms. → findings by severity.
 
@@ -124,7 +132,7 @@ If the fired-check flagged either arm **inconclusive** or **invalid** (step 7), 
 ## Validity guardrails
 
 1. Identical **prompt**, **base commit**, and **model** across arms.
-2. Each arm has exactly one of the two skills present. For repo-local skills this is a single-file delete; a plugin or globally installed skill is shared by every worktree, so it must be isolated per the host reference's **Skill isolation** procedure (or the run stopped). No other skill state differs between arms, and the per-arm fired-check confirms each arm ran its own skill and not the other.
+2. Each arm has exactly one of the two skills present. For loose skills this is a single-file delete; a plugin skill is shared by every worktree, so its enablement is pinned per arm via the host reference's **Skill isolation** procedure (writing the host's highest-precedence settings file into the worktree) — or the run stopped. No other skill state differs between arms, and the per-arm fired-check confirms each arm ran its own skill and not the other.
 3. **Arm-blind reviewer** — the review subprocess receives the diff and project context, never the arm label.
 4. Single-run results are **directional**, not statistical. Report them as such. If the user needs statistical confidence, they can request repeated runs and compare distributions.
 5. **Fired-check.** Neither skill is force-invoked; triggering must happen naturally. An arm whose own skill never fired is **inconclusive**, and an arm where the excluded skill fired is **invalid**. Only compare arms that each fired their own skill and not the other.

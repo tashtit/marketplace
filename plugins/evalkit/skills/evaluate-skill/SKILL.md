@@ -37,8 +37,8 @@ When invoked as `/evaluate-skill <skill> <task…>`, parse from `$ARGUMENTS`: `s
 1. Determine `skill` and `task` as described above. If either is missing, ask and stop.
 
 2. Resolve the skill against known load paths (`.claude/skills/`, `.github/skills/`, `src/skills/`, plugin skill paths). If unresolvable, report the error and stop. Then **classify the source** — see the **Skill isolation** section of the resolved host reference:
-   - **Repo-local** — the skill lives inside the repo tree, so it is present in every worktree branched from `base` and the control is a single-file delete.
-   - **Plugin / global** — the skill is installed outside the repo (a plugin or a globally installed copy shared by every worktree and session). A worktree delete does **not** remove it, so isolate it per the host reference's **Skill isolation** procedure. If the host cannot isolate it, **stop** and tell the user this skill cannot be evaluated by the delete-based control — never produce a run whose control arm can still reach the skill.
+   - **Loose skill** — a `SKILL.md` inside the repo tree, present in every worktree branched from `base`; the control is a single-file delete.
+   - **Plugin skill** — installed outside the repo and enabled through an `enabledPlugins` map shared by every worktree and session. A worktree delete does **not** remove it; instead each arm's enablement is **pinned by writing the host's highest-precedence settings file into the worktree** (the host reference's **Skill isolation** procedure). If the plugin's files are not installed, or a managed scope force-enables it so enablement cannot be pinned, **stop** and tell the user — never produce a run whose control arm can still reach the skill.
 
 3. Resolve `base` to the current HEAD:
 
@@ -50,10 +50,14 @@ When invoked as `/evaluate-skill <skill> <task…>`, parse from `$ARGUMENTS`: `s
 
 5. Run both arms **in parallel** (isolated worktrees). Both worktrees start from the same base with the skill present; the `without` arm deletes it before the session begins. Use the **Headless invocation** from the resolved host reference for each session, capturing JSONL to `runs/<arm>-<run-id>.jsonl`:
 
-   **Arm `with`** — skill present (repo as-is):
+   **Arm `with`** — skill present:
 
    ```bash
    git worktree add -b eval/<skill>-with-<run-id> eval/with-<run-id> <base>
+   # ensure the skill is available in this arm:
+   #   loose skill   → present in the checkout, nothing to do
+   #   plugin skill  → pin it ON via the host reference's Skill isolation procedure
+   #                   (a local-scope enablement may not survive a fresh worktree)
    cd eval/with-<run-id>
    # headless session per the resolved host reference → runs/with-<run-id>.jsonl
    ```
@@ -63,8 +67,8 @@ When invoked as `/evaluate-skill <skill> <task…>`, parse from `$ARGUMENTS`: `s
    ```bash
    git worktree add -b eval/<skill>-without-<run-id> eval/without-<run-id> <base>
    # make the skill unavailable in this arm:
-   #   repo-local    → delete <resolved skill path> inside the worktree
-   #   plugin/global → apply the host reference's Skill isolation procedure for this arm
+   #   loose skill   → delete <resolved skill path> inside the worktree
+   #   plugin skill  → pin it OFF via the host reference's Skill isolation procedure
    cd eval/without-<run-id>
    # headless session per the resolved host reference → runs/without-<run-id>.jsonl
    ```
@@ -76,9 +80,17 @@ When invoked as `/evaluate-skill <skill> <task…>`, parse from `$ARGUMENTS`: `s
    **Commit the result:**
 
    ```bash
-   git add -A && git commit -m "eval: <arm> arm result"
+   # <pin-pathspec>: see the resolved host reference's Skill isolation section
+   git add -A <pin-pathspec> && git commit -m "eval: <arm> arm result"
    git diff <base> > runs/<arm>-<run-id>.diff
    ```
+
+   If the host's **Skill isolation** procedure put an enablement pin inside the
+   worktree, `<pin-pathspec>` is `-- ':(exclude)<pin-path>'` — the pin is arm-revealing
+   and must not reach the diff. Omit it when the pin lives outside the worktree (Claude
+   Code's `--settings`) or when isolating a loose skill, where no pin exists. Then run
+   the host reference's **pin-leak check** if it defines one, and treat a leak as an
+   invalid run rather than reviewing a diff that reveals the arm.
 
    **`review`** — code-review the diff using the **Review-layer subprocess** from the resolved host reference, run inside the arm's worktree so it inherits the host's project-context file and skills. Do **not** pass the arm label to the reviewer (arm-blind). → findings by severity (critical / high / medium).
 
@@ -118,7 +130,7 @@ Both worktrees remain on disk; the user picks a winner and continues there or me
 ## Validity guardrails
 
 1. Identical **prompt**, **base commit**, and **model** across arms.
-2. The skill must be absent from **all** load paths in the `without` arm. For a repo-local skill this is a single-file delete; a plugin or globally installed copy is shared by every worktree, so it must be isolated per the host reference's **Skill isolation** procedure (or the run stopped) — a reachable global copy silently invalidates the control. The `without`-arm fired-check confirms the removal actually took effect.
+2. The skill must be absent from the `without` arm and present in the `with` arm. For a loose skill this is a single-file delete; a plugin skill is shared by every worktree, so its enablement is pinned per arm via the host reference's **Skill isolation** procedure (writing the host's highest-precedence settings file into the worktree) — or the run is stopped. The per-arm fired-check confirms each pin actually took effect.
 3. **Arm-blind reviewer** — the review subprocess receives the diff and project context, never the arm label.
 4. Single-run results are **directional**, not statistical. Report them as such. If the user needs statistical confidence, they can request repeated runs and compare distributions.
 5. The skill under test is assumed to be a non-review skill, so the same review skill auto-triggers identically in both arms.

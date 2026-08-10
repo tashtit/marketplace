@@ -22,7 +22,7 @@ GitHub Copilot CLI only.
 
 ## Maturity
 
-**Experimental — 0.3.0.** Behavioral compatibility still requires review on the
+**Experimental — 0.4.0.** Behavioral compatibility still requires review on the
 target agent.
 
 ## Skills
@@ -84,7 +84,7 @@ This plugin does not target Codex.
 | Runaway cost from headless sessions on the wrong task | Dynamic harnesses confirm ambiguous requests and never guess a missing task or skill |
 | Biased review or judgement | Reviewer and judge receive the diff and project context only, never the arm label or model name |
 | Ambiguous destructive request treated as authorization | "Clean up my worktrees" defaults toward listing and never force-removes dirty work without explicit confirmation |
-| Invalid control arm | `evaluate-skill` checks that the skill is absent from all load paths in the `without` arm, isolates plugin/global skills via the host's **Skill isolation** procedure (or stops), and a per-arm **fired-check** confirms the skill actually fired where present and not where absent — a run that never triggered the skill is reported inconclusive, not "no effect" |
+| Invalid control arm | Both dynamic skills pin each arm's skill state — a loose skill by file delete, a plugin skill by forcing `enabledPlugins` on/off — and stop if a plugin's files are missing or a managed scope force-enables it. The pin never reaches the arm-blind reviewer or the `files_changed` count: on Claude Code it lives outside the worktree (`--settings`), and on Copilot CLI it is excluded at staging time and a pin-leak check invalidates the run if the coding agent committed it mid-task. A per-arm **fired-check** confirms the skill actually fired where present and not where absent; a run that never triggered the skill is reported inconclusive, not "no effect" |
 
 See [CHANGELOG.md](CHANGELOG.md). Maintainer-only evaluation material lives outside
 the distributed plugin in the
