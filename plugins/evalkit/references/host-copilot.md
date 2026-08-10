@@ -85,22 +85,61 @@ Presence of any of these ⇒ `skill_fired = yes`; absence of all ⇒ `skill_fire
 
 ## Skill isolation
 
-Skills reach a session from two places: **repo-local** load paths inside the worktree
-(`.github/skills/`, `.claude/skills/`, `src/skills/`, …), and **plugins** installed
-under the user config dir (`$HOME/.copilot/`), which every worktree and session shares.
+A skill reaches a session one of two ways. Classify the skill under test, then
+isolate it with the matching mechanism — **never** by editing the shared
+`$HOME/.copilot/` in place (that corrupts other sessions and the parallel arm).
 
-- **Repo-local** — isolate by deleting the skill's file/directory inside the arm's
-  worktree. Fully isolated; no shared state is touched.
-- **Plugin / global** — a worktree delete does not remove it. Isolate the arm by
-  running its headless `copilot` session with `HOME` pointed at a **per-arm copy** of
-  the real home (so the copied `$HOME/.copilot/` keeps its auth/token) in which the
-  plugin under test is removed for the arm that must lack the skill and left in place
-  for the arm that must have it. Never uninstall or edit the shared `$HOME/.copilot/`
-  in place — that would corrupt other sessions and the parallel arm.
+**1. Loose skill under a skills directory** (a `SKILL.md` committed in the repo at
+`.github/skills/`, `.claude/skills/`, `src/skills/`, … or pointed to by
+`COPILOT_SKILLS_DIR`). Its file is inside the worktree, so isolate by **deleting the
+skill's file/directory** in the arm that must lack it. Fully isolated; no shared
+state is touched.
+
+**2. Plugin skill** (installed under `$HOME/.copilot/installed-plugins/<marketplace>/<plugin>/`
+and enabled through an `enabledPlugins` map). The files are shared by every worktree,
+so a worktree delete does nothing. Instead **pin enablement per arm by writing the
+highest-precedence settings file into the arm's worktree** — do not touch `$HOME`.
+
+Copilot merges settings from three scopes, `local` highest:
+
+| Scope | File                                         | Git-tracked     | Precedence |
+|-------|----------------------------------------------|-----------------|------------|
+| user  | `$HOME/.copilot/settings.json`               | no (shared)     | low        |
+| repo  | `<repo>/.github/copilot/settings.json`       | yes             | mid        |
+| local | `<repo>/.github/copilot/settings.local.json` | no (gitignored) | high       |
+
+`enabledPlugins` is a `"<plugin>@<marketplace>": <bool>` map merged **per key**
+(`{...lower, ...higher}`), so a `local`-scope entry deterministically overrides
+whatever `user` or `repo` scope set — `true` forces the skill on, `false` forces it
+off. Isolate each arm by writing `<repo>/.github/copilot/settings.local.json` in the
+worktree:
+
+```jsonc
+// with arm
+{ "enabledPlugins": { "<plugin>@<marketplace>": true } }
+// without arm
+{ "enabledPlugins": { "<plugin>@<marketplace>": false } }
+```
+
+Because `settings.local.json` is the gitignored `local` scope, writing it into the
+worktree does **not** appear in `git diff <base>`, so the arm-blind review layer and
+`files_changed` metric stay clean. The plugin files are already present via the
+shared `$HOME/.copilot/installed-plugins/`, so no `HOME` copy is needed — only
+enablement is pinned.
+
+**Preconditions — stop rather than produce an invalid run if any fail:**
+
+- The plugin's **files must be installed** on the machine. Enablement toggles a
+  plugin that exists; it cannot conjure missing files. If the plugin is not
+  installed, the `with` arm cannot have it — install it first or stop.
+- A **managed/enterprise scope** can force-enable above `local`; if one pins the
+  plugin, `local: false` cannot override it — detect and stop.
+- Keep the inherited `extraKnownMarketplaces` (from `user` scope) so the enable
+  resolves; only add `enabledPlugins` at `local` scope, never replace the whole file.
 
 Always verify isolation with **Skill-invocation detection**: the arm that must lack the
-skill must show `skill_fired = no`. If it fired anyway, isolation leaked — treat the
-run as invalid.
+skill must show `skill_fired = no` and the arm that must have it `skill_fired = yes`.
+If either is wrong, the pin did not take effect — treat the run as invalid.
 
 ## Reviewer sub-agent
 

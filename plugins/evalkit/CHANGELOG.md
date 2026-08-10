@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.4.0 - 2026-08-10
+
+- Replaced the plugin/global skill-isolation approach in `evaluate-skill` and
+  `benchmark-skills`. Instead of copying `HOME` and removing the plugin (fragile,
+  mutated shared state), each arm now **pins the skill's enablement declaratively**
+  by writing the host's highest-precedence, gitignored settings file into the
+  worktree — `.github/copilot/settings.local.json` on Copilot CLI,
+  `.claude/settings.local.json` on Claude Code — forcing `enabledPlugins` on for the
+  arm that keeps the skill and off for the arm that excludes it.
+- This handles all install scopes deterministically (user, project/repo, and local),
+  fixes the two previously broken cases (a committed project-scope enablement leaking
+  into the control arm, and a local-scope enablement not propagating into a fresh
+  worktree), and keeps the review diff clean because the local settings file is
+  gitignored. The skills now classify the source as a **loose skill** (file delete)
+  vs a **plugin skill** (settings pin), and **stop** if a plugin's files are not
+  installed or a managed scope force-enables it.
+- Documented the verified per-host scope tables, `enabledPlugins` merge semantics,
+  and the Claude parent-key gotcha (issue #27247) in `host-copilot.md` and
+  `host-claude.md`.
+
 ## 0.3.0 - 2026-08-06
 
 - Added a **fired-check** to `evaluate-skill` and `benchmark-skills`: the task is

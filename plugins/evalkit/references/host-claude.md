@@ -67,22 +67,62 @@ Presence of either ⇒ `skill_fired = yes`; absence of both ⇒ `skill_fired = n
 
 ## Skill isolation
 
-Skills reach a session from two places: **repo-local** load paths inside the worktree
-(`.claude/skills/`, `.github/skills/`, `src/skills/`, …), and **plugins** installed
-under the user config dir (`$HOME/.claude/`), which every worktree and session shares.
+A skill reaches a session one of two ways. Classify the skill under test, then
+isolate it with the matching mechanism — **never** by editing the shared
+`$HOME/.claude/` in place (that corrupts other sessions and the parallel arm).
 
-- **Repo-local** — isolate by deleting the skill's file/directory inside the arm's
-  worktree. Fully isolated; no shared state is touched.
-- **Plugin / global** — a worktree delete does not remove it. Isolate the arm by
-  running its headless `claude` session with `HOME` pointed at a **per-arm copy** of
-  the real home (so the copied `$HOME/.claude/` keeps its auth) in which the plugin
-  under test is removed for the arm that must lack the skill and left in place for the
-  arm that must have it. Never uninstall or edit the shared `$HOME/.claude/` in place —
-  that would corrupt other sessions and the parallel arm.
+**1. Loose skill under a skills directory** (a `SKILL.md` committed in the repo at
+`.claude/skills/`, `.github/skills/`, `src/skills/`, …). Its file is inside the
+worktree, so isolate by **deleting the skill's file/directory** in the arm that must
+lack it. Fully isolated; no shared state is touched.
+
+**2. Plugin skill** (installed under `$HOME/.claude/plugins/` and enabled through an
+`enabledPlugins` map). The files are shared by every worktree, so a worktree delete
+does nothing. Instead **pin enablement per arm by writing the highest-precedence
+settings file into the arm's worktree** — do not touch `$HOME`.
+
+Claude merges settings from three scopes, `local` highest:
+
+| Scope   | File                                 | Git-tracked     | Precedence |
+|---------|--------------------------------------|-----------------|------------|
+| user    | `$HOME/.claude/settings.json`        | no (shared)     | low        |
+| project | `<repo>/.claude/settings.json`       | yes             | mid        |
+| local   | `<repo>/.claude/settings.local.json` | no (gitignored) | high       |
+
+`enabledPlugins` is a `"<plugin>@<marketplace>": <bool>` map merged **per key**, so a
+`local`-scope entry overrides whatever `user` or `project` scope set — `true` forces
+the skill on, `false` forces it off. Isolate each arm by writing
+`<repo>/.claude/settings.local.json` in the worktree:
+
+```jsonc
+// with arm
+{ "enabledPlugins": { "<plugin>@<marketplace>": true } }
+// without arm
+{ "enabledPlugins": { "<plugin>@<marketplace>": false } }
+```
+
+Because `settings.local.json` is the gitignored `local` scope, writing it into the
+worktree does **not** appear in `git diff <base>`, so the arm-blind review layer and
+`files_changed` metric stay clean. The plugin files are already present via the
+shared `$HOME/.claude/plugins/`, so no `HOME` copy is needed — only enablement is pinned.
+
+> **Claude gotcha (issue #27247).** A `local`-scope `enabledPlugins` override is
+> **silently ignored unless the `enabledPlugins` key already exists in a parent
+> scope** (`user` or `project`). Because the skill under test is a currently
+> **enabled** plugin, that key already exists at some parent scope, so the override
+> takes effect — but confirm it with the fired-check below rather than assuming.
+
+**Preconditions — stop rather than produce an invalid run if any fail:**
+
+- The plugin's **files must be installed** on the machine. Enablement toggles a
+  plugin that exists; it cannot conjure missing files. If not installed, the `with`
+  arm cannot have it — install it first or stop.
+- A **managed/enterprise scope** can force-enable above `local`; if one pins the
+  plugin, `local: false` cannot override it — detect and stop.
 
 Always verify isolation with **Skill-invocation detection**: the arm that must lack the
-skill must show `skill_fired = no`. If it fired anyway, isolation leaked — treat the
-run as invalid.
+skill must show `skill_fired = no` and the arm that must have it `skill_fired = yes`.
+If either is wrong, the pin did not take effect — treat the run as invalid.
 
 ## Reviewer sub-agent
 
