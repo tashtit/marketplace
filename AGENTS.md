@@ -45,6 +45,8 @@ but shallow guidance.
   actually observed, and never raise a plugin's maturity to satisfy the
   validator. The record exists to make an unreviewed claim impossible.
 - Keep documentation concise, actionable, and free from vendor marketing copy.
+- Never add `Co-authored-by` trailers or any other co-author attribution for
+  contributors to commits or pull requests.
 
 ## Validation
 
