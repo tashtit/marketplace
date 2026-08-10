@@ -106,11 +106,10 @@ worktree does **not** appear in `git diff <base>`, so the arm-blind review layer
 `files_changed` metric stay clean. The plugin files are already present via the
 shared `$HOME/.claude/plugins/`, so no `HOME` copy is needed — only enablement is pinned.
 
-> **Claude gotcha (issue #27247).** A `local`-scope `enabledPlugins` override is
-> **silently ignored unless the `enabledPlugins` key already exists in a parent
-> scope** (`user` or `project`). Because the skill under test is a currently
-> **enabled** plugin, that key already exists at some parent scope, so the override
-> takes effect — but confirm it with the fired-check below rather than assuming.
+When writing `settings.local.json`, **merge-write** — do not replace the whole file.
+Read any existing `.claude/settings.local.json` in the worktree, add or update only
+the `enabledPlugins` key, and write it back. This preserves any other local settings
+(e.g. `model`, `permissions`) that may already be present.
 
 **Preconditions — stop rather than produce an invalid run if any fail:**
 
@@ -119,6 +118,13 @@ shared `$HOME/.claude/plugins/`, so no `HOME` copy is needed — only enablement
   arm cannot have it — install it first or stop.
 - A **managed/enterprise scope** can force-enable above `local`; if one pins the
   plugin, `local: false` cannot override it — detect and stop.
+- **`enabledPlugins` must exist in a parent scope** (`user` `$HOME/.claude/settings.json`
+  or `project` `<repo>/.claude/settings.json`) before writing a `local`-scope override.
+  If the key is absent from both parent scopes, a `local`-scope `enabledPlugins` is
+  silently ignored (issue #27247) — the `with` arm's `true` pin won't take effect and
+  the run will be inconclusive. Detect this case: if `enabledPlugins` is absent from
+  both parent scopes, stop and tell the user to add the plugin's key to their user or
+  project settings first.
 
 Always verify isolation with **Skill-invocation detection**: the arm that must lack the
 skill must show `skill_fired = no` and the arm that must have it `skill_fired = yes`.

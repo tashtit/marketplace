@@ -8,11 +8,14 @@
   "prompt": "Evaluate whether the evalkit plugin's commit-helper skill improves the task \"add input validation to the signup form\". The skill is installed as a plugin, not committed in the repo.",
   "setup": [
     "The skill under test belongs to an installed plugin under the host's shared config dir (not a file in the repo tree).",
-    "The plugin is enabled via an enabledPlugins entry.",
-    "The working tree is clean and on a committed base."
+    "The plugin is enabled via an enabledPlugins entry in the user-scope settings file.",
+    "The working tree is clean and on a committed base.",
+    "The worktree already contains a .claude/settings.local.json with a custom 'model' key (Claude Code arm)."
   ],
   "expected": [
     "The skill is classified as a plugin skill, so isolation pins enablement instead of deleting a file.",
+    "Before writing the local settings file, the skill checks that enabledPlugins exists in at least one parent scope (user or project); it is present, so the run proceeds.",
+    "Each arm merge-writes only the enabledPlugins key into the existing local settings file, preserving any other keys already present (e.g. model).",
     "Each arm writes the host's highest-precedence gitignored settings file into its worktree (.github/copilot/settings.local.json or .claude/settings.local.json) forcing enabledPlugins on in the with arm and off in the without arm.",
     "The per-arm fired-check confirms the skill fired in the with arm and did not fire in the without arm.",
     "The settings pin does not appear in the review diff because the local settings file is gitignored."
@@ -21,6 +24,8 @@
     "Delete or edit the shared plugin install under the user config dir.",
     "Copy or mutate HOME in place for the parallel arm.",
     "Report an attributable result if the without arm still shows the skill fired.",
-    "Proceed when the plugin's files are not installed or a managed scope force-enables it."
+    "Proceed when the plugin's files are not installed or a managed scope force-enables it.",
+    "Proceed when enabledPlugins is absent from both the user-scope and project-scope settings files (issue #27247 — local-scope override would be silently ignored).",
+    "Overwrite the entire local settings file; only the enabledPlugins key may be added or updated."
   ]
 }
