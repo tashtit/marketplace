@@ -4,19 +4,23 @@
 
 - Replaced the plugin/global skill-isolation approach in `evaluate-skill` and
   `benchmark-skills`. Instead of copying `HOME` and removing the plugin (fragile,
-  mutated shared state), each arm now **pins the skill's enablement declaratively**
-  by writing the host's highest-precedence settings file into the
-  worktree — `.github/copilot/settings.local.json` on Copilot CLI,
-  `.claude/settings.local.json` on Claude Code — forcing `enabledPlugins` on for the
-  arm that keeps the skill and off for the arm that excludes it.
-- This handles all install scopes deterministically (user, project/repo, and local),
-  fixes the two previously broken cases (a committed project-scope enablement leaking
-  into the control arm, and a local-scope enablement not propagating into a fresh
-  worktree), and keeps the review diff clean by **excluding the pin from the arm's
-  staged result** (`git add -A -- ':(exclude)<pin-path>'`) rather than relying on the
-  target repo to gitignore it — most repos do not. The skills now classify the source
-  as a **loose skill** (file delete) vs a **plugin skill** (settings pin), and
-  **stop** if a plugin's files are not installed or a managed scope force-enables it.
+  mutated shared state), each arm now **pins the skill's enablement declaratively**,
+  forcing `enabledPlugins` on for the arm that keeps the skill and off for the arm
+  that excludes it.
+- The pin is kept out of the arm's captured diff so it cannot reveal the arm label to
+  the arm-blind reviewer or inflate `files_changed`. On **Claude Code** the pin is
+  written outside the worktree and passed with `--settings`, so nothing enters the
+  repo at all. **Copilot CLI** has no equivalent flag, so its pin lives in the
+  worktree, is excluded at staging time
+  (`git add -A -- ':(exclude)<pin-path>'`), and is followed by a **pin-leak check**
+  that invalidates the run if the coding agent committed the pin itself mid-task.
+  Neither host relies on the target repo gitignoring the file — most do not.
+- This handles all install scopes deterministically (user, project/repo, and local)
+  and fixes the two previously broken cases: a committed project-scope enablement
+  leaking into the control arm, and a local-scope enablement not propagating into a
+  fresh worktree. The skills now classify the source as a **loose skill** (file
+  delete) vs a **plugin skill** (enablement pin), and **stop** if a plugin's files are
+  not installed or a managed scope force-enables it.
 - Documented the verified per-host scope tables, `enabledPlugins` merge semantics,
   and the Claude parent-key gotcha (issue #27247) in `host-copilot.md` and
   `host-claude.md`.

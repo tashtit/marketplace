@@ -80,15 +80,17 @@ When invoked as `/benchmark-skills <skillA> <skillB> <task…>`, parse from `$AR
    **Commit the result:**
 
    ```bash
-   # exclude the arm's enablement pin, if one was written — it is arm-revealing
-   git add -A -- ':(exclude)<pin-path>' && git commit -m "bench: <arm> arm result"
+   # <pin-pathspec>: see the resolved host reference's Skill isolation section
+   git add -A <pin-pathspec> && git commit -m "bench: <arm> arm result"
    git diff <base> > runs/<arm>-<run-id>.diff
    ```
 
-   `<pin-path>` is the settings file the **Skill isolation** procedure wrote for this
-   arm (omit the pathspec entirely for loose skills, where no pin exists). Excluding
-   it keeps the pin out of the committed diff, so the arm-blind reviewer never sees
-   `enabledPlugins` differing between arms and `files_changed` is not inflated.
+   If the host's **Skill isolation** procedure put an enablement pin inside the
+   worktree, `<pin-pathspec>` is `-- ':(exclude)<pin-path>'` — the pin is arm-revealing
+   and must not reach the diff. Omit it when the pin lives outside the worktree (Claude
+   Code's `--settings`) or when isolating loose skills, where no pin exists. Then run
+   the host reference's **pin-leak check** if it defines one, and treat a leak as an
+   invalid run rather than reviewing a diff that reveals the arm.
 
    **`review`** — code-review the diff using the **Review-layer subprocess** from the resolved host reference, run inside the arm's worktree so it inherits the host's project-context file and skills. Do **not** pass the arm label to the reviewer (arm-blind). Both skills are assumed to be non-review skills, so the same review skill auto-triggers identically in both arms. → findings by severity.
 

@@ -12,6 +12,7 @@ One headless session per arm. Substitute `<task>`, `<model>`, and `<out>`
 ```bash
 claude -p "<task>" \
        --model <model> \
+       --settings <pin-path> \
        --permission-mode bypassPermissions \
        --output-format stream-json \
        > <out>
@@ -19,6 +20,8 @@ claude -p "<task>" \
 
 - Omit `--model` to use the session default / auto.
 - `<out>` is `runs/<arm>-<run-id>.jsonl`.
+- `--settings <pin-path>` is the arm's enablement pin from **Skill isolation**. Omit
+  it entirely for a loose skill, where isolation is a file delete and no pin exists.
 
 ## Review-layer subprocess
 
@@ -81,61 +84,65 @@ lack it. Fully isolated; no shared state is touched.
 does nothing. Instead **pin enablement per arm by writing the highest-precedence
 settings file into the arm's worktree** — do not touch `$HOME`.
 
-Claude merges settings from three scopes, `local` highest:
+Claude merges settings from these scopes, highest last:
 
-| Scope   | File                                 | Git-tracked     | Precedence |
-|---------|--------------------------------------|-----------------|------------|
-| user    | `$HOME/.claude/settings.json`        | no (shared)     | low        |
-| project | `<repo>/.claude/settings.json`       | yes             | mid        |
-| local   | `<repo>/.claude/settings.local.json` | not by default  | high       |
+| Scope        | File                                 | Git-tracked       | Precedence |
+|--------------|--------------------------------------|-------------------|------------|
+| user         | `$HOME/.claude/settings.json`        | no (shared)       | low        |
+| project      | `<repo>/.claude/settings.json`       | yes               | mid        |
+| local        | `<repo>/.claude/settings.local.json` | not by default    | high       |
+| `--settings` | any path, passed on the command line | n/a (out-of-tree) | highest    |
 
 `enabledPlugins` is a `"<plugin>@<marketplace>": <bool>` map merged **per key**, so a
-`local`-scope entry overrides whatever `user` or `project` scope set — `true` forces
-the skill on, `false` forces it off. Isolate each arm by writing
-`<repo>/.claude/settings.local.json` in the worktree:
+higher-precedence entry overrides whatever `user` or `project` scope set — `true`
+forces the skill on, `false` forces it off.
+
+**Write the pin outside the worktree and pass it with `--settings`.** Do not write it
+into the repo at all. `claude` accepts `--settings <file>` with a path anywhere on
+disk, and it takes precedence over the scopes above:
 
 ```jsonc
+// runs/<arm>-<run-id>.settings.json — outside the worktree
 // with arm
 { "enabledPlugins": { "<plugin>@<marketplace>": true } }
 // without arm
 { "enabledPlugins": { "<plugin>@<marketplace>": false } }
 ```
 
-The pin must stay out of the captured diff, or the arm-blind review layer sees
-`enabledPlugins` set to `true` in one arm and `false` in the other and can infer the
-arm label. **Do not assume the file is gitignored** — `.claude/settings.local.json`
-is only ignored if the target repo happens to ignore it, and most do not. Instead
-exclude it explicitly when staging the arm's result, per the **Commit the result**
-step in the calling skill:
+Pass that path as `--settings <pin-path>` in the **Headless invocation**. Because the
+file never enters the worktree, it cannot be staged, cannot reach `git diff <base>`,
+and cannot inflate `files_changed` — the arm-blind reviewer sees nothing regardless of
+what the coding agent does with git during the run. Nothing in the target repo is
+modified, and no scope file is edited in place.
 
-```bash
-git add -A -- ':(exclude).claude/settings.local.json'
-```
+> Verified: with an out-of-tree `--settings` pinning `false`, the plugin's skills are
+> absent from the session's skill list; pinning `true` restores them. The worktree is
+> left untouched (no `.claude/` directory is created).
 
-The file stays on disk and in effect for the session; it is simply never staged, so
-it does not reach `git diff <base>` or inflate `files_changed`. The plugin files are
-already present via the shared `$HOME/.claude/plugins/`, so no `HOME` copy is
-needed — only enablement is pinned.
+Prefer `--settings` over writing `<repo>/.claude/settings.local.json`. An in-tree pin
+is **not** reliably gitignored — `.claude/settings.local.json` is only ignored if the
+target repo happens to ignore it, and most do not — so it risks being committed by the
+coding agent's own `git add -A` mid-task and leaking the arm label into the diff.
 
-When writing `settings.local.json`, **merge-write** — do not replace the whole file.
-Read any existing `.claude/settings.local.json` in the worktree, add or update only
-the `enabledPlugins` key, and write it back. This preserves any other local settings
-(e.g. `model`, `permissions`) that may already be present.
+The plugin files are already present via the shared `$HOME/.claude/plugins/`, so no
+`HOME` copy is needed — only enablement is pinned.
 
 **Preconditions — stop rather than produce an invalid run if any fail:**
 
 - The plugin's **files must be installed** on the machine. Enablement toggles a
   plugin that exists; it cannot conjure missing files. If not installed, the `with`
   arm cannot have it — install it first or stop.
-- A **managed/enterprise scope** can force-enable above `local`; if one pins the
-  plugin, `local: false` cannot override it — detect and stop.
-- **`enabledPlugins` must exist in a parent scope** (`user` `$HOME/.claude/settings.json`
-  or `project` `<repo>/.claude/settings.json`) before writing a `local`-scope override.
-  If the key is absent from both parent scopes, a `local`-scope `enabledPlugins` is
-  silently ignored (issue #27247) — the `with` arm's `true` pin won't take effect and
-  the run will be inconclusive. Detect this case: if `enabledPlugins` is absent from
-  both parent scopes, stop and tell the user to add the plugin's key to their user or
-  project settings first.
+- A **managed/enterprise scope** can force-enable above `--settings`; if one pins the
+  plugin, a `false` pin cannot override it — detect and stop.
+- **`enabledPlugins` should already contain the plugin's key in a parent scope**
+  (`user` `$HOME/.claude/settings.json` or `project` `<repo>/.claude/settings.json`).
+  Issue #27247 reports that a `local`-scope `enabledPlugins` override is silently
+  ignored when the key is absent from every parent scope. A `false` pin via
+  `--settings` was verified to override a parent-scope `true`, so the control arm is
+  sound; whether a `true` pin works for a key absent from all parent scopes was **not**
+  verified. Since the skill under test is a currently enabled plugin, its key is
+  normally present anyway — but if it is absent from both parent scopes, stop and ask
+  the user to enable the plugin normally first rather than risk an inconclusive run.
 
 Always verify isolation with **Skill-invocation detection**: the arm that must lack the
 skill must show `skill_fired = no` and the arm that must have it `skill_fired = yes`.

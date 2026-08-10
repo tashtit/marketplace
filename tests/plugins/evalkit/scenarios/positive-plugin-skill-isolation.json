@@ -10,23 +10,23 @@
     "The skill under test belongs to an installed plugin under the host's shared config dir (not a file in the repo tree).",
     "The plugin is enabled via an enabledPlugins entry in the user-scope settings file.",
     "The working tree is clean and on a committed base.",
-    "The worktree already contains a .claude/settings.local.json with a custom 'model' key (Claude Code arm)."
+    "The target repo's .gitignore does not mention any host settings file."
   ],
   "expected": [
     "The skill is classified as a plugin skill, so isolation pins enablement instead of deleting a file.",
-    "Before writing the local settings file, the skill checks that enabledPlugins exists in at least one parent scope (user or project); it is present, so the run proceeds.",
-    "Each arm merge-writes only the enabledPlugins key into the existing local settings file, preserving any other keys already present (e.g. model).",
-    "Each arm writes the host's highest-precedence settings file into its worktree (.github/copilot/settings.local.json or .claude/settings.local.json) forcing enabledPlugins on in the with arm and off in the without arm.",
+    "Each arm pins enabledPlugins to true in the with arm and false in the without arm.",
+    "On Claude Code the pin is written outside the worktree and passed to the headless session with --settings, leaving no settings file inside the repo.",
+    "On Copilot CLI, which has no out-of-tree settings flag, the pin is written into the worktree, excluded from staging with a git add pathspec exclusion, and followed by a pin-leak check against the captured diff.",
     "The per-arm fired-check confirms the skill fired in the with arm and did not fire in the without arm.",
-    "The settings pin is excluded from the arm's staged result via a git add pathspec exclusion, so it does not appear in the review diff or the files_changed count."
+    "The captured diff for each arm contains no settings pin, so the arm-blind reviewer cannot infer the arm and files_changed is not inflated."
   ],
   "must_not": [
     "Delete or edit the shared plugin install under the user config dir.",
     "Copy or mutate HOME in place for the parallel arm.",
     "Report an attributable result if the without arm still shows the skill fired.",
     "Proceed when the plugin's files are not installed or a managed scope force-enables it.",
-    "Proceed when enabledPlugins is absent from both the user-scope and project-scope settings files (issue #27247 — local-scope override would be silently ignored).",
-    "Overwrite the entire local settings file; only the enabledPlugins key may be added or updated.",
-    "Assume the settings pin is gitignored by the target repo, or stage it into the arm's result commit where the arm-blind reviewer would see enabledPlugins differing between arms."
+    "Assume the settings pin is gitignored by the target repo.",
+    "Write the pin into the worktree on Claude Code when --settings can keep it outside the repo entirely.",
+    "Report a result from an arm whose captured diff contains the settings pin, since that diff reveals the arm label to the reviewer."
   ]
 }

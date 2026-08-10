@@ -125,17 +125,34 @@ The pin must stay out of the captured diff, or the arm-blind review layer sees
 `enabledPlugins` set to `true` in one arm and `false` in the other and can infer the
 arm label. **Do not assume the file is gitignored** —
 `.github/copilot/settings.local.json` is only ignored if the target repo happens to
-ignore it, and most do not. Instead exclude it explicitly when staging the arm's
-result, per the **Commit the result** step in the calling skill:
+ignore it, and most do not. Exclude it explicitly when staging the arm's result, per
+the **Commit the result** step in the calling skill:
 
 ```bash
 git add -A -- ':(exclude).github/copilot/settings.local.json'
 ```
 
-The file stays on disk and in effect for the session; it is simply never staged, so
-it does not reach `git diff <base>` or inflate `files_changed`. The plugin files are
-already present via the shared `$HOME/.copilot/installed-plugins/`, so no `HOME` copy
-is needed — only enablement is pinned.
+Copilot CLI has no flag for loading a settings file from outside the repo (unlike
+Claude Code's `--settings`), so the pin must live in the worktree and the exclusion is
+what keeps it out of the diff.
+
+That exclusion only covers the harness's own staging. The headless coding agent runs
+in the same worktree and may commit with a plain `git add -A` mid-task, which would
+capture the pin before the harness ever stages anything. **After committing the arm
+result, verify the pin is absent from the captured diff:**
+
+```bash
+git diff <base> --name-only | grep -qx '.github/copilot/settings.local.json' \
+  && echo "INVALID: enablement pin leaked into the arm diff"
+```
+
+If it matches, the diff is contaminated and reveals the arm label — treat the run as
+invalid rather than passing it to the reviewer.
+
+The file stays on disk and in effect for the session; it is simply never staged by the
+harness. The plugin files are already present via the shared
+`$HOME/.copilot/installed-plugins/`, so no `HOME` copy is needed — only enablement is
+pinned.
 
 **Preconditions — stop rather than produce an invalid run if any fail:**
 
