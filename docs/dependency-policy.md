@@ -114,7 +114,7 @@ with no matching declaration, so a stale record cannot linger.
 | Every declared dependency has a reviewed record | `scripts/check-dependencies.js`, in `npm run validate` | Hard failure |
 | No record without a declaration | same | Hard failure |
 | Recorded version matches the manifest | same | Warning |
-| Vulnerable or non-allowlisted dependency introduced by a pull request | dependency review step in the CI `test` job | Hard failure on the pull request |
+| Vulnerable or non-allowlisted dependency introduced by a pull request | dependency review step in the `ci` job | Hard failure on the pull request |
 | Actions pinned to an immutable reference | `scripts/validate.js` | Hard failure |
 | Grouped, scheduled update pull requests | `.github/dependabot.yml` | Not a check |
 
@@ -128,19 +128,17 @@ The check reads committed files only. It cannot tell whether the recorded
 evidence is true, so it never substitutes for the review — it only guarantees
 that a reviewer was asked.
 
-The dependency review step in the CI `test` job needs the base-versus-head
-dependency graph. That API is available on public repositories, and on private
-ones only with GitHub Advanced Security, where it otherwise fails with a setup
-error instead of a finding. The step is therefore conditioned on repository
-visibility: it enforces while this repository is public, and skips rather than
-failing red if it is ever made private without an Advanced Security license.
-It runs after validation and the unit tests so that a denied dependency does
-not hide the other results.
+The dependency review step in the `ci` job compares the base and head
+dependency graphs, which exist only for a pull request, so it is skipped on
+push and manual dispatch. It runs after validation and the unit tests, so a
+denied dependency does not hide the other results.
 
-A skipped dependency review is coverage this repository does not have, not a
-passing check. If you see one, a reviewer is responsible for advisories and
-licenses on the dependency change, and the fix is to restore the prerequisite —
-not to relax the condition so the step runs and fails.
+The step also requires a public repository, or GitHub Advanced Security on a
+private one; without either, GitHub returns a setup error. That prerequisite is
+deliberately not guarded away with a condition. If this repository ever becomes
+private without an Advanced Security license, the step MUST fail loudly and the
+loss of coverage MUST be decided on, because a silently skipped supply-chain
+check reads as a passing one.
 
 ## Adding a record
 
