@@ -67,6 +67,20 @@ Shipped as the `repository-governance` plugin.
 - [x] Audit-only mode before any settings mutation.
 - [x] Policy-as-code examples with rollback instructions.
 
+### Dependency intake
+
+Shipped as the `dependency-standards` plugin, and applied to this repository by
+the [dependency policy](dependency-policy.md).
+
+- [x] Blocking intake gate for a new dependency: need, alternatives, usage and
+      health, provenance, license, security exposure, and pinning.
+- [x] Review gate for version updates, including bot-authored and security
+      updates, and a removal rule.
+- [x] Ecosystem evidence for npm, GitHub Actions, containers, and language
+      package managers, plus license classes.
+- [x] Repository dependency policy with review-enforced intake evidence and
+      CI-blocked vulnerable or non-allowlisted dependencies.
+
 ### Code style and maintainability
 
 - [ ] Language-neutral readability and change-scope guidance.

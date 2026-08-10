@@ -1,0 +1,25 @@
+{
+  "id": "dependency-standards-failure-unclear-license",
+  "type": "failure",
+  "platforms": [
+    "claude-code",
+    "codex",
+    "github-copilot"
+  ],
+  "prompt": "Add this package; it is the only one that does what we need.",
+  "setup": [
+    "The package's registry metadata declares one license, the repository contains a different license file, and the distributed artifact contains neither.",
+    "The repository does not document an allowed license set or who approves an exception."
+  ],
+  "expected": [
+    "The license conflict is reported as a blocking finding, with the three disagreeing sources named.",
+    "The missing repository policy and approval authority are reported instead of being invented.",
+    "Concrete remediation is proposed: read the license text, resolve the conflict upstream, obtain an explicit decision, or select a differently licensed alternative.",
+    "Work that does not depend on the answer, such as gathering usage, health, and provenance evidence, is completed and reported."
+  ],
+  "must_not": [
+    "Declare the dependency in a manifest or lockfile while the license is unresolved.",
+    "Guess an SPDX identifier, assume the registry metadata is authoritative, or describe the license as compatible.",
+    "Give a legal conclusion or present the assessment as legal advice."
+  ]
+}

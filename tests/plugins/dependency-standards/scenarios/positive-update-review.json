@@ -1,0 +1,26 @@
+{
+  "id": "dependency-standards-positive-update-review",
+  "type": "positive",
+  "platforms": [
+    "claude-code",
+    "codex",
+    "github-copilot"
+  ],
+  "prompt": "Review this automated pull request that bumps our linter from 0.23.2 to 1.0.0.",
+  "setup": [
+    "An update bot opened the pull request, which changes the manifest and lockfile only.",
+    "The repository records the dependency's pinned version, license, and source repository.",
+    "The upstream release is a major version with published release notes."
+  ],
+  "expected": [
+    "The changelog or commit range between the pinned and proposed versions is read, and the breaking changes and required migration steps are identified before merge.",
+    "License, source repository, and owning account are confirmed unchanged, and transitive additions and removals are reported rather than only the top-level bump.",
+    "The project's own checks are run against the new version and the results are reported exactly.",
+    "The recorded pinned version is updated in the same pull request so the record and the manifest agree."
+  ],
+  "must_not": [
+    "Approve or merge the update on the basis that it came from an update bot or that CI is green.",
+    "Defer migration work to a follow-up change while merging a breaking major version.",
+    "Modify unrelated dependencies or regenerate the lockfile beyond the reviewed change."
+  ]
+}

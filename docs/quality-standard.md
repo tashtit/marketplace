@@ -30,6 +30,8 @@ A candidate or stable plugin MUST:
 - redact or exclude secrets and personal data;
 - protect shell arguments and structured data from injection;
 - disclose network calls, telemetry, and persistent storage;
+- declare every external dependency it requires, and clear the
+  [dependency policy](dependency-policy.md) before one is added;
 - require explicit confirmation for destructive or externally visible actions;
 - document rollback or recovery where feasible;
 - pass a threat-model review appropriate to its capabilities.

@@ -6,7 +6,8 @@ Thank you for helping make agent-assisted engineering more reliable.
 
 - Search existing issues and the [roadmap](docs/roadmap.md).
 - Use an issue for substantial plugins, behavioral changes, new dependencies,
-  or architecture changes.
+  or architecture changes. A new dependency also has to clear the
+  [dependency policy](docs/dependency-policy.md).
 - Report vulnerabilities privately as described in [SECURITY.md](SECURITY.md).
 - Read the [Code of Conduct](CODE_OF_CONDUCT.md).
 
@@ -56,6 +57,22 @@ In particular:
   never hand-maintained copies, and never repository symlinks when the provider
   parses the file itself;
 - stable guidance must not depend on an unpinned mutable external source.
+
+## Dependencies
+
+Adding a dependency is a blocking gate; updating one is a review gate. Both are
+defined in [docs/dependency-policy.md](docs/dependency-policy.md).
+
+In short: this repository stays dependency-light on purpose, so a new npm
+package or GitHub Action needs an issue first, then evidence for need,
+alternatives, real usage and health, provenance, license, security exposure,
+and pinning — written into the pull request's Dependencies section, where the
+reviewer checks it before approving. CI separately blocks a pull request that
+introduces a vulnerable or non-allowlisted dependency.
+
+When you update a dependency, review the actual change — the changelog or
+commit range, the transitive diff, and whether license and ownership moved —
+rather than trusting the version bump.
 
 ## Validation
 

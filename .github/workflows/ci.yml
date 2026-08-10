@@ -3,6 +3,7 @@ name: CI
 on:
   workflow_dispatch:
   pull_request:
+    branches: ['main']
   push:
     branches: ['main']
 
@@ -11,7 +12,7 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
-  test:
+  ci:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -38,3 +39,20 @@ jobs:
 
       - name: Run script unit tests
         run: npm test
+
+      # Blocks a pull request that pulls in a vulnerable or non-allowlisted
+      # dependency, complementing the reviewed-record rule `npm run validate`
+      # enforces above. Dependency review compares the base and head dependency
+      # graphs, which exist only for a pull request, so the step is skipped on
+      # push and manual dispatch. It also requires a public repository or
+      # GitHub Advanced Security; if that stops holding, the step is meant to
+      # fail loudly rather than be conditioned away into silence. Kept last so
+      # a denied dependency never hides the validation and test results a
+      # contributor also needs.
+      - name: Review dependency changes
+        if: github.event_name == 'pull_request'
+        uses: actions/dependency-review-action@v5.0.0
+        with:
+          fail-on-severity: 'high'
+          allow-licenses: '0BSD, Apache-2.0, BSD-2-Clause, BSD-3-Clause, CC0-1.0, ISC, MIT, MPL-2.0, Unlicense'
+          comment-summary-in-pr: 'never'
