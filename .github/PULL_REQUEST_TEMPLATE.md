@@ -12,16 +12,15 @@
 
 ## Dependencies
 
-<!-- Delete this section if no dependency was added, updated, or removed. -->
+<!-- Delete this section if no dependency was added, updated, or removed.
+     For a new dependency, write the evidence here; the reviewer checks it
+     against docs/dependency-policy.md before approving. -->
 
 - [ ] New dependency: need, alternatives, usage and health, provenance,
-      license, security exposure, and pinning are evidenced in
-      `dependency-registry.json`.
-- [ ] Update: the change between the recorded and proposed versions was read,
-      license, source, and ownership are unchanged, and the recorded version is
-      updated here.
-- [ ] Removal: the manifest, lockfile, and registry entry were removed
-      together.
+      license, security exposure, and pinning are evidenced below.
+- [ ] Update: the change between the current and proposed versions was read,
+      and license, source, and ownership are unchanged.
+- [ ] Removal: the manifest and lockfile entries were removed together.
 
 ## Validation
 

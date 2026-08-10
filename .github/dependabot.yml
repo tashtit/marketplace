@@ -1,6 +1,5 @@
 # Scheduled, grouped update pull requests. Merging one still requires the
-# review gate in docs/dependency-policy.md, including updating the recorded
-# version in dependency-registry.json.
+# review gate in docs/dependency-policy.md.
 version: 2
 
 updates:

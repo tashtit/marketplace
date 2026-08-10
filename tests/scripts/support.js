@@ -157,14 +157,12 @@ export function withRoot(module, root, fn) {
   const previous = module.setRoot(root);
   module.errors?.splice(0);
   module.findings?.splice(0);
-  module.warnings?.splice(0);
   try {
     return fn();
   } finally {
     module.setRoot(previous);
     module.errors?.splice(0);
     module.findings?.splice(0);
-    module.warnings?.splice(0);
   }
 }
 

@@ -19,9 +19,8 @@ CI-only dependencies. A CI dependency is not lower risk: it runs inside the
 pipeline, with the pipeline's token and network.
 
 Tashtit's own baseline is that this repository stays dependency-light on
-purpose. The validator, sync, secret scan, and dependency check are
-dependency-free Node.js scripts, and that MUST remain the default for new
-tooling.
+purpose. The validator, sync, and secret scan are dependency-free Node.js
+scripts, and that MUST remain the default for new tooling.
 
 ## Adding a dependency is a blocking gate
 
@@ -45,9 +44,12 @@ with evidence and committed in the same pull request:
    capabilities, and the blast radius if the package were compromised.
 7. **Control** — the immutable pin, the owner, and the exit plan.
 
-The answers are recorded in [`dependency-registry.json`](../dependency-registry.json).
-A record is not paperwork: it is the artifact a reviewer checks, and the thing
-`npm run validate` requires.
+The answers go in the pull request: the **Dependencies** section of the
+template carries them, and the issue that proposed the dependency links the
+discussion. This repository deliberately keeps no separate dependency
+register — with a handful of dependencies, the pull request history is the
+record, and a reviewer MUST NOT approve a dependency addition whose PR leaves
+any of the seven answers missing.
 
 `docs/quality-standard.md` and `CONTRIBUTING.md` already require an issue
 before a substantial change; a new dependency MUST have one.
@@ -73,7 +75,7 @@ An update SHOULD land through the scheduled, grouped Dependabot pull requests
 configured in [`.github/dependabot.yml`](../.github/dependabot.yml). Before
 merging one, a reviewer MUST:
 
-- read the changelog or commit range between the recorded and proposed
+- read the changelog or commit range between the current and proposed
   versions;
 - confirm the license, source repository, and owning account are unchanged;
 - check what the update adds or removes transitively;
@@ -85,11 +87,9 @@ A security update MAY be merged ahead of a routine one, but MUST still be
 reviewed against the advisory: confirm it affects a path this repository uses
 and that the fix comes from the same maintainers.
 
-The recorded version MUST be updated in the same pull request. Until it is,
-`npm run validate` prints a warning naming the dependency, the recorded
-version, and the declared one. The warning does not fail the build — that is
-what makes an update a soft gate — but merging with the warning outstanding
-means the update was not reviewed.
+What makes an update a soft gate is that nothing blocks the merge beyond this
+review; the reviewer's approval on the update pull request is the record that
+it happened.
 
 ## Pinning
 
@@ -103,30 +103,23 @@ means the update was not reviewed.
 
 ## Removal
 
-A dependency that is no longer used MUST be removed from the manifest, the
-lockfile, and the registry in one change. `npm run validate` fails on a record
-with no matching declaration, so a stale record cannot linger.
+A dependency that is no longer used MUST be removed from the manifest and the
+lockfile in one change. An unused dependency still contributes advisories,
+license obligations, and install time.
 
 ## Enforcement
 
 | Check | Where | Failure mode |
 | --- | --- | --- |
-| Every declared dependency has a reviewed record | `scripts/check-dependencies.js`, in `npm run validate` | Hard failure |
-| No record without a declaration | same | Hard failure |
-| Recorded version matches the manifest | same | Warning |
 | Vulnerable or non-allowlisted dependency introduced by a pull request | dependency review step in the `ci` job | Hard failure on the pull request |
 | Actions pinned to an immutable reference | `scripts/validate.js` | Hard failure |
+| Intake evidence for a new dependency | the PR template's Dependencies section, checked by the reviewer | Human review |
 | Grouped, scheduled update pull requests | `.github/dependabot.yml` | Not a check |
 
-Run the repository check locally with:
-
-```bash
-npm run check:deps
-```
-
-The check reads committed files only. It cannot tell whether the recorded
-evidence is true, so it never substitutes for the review — it only guarantees
-that a reviewer was asked.
+The intake gate is enforced by review rather than by a script. Automation here
+covers what a machine can actually decide — advisories, license identifiers,
+and pinning — while need, alternatives, provenance, and trust are judgment
+calls that a required template section puts in front of the reviewer.
 
 The dependency review step in the `ci` job compares the base and head
 dependency graphs, which exist only for a pull request, so it is skipped on
@@ -140,31 +133,12 @@ private without an Advanced Security license, the step MUST fail loudly and the
 loss of coverage MUST be decided on, because a silently skipped supply-chain
 check reads as a passing one.
 
-## Adding a record
+## If the dependency count grows
 
-Add one object to the `dependencies` array in `dependency-registry.json`,
-sorted by `ecosystem` then `name`. Every field is required:
-
-```json
-{
-  "ecosystem": "npm",
-  "name": "example-package",
-  "version": "1.4.2",
-  "purpose": "What this repository needs it for, and why nothing already here does it.",
-  "alternatives": [
-    "The alternative considered, and why it lost."
-  ],
-  "adoption": "Dependents, release cadence, maintainer count, and the date the numbers were checked.",
-  "provenance": "How the artifact was tied to its source repository, and how it is installed.",
-  "license": "MIT",
-  "source": "https://github.com/example/example-package",
-  "reviewed_by": "@handle",
-  "reviewed_on": "2026-08-09"
-}
-```
-
-`ecosystem` is `npm` or `github-actions`. `version` MUST match the version the
-manifest or workflow declares, exactly as declared — the npm version string, or
-the action's `@` reference. Extending the registry to another ecosystem means
-teaching `scripts/check-dependencies.js` to discover it, so that a declared
-dependency can never sit outside the gate.
+This policy trades automation for low overhead because the repository declares
+a handful of dependencies and intends to keep it that way. If that stops being
+true — roughly, when a reviewer can no longer say from memory why each
+dependency is here — revisit the decision to keep no machine-checked
+dependency register. The dependency-standards plugin describes the committed
+record shape and the validation that makes the intake gate a build failure
+instead of a review convention.

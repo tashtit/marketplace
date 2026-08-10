@@ -78,9 +78,8 @@ the [dependency policy](dependency-policy.md).
       updates, and a removal rule.
 - [x] Ecosystem evidence for npm, GitHub Actions, containers, and language
       package managers, plus license classes.
-- [x] Committed dependency records enforced by repository validation.
-- [ ] Extend record discovery beyond npm and GitHub Actions as this repository
-      adopts other ecosystems.
+- [x] Repository dependency policy with review-enforced intake evidence and
+      CI-blocked vulnerable or non-allowlisted dependencies.
 
 ### Code style and maintainability
 

@@ -66,15 +66,13 @@ defined in [docs/dependency-policy.md](docs/dependency-policy.md).
 In short: this repository stays dependency-light on purpose, so a new npm
 package or GitHub Action needs an issue first, then evidence for need,
 alternatives, real usage and health, provenance, license, security exposure,
-and pinning — recorded as an entry in
-[`dependency-registry.json`](dependency-registry.json) in the same pull
-request. `npm run validate` fails when a declared dependency has no record, or
-when a record has no declaration.
+and pinning — written into the pull request's Dependencies section, where the
+reviewer checks it before approving. CI separately blocks a pull request that
+introduces a vulnerable or non-allowlisted dependency.
 
-When you update a dependency, review the actual change and update the recorded
-version in the same pull request. Until you do, validation prints a warning
-naming the dependency; the warning does not fail the build, but merging with it
-outstanding means nobody reviewed the update.
+When you update a dependency, review the actual change — the changelog or
+commit range, the transitive diff, and whether license and ownership moved —
+rather than trusting the version bump.
 
 ## Validation
 
@@ -109,8 +107,8 @@ Never edit a generated file by hand; change the canonical source and re-run
 syntax, marketplace alignment, the plugin catalog tables in `README.md` and
 `plugins/README.md`, plugin naming and manifest consistency, recorded acceptance
 results against the claimed maturity, safe links, canonical skill presence,
-local documentation links, dependency records, committed credential material,
-Markdown style, and whitespace. CI runs the same validation on every pull request, on pushes to
+local documentation links, committed credential material, Markdown style, and
+whitespace. CI runs the same validation on every pull request, on pushes to
 `main`, and on manual dispatch.
 
 `npm test` runs the unit tests for the repository scripts in `tests/scripts/`
@@ -120,8 +118,7 @@ that each validator check still fails when it should, which protects the
 scripts themselves from regressing. Extend them whenever `scripts/` changes
 behavior. CI runs them in the same job as validation.
 
-`npm run check:deps`, `npm run scan:secrets`, and `npm run lint:markdown` run
-those steps individually.
+`npm run scan:secrets` and `npm run lint:markdown` run those two steps individually.
 The secret scan matches issued credential material rather than the word
 "secret", so documenting `${{ secrets.TOKEN }}` is safe. When a match is an
 intentional example, append `pragma: allowlist secret` to that line.
