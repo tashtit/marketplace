@@ -18,9 +18,10 @@ disclosure and reaches the maintainers directly. No email address is published,
 so do not send vulnerability details to any address that claims to represent
 this project.
 
-If the link returns a 404, private reporting has not been enabled yet. Open a
-public issue that says only that you need a private channel, without any
-vulnerability detail, and a maintainer will enable the feature
+Private vulnerability reporting is enabled on the repository. If the link ever
+returns a 404, the feature has been switched off in error: open a public issue
+that says only that you need a private channel, without any vulnerability
+detail, and a maintainer will restore it
 (Settings > Advanced Security > Private vulnerability reporting) and respond.
 
 Include:

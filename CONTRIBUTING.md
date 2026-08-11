@@ -68,7 +68,8 @@ package or GitHub Action needs an issue first, then evidence for need,
 alternatives, real usage and health, provenance, license, security exposure,
 and pinning — written into the pull request's Dependencies section, where the
 reviewer checks it before approving. CI separately blocks a pull request that
-introduces a vulnerable or non-allowlisted dependency.
+introduces a dependency with a known high-severity vulnerability or a license
+outside the allowlist.
 
 When you update a dependency, review the actual change — the changelog or
 commit range, the transitive diff, and whether license and ownership moved —
@@ -107,7 +108,8 @@ Never edit a generated file by hand; change the canonical source and re-run
 syntax, marketplace alignment, the plugin catalog tables in `README.md` and
 `plugins/README.md`, plugin naming and manifest consistency, recorded acceptance
 results against the claimed maturity, safe links, canonical skill presence,
-local documentation links, committed credential material, Markdown style, and
+local documentation links, GitHub Actions pinning in the CI workflow, retired
+project branding, committed credential material, Markdown style, and
 whitespace. CI runs the same validation on every pull request, on pushes to
 `main`, and on manual dispatch.
 
