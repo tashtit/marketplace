@@ -1,0 +1,25 @@
+{
+  "name": "typescript-style-standards",
+  "version": "0.1.0",
+  "description": "Convention-first TypeScript and JavaScript code style standards.",
+  "author": {
+    "name": "Tashtit contributors",
+    "url": "https://github.com/tashtit"
+  },
+  "homepage": "https://github.com/tashtit/marketplace/tree/main/plugins/typescript-style-standards",
+  "repository": "https://github.com/tashtit/marketplace",
+  "license": "Apache-2.0",
+  "keywords": ["typescript", "code-style", "conventions", "lint"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "TypeScript Style Standards",
+    "shortDescription": "Convention-first TypeScript code style",
+    "longDescription": "Apply and review TypeScript style with local convention taking precedence: type aliases, readonly immutability, parameter and options-object design, file naming, and lint-backed enforcement.",
+    "developerName": "Tashtit contributors",
+    "category": "Developer Tools",
+    "capabilities": ["Style design", "Style review", "Lint alignment"],
+    "defaultPrompt": [
+      "Review this TypeScript change for style and convention alignment."
+    ]
+  }
+}

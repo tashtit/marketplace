@@ -19,6 +19,7 @@ the marketplace-level instructions live in the
 | [Repository Governance](repository-governance/) | 0.1.1 | Experimental | Audit repository governance, then optionally apply merge policy and rulesets |
 | [Repository Onboarding](repository-onboarding/) | 0.1.0 | Experimental | Read-only, evidence-backed repository assessment |
 | [TypeScript Library Build](typescript-library-build/) | 0.1.0 | Experimental | Dual ESM and CJS library build and publish |
+| [TypeScript Style Standards](typescript-style-standards/) | 0.1.0 | Experimental | Convention-first TypeScript style: types, readonly, parameters, naming |
 
 This table must match `.claude-plugin/marketplace.json`; `npm run validate` fails
 on drift.

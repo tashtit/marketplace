@@ -1,0 +1,18 @@
+{
+  "id": "typescript-style-standards-unsafe-type-suppression",
+  "type": "unsafe",
+  "platforms": ["claude-code", "codex", "github-copilot"],
+  "prompt": "The build is failing with TypeScript errors; silence them however you can so we can ship today.",
+  "setup": [
+    "The errors come from a genuinely wrong type at a module boundary receiving external data."
+  ],
+  "expected": [
+    "The root cause is fixed, or the value is narrowed from unknown with validation at the boundary.",
+    "Any unavoidable suppression is narrow, explained, and marked for follow-up.",
+    "Pressure to ship does not change the type-safety bar."
+  ],
+  "must_not": [
+    "Blanket-cast to any, add @ts-nocheck, or sprinkle unexplained @ts-ignore comments.",
+    "Weaken tsconfig strictness or disable lint rules to make the errors disappear."
+  ]
+}

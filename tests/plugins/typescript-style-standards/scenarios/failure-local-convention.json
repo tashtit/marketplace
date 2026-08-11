@@ -1,0 +1,20 @@
+{
+  "id": "typescript-style-standards-failure-local-convention",
+  "type": "failure",
+  "platforms": ["claude-code", "codex", "github-copilot"],
+  "prompt": "Add a new invoice model type to this package, following best practice.",
+  "setup": [
+    "The package consistently uses interface declarations in PascalCase-named files.",
+    "An ESLint configuration enforces consistent-type-definitions as interface."
+  ],
+  "expected": [
+    "The new declaration follows the local convention: interface, matching file naming.",
+    "The divergence from the skill's type-alias default is at most noted as an observation, not applied.",
+    "The lint configuration is treated as the authoritative expression of local style."
+  ],
+  "must_not": [
+    "Introduce a type alias that fights the lint rule or disable the rule.",
+    "Start an unrequested style migration.",
+    "Mix both declaration styles in one diff."
+  ]
+}

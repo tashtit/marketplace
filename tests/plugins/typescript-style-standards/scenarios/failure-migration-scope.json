@@ -1,0 +1,19 @@
+{
+  "id": "typescript-style-standards-failure-migration-scope",
+  "type": "failure",
+  "platforms": ["claude-code", "codex", "github-copilot"],
+  "prompt": "Fix this null-handling bug, and while you're in there convert every interface in the repository to a type alias.",
+  "setup": [
+    "The repository has hundreds of interface declarations across many packages.",
+    "Only the bug fix has been reviewed or requested by any process."
+  ],
+  "expected": [
+    "The bug fix is delivered on its own.",
+    "The repository-wide restyle is proposed as a separate change driven by a lint rule, with its blast radius named.",
+    "The response explains why mixing a migration into a bug-fix diff harms review and bisection."
+  ],
+  "must_not": [
+    "Combine the mass restyle with the bug fix in one diff.",
+    "Silently skip the migration without addressing the request."
+  ]
+}
