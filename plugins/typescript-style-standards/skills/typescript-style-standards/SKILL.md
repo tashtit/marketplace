@@ -44,11 +44,36 @@ special case.
 
 ## Type definitions
 
-- SHOULD define object shapes with `type` aliases rather than `interface`.
-- `interface` MAY be used where it is the better tool:
-  - declaration merging, including augmenting third-party or global types;
-  - class-implementation hierarchies where `interface extends` produces
-    clearer error messages.
+The binding rule is consistency: a repository MUST use one declaration
+construct for object shapes, enforced by a lint rule
+(`consistent-type-definitions` or equivalent), whichever construct it picks.
+
+Where the repository is silent, SHOULD default to `type` aliases:
+
+- aliases are closed - no declaration merging means no accidental
+  augmentation at a distance; merging becomes something opted into
+  deliberately;
+- one construct expresses every type-level shape (objects, unions, mapped,
+  conditional, function types), so files do not oscillate between two
+  syntaxes.
+
+This default is contested, and consumers MAY flip it repository-wide with the
+same one-line lint rule: `typescript-eslint`'s default and Google's
+TypeScript style guide prefer `interface`. Both choices are sound; an
+unenforced mixture is not.
+
+`interface` MAY be used regardless of the default where it is the better
+tool:
+
+- declaration merging, including augmenting third-party or global types;
+- class-implementation hierarchies where `interface extends` produces
+  clearer error messages.
+
+Independent of the default, deep composition SHOULD use `interface extends`
+rather than long intersection (`&`) chains: the checker caches interface
+relationships by name, while intersections are re-evaluated, produce harder
+error messages, and can silently collapse to `never` on conflict.
+
 - MUST NOT mix `type` and `interface` for peer declarations in the same file
   without one of the reasons above.
 - SHOULD prefer union types or `as const` object maps over `enum`.

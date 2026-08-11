@@ -5,8 +5,10 @@
 - Added convention-first precedence rules: local convention and lint
   configuration override the skill's defaults, and style migrations are
   separate lint-driven changes.
-- Added type-definition guidance preferring `type` aliases with explicit
-  `interface` exceptions.
+- Added type-definition guidance making lint-enforced consistency the
+  requirement, defaulting to `type` aliases with explicit `interface`
+  exceptions and a documented one-line flip for `interface`-standard
+  repositories.
 - Added immutability defaults: `readonly` properties and unmutated
   `readonly` parameter types.
 - Added parameter-design rules: at most 3 parameters, trailing options

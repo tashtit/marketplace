@@ -11,7 +11,7 @@ effect of a style change.
 
 | Convention | Rule |
 | --- | --- |
-| Prefer `type` over `interface` | `@typescript-eslint/consistent-type-definitions: ["error", "type"]` |
+| One declaration construct per repository | `@typescript-eslint/consistent-type-definitions: ["error", "type"]` - the skill's default; a repository standardizing on `interface` uses `["error", "interface"]` instead. Enforcing either is the requirement; the choice is repository policy. |
 | `readonly` class members where never reassigned | `@typescript-eslint/prefer-readonly` |
 | `readonly` parameter types for unmutated inputs | `functional/prefer-immutable-types` (or `@typescript-eslint/prefer-readonly-parameter-types`, which is strict and often too noisy - evaluate before enabling) |
 | Max 3 parameters | `max-params: ["error", 3]` |

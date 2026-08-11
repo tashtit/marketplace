@@ -14,7 +14,10 @@ repository is silent, and style migrations are separate, lint-driven changes
 rather than passengers on feature diffs.
 
 It deliberately does not mandate a linter, formatter, framework, or module
-system, and it makes no claim about runtime behavior or performance.
+system, and it makes no claim about runtime behavior or performance. Where a
+default is genuinely contested - `type` versus `interface` - the requirement
+is lint-enforced consistency; the skill states its default, the rationale,
+and the one-line lint change that flips it repository-wide.
 
 No network, credentials, or storage are required. Review is read-only unless
 implementation is requested.
