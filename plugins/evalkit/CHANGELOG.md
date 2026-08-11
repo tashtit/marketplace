@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.4.2 - 2026-08-12
+
+- Documented the **ungated-execution risk** in the README threat model: the dynamic
+  harnesses run headless with the host's permission gates disabled
+  (`--permission-mode bypassPermissions` on Claude Code; `--allow-all-tools
+  --no-ask-user` on Copilot CLI), and a git worktree isolates the diff, not the
+  filesystem or network. Guidance: only evaluate trusted tasks and skills, and
+  sandbox the harness for anything less trusted. Documentation only; no behavior
+  changes.
+
 ## 0.4.1 - 2026-08-10
 
 - Version bump only. No behavior, skill, or documentation changes since 0.4.0.

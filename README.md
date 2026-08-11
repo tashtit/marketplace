@@ -96,7 +96,7 @@ The prioritized scope and acceptance criteria live in the
 | [Architecture Diagrams](plugins/architecture-diagrams/) | 0.1.0 | Experimental | C4 system context and container diagrams |
 | [Dependency Standards](plugins/dependency-standards/) | 0.1.0 | Experimental | Evidence-gated dependency intake, updates, and removal |
 | [Engineering Standards](plugins/engineering-standards/) | 0.2.0 | Experimental | Evidence-backed production change review |
-| [Evalkit](plugins/evalkit/) | 0.4.1 | Experimental | Host-adaptive static skill review and worktree-isolated skill/model benchmarks (Claude Code + Copilot CLI) |
+| [Evalkit](plugins/evalkit/) | 0.4.2 | Experimental | Host-adaptive static skill review and worktree-isolated skill/model benchmarks (Claude Code + Copilot CLI) |
 | [Git Workflow](plugins/git-workflow/) | 0.1.0 | Experimental | Safe branches, commits, and pull-request handoff |
 | [GitHub Actions Standards](plugins/github-actions-standards/) | 0.4.0 | Experimental | Secure, reproducible CI and release workflows |
 | [Logging Standards](plugins/logging-standards/) | 0.1.0 | Experimental | Secure structured production logging |
