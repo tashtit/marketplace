@@ -104,6 +104,7 @@ The prioritized scope and acceptance criteria live in the
 | [Repository Governance](plugins/repository-governance/) | 0.1.1 | Experimental | Audit repository governance, then optionally apply merge policy and rulesets |
 | [Repository Onboarding](plugins/repository-onboarding/) | 0.1.0 | Experimental | Read-only, evidence-backed repository assessment |
 | [TypeScript Library Build](plugins/typescript-library-build/) | 0.1.0 | Experimental | Dual ESM and CJS library build and publish |
+| [TypeScript Style Standards](plugins/typescript-style-standards/) | 0.1.0 | Experimental | Convention-first TypeScript style: types, readonly, parameters, naming |
 
 Experimental plugins are published for evaluation and do not carry Tashtit's
 stable compatibility or production-readiness claim.

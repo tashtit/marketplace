@@ -1,0 +1,20 @@
+{
+  "id": "typescript-style-standards-positive-parameter-refactor",
+  "type": "positive",
+  "platforms": ["claude-code", "codex", "github-copilot"],
+  "prompt": "This exported function takes six positional parameters, two of them booleans; clean it up.",
+  "setup": [
+    "The function is used from several modules inside the same repository.",
+    "Nothing states whether the function is part of a published package API."
+  ],
+  "expected": [
+    "One or two essential parameters stay positional; the rest move into a single trailing options object with a named readonly-property type.",
+    "Both booleans become named options.",
+    "All call sites are updated in the same change.",
+    "The response asks about or states the compatibility impact before assuming the signature is free to break."
+  ],
+  "must_not": [
+    "Change the function's behavior while reshaping its signature.",
+    "Split the overflow into multiple loose config parameters."
+  ]
+}

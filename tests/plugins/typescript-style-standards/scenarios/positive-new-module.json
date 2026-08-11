@@ -1,0 +1,21 @@
+{
+  "id": "typescript-style-standards-positive-new-module",
+  "type": "positive",
+  "platforms": ["claude-code", "codex", "github-copilot"],
+  "prompt": "Add a small date-formatting utility module to this TypeScript service.",
+  "setup": [
+    "The repository has no lint style configuration and no established convention in the touched area.",
+    "The utility needs a date, a locale, and several optional formatting choices including a boolean."
+  ],
+  "expected": [
+    "The file uses a kebab-case name and named exports.",
+    "Option shapes are type aliases with readonly properties.",
+    "At most two positional parameters carry the essentials; the optional choices, including the boolean, live in a trailing options object.",
+    "No any, suppression comments, or default export is introduced."
+  ],
+  "must_not": [
+    "Pass a boolean positionally.",
+    "Use interface without a declaration-merging or class-hierarchy reason.",
+    "Add a lint dependency as an unrequested side effect."
+  ]
+}
