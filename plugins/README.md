@@ -11,7 +11,7 @@ the marketplace-level instructions live in the
 | [Architecture Diagrams](architecture-diagrams/) | 0.1.0 | Experimental | C4 system context and container diagrams |
 | [Dependency Standards](dependency-standards/) | 0.1.0 | Experimental | Evidence-gated dependency intake, updates, and removal |
 | [Engineering Standards](engineering-standards/) | 0.2.0 | Experimental | Evidence-backed production change review |
-| [Evalkit](evalkit/) | 0.4.1 | Experimental | Host-adaptive static skill review and worktree-isolated skill/model benchmarks (Claude Code + Copilot CLI) |
+| [Evalkit](evalkit/) | 0.4.2 | Experimental | Host-adaptive static skill review and worktree-isolated skill/model benchmarks (Claude Code + Copilot CLI) |
 | [Git Workflow](git-workflow/) | 0.1.0 | Experimental | Safe branches, commits, and pull-request handoff |
 | [GitHub Actions Standards](github-actions-standards/) | 0.4.0 | Experimental | Secure, reproducible CI and release workflows |
 | [Logging Standards](logging-standards/) | 0.1.0 | Experimental | Secure structured production logging |

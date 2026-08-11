@@ -22,7 +22,7 @@ GitHub Copilot CLI only.
 
 ## Maturity
 
-**Experimental — 0.4.1.** Behavioral compatibility still requires review on the
+**Experimental — 0.4.2.** Behavioral compatibility still requires review on the
 target agent.
 
 ## Skills
@@ -84,6 +84,7 @@ This plugin does not target Codex.
 | Runaway cost from headless sessions on the wrong task | Dynamic harnesses confirm ambiguous requests and never guess a missing task or skill |
 | Biased review or judgement | Reviewer and judge receive the diff and project context only, never the arm label or model name |
 | Ambiguous destructive request treated as authorization | "Clean up my worktrees" defaults toward listing and never force-removes dirty work without explicit confirmation |
+| Ungated execution of an untrusted task | The dynamic arms run headless with the host's permission gates disabled (`--permission-mode bypassPermissions` on Claude Code; `--allow-all-tools --no-ask-user` on Copilot CLI), and a git worktree isolates the diff — not the filesystem or network. Anything the task or the skill under test instructs the agent to do runs unattended. Only evaluate tasks and skills you trust as if you were running them yourself; for anything less trusted, run the harness inside a sandbox, container, or throwaway machine |
 | Invalid control arm | Both dynamic skills pin each arm's skill state — a loose skill by file delete, a plugin skill by forcing `enabledPlugins` on/off — and stop if a plugin's files are missing or a managed scope force-enables it. The pin never reaches the arm-blind reviewer or the `files_changed` count: on Claude Code it lives outside the worktree (`--settings`), and on Copilot CLI it is excluded at staging time and a pin-leak check invalidates the run if the coding agent committed it mid-task. A per-arm **fired-check** confirms the skill actually fired where present and not where absent; a run that never triggered the skill is reported inconclusive, not "no effect" |
 
 See [CHANGELOG.md](CHANGELOG.md). Maintainer-only evaluation material lives outside
