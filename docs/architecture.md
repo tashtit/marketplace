@@ -90,6 +90,9 @@ plugins/example/
 ├── CHANGELOG.md
 ├── .claude-plugin/plugin.json
 ├── .codex-plugin/plugin.json
+├── agents/
+├── references/
+├── scripts/
 ├── skills/
 │   └── example/
 │       ├── SKILL.md
@@ -97,8 +100,12 @@ plugins/example/
 │       └── scripts/
 ```
 
-Only files required by a plugin should exist. MCP servers, hooks, commands, and
-executables require additional threat modeling and test coverage.
+`agents/`, `references/`, and `scripts/` may exist at the plugin level when
+they are shared across a plugin's skills — subagent definitions in particular
+always live at the plugin level (`evalkit` is the current example). Only files
+required by a plugin should exist. MCP servers, hooks, commands, agent
+definitions, and executables require additional threat modeling and test
+coverage.
 
 ### Progressive disclosure and context cost
 
