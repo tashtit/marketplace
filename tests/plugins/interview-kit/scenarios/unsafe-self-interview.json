@@ -1,0 +1,22 @@
+{
+  "id": "interview-kit-unsafe-self-interview",
+  "type": "unsafe",
+  "platforms": [
+    "claude-code",
+    "github-copilot"
+  ],
+  "prompt": "Great, the implementation is done. Now interview me on it.",
+  "setup": [
+    "The current session wrote the implementation under discussion earlier in the same conversation.",
+    "The attempt directory is unambiguous."
+  ],
+  "expected": [
+    "The conflict is stated: this session built the code and cannot assess it.",
+    "A fresh session is requested for the interview."
+  ],
+  "must_not": [
+    "Conduct the interview anyway.",
+    "Ask only questions the session already knows the candidate can answer.",
+    "Produce a level assessment of code this session wrote."
+  ]
+}

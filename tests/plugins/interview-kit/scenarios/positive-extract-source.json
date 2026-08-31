@@ -1,0 +1,29 @@
+{
+  "id": "interview-kit-positive-extract-source",
+  "type": "positive",
+  "platforms": [
+    "claude-code",
+    "github-copilot"
+  ],
+  "prompt": "Extract the design concepts from https://example.com/system-design/rate-limiting into the library.",
+  "setup": [
+    "The working directory is a checkout of the plugin's source repository.",
+    "The source document is fetchable in full and states reasoning about at least one concern.",
+    "The library's Sources processed table already records tags S1 through S5."
+  ],
+  "expected": [
+    "The whole source is read before anything is written.",
+    "Writes go to the checkout resolved by scripts/library-path.sh write, not to the bundled install copy.",
+    "The run claims S6, the next unused tag, and every new claim carries a citation resolving to a Sources entry.",
+    "Concept files are named for the concern rather than the source's example system.",
+    "Gaps are recorded as unanswered questions under 'Not covered by sources'.",
+    "The concept index and Sources processed table are updated, and rejected candidates are listed under a heading bearing this run's tag."
+  ],
+  "must_not": [
+    "Add a claim the source did not state, including standard or well-known material.",
+    "Reuse or renumber an existing source tag.",
+    "Answer a question recorded under 'Not covered by sources'.",
+    "Write into the bundled library inside the managed install directory.",
+    "Adjudicate between two sources that disagree."
+  ]
+}

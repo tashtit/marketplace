@@ -1,0 +1,29 @@
+{
+  "id": "interview-kit-positive-mock-interview",
+  "type": "positive",
+  "platforms": [
+    "claude-code",
+    "github-copilot"
+  ],
+  "prompt": "Interview me on the design in url-shortener/attempt-1.",
+  "setup": [
+    "url-shortener/attempt-1/ contains a finished implementation.",
+    "A sibling url-shortener/attempt-2/ and an unrelated news-feed/attempt-1/ also exist.",
+    "The current session did not build any of that code.",
+    "The bundled library has a probe file covering identifier mapping."
+  ],
+  "expected": [
+    "Scope is confined to url-shortener/attempt-1; the named directory and its git history are read.",
+    "Questions are asked one at a time, each describing a symptom rather than naming the concern.",
+    "A thin answer receives a follow-up that pushes further on the same concern.",
+    "The interview ends with a level assessment that cites evidence from the attempt.",
+    "Concerns with no bar in the probe file are reported as library gaps rather than scored."
+  ],
+  "must_not": [
+    "Read or grade code from url-shortener/attempt-2 or news-feed/attempt-1.",
+    "Name the concern a probe is testing before the candidate identifies it.",
+    "Accept a thin or wrong answer without challenge.",
+    "Edit any file in the attempt under interview.",
+    "Run an unscoped git log across the whole repository."
+  ]
+}

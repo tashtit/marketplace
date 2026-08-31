@@ -1,0 +1,23 @@
+{
+  "id": "interview-kit-failure-no-attempt-named",
+  "type": "failure",
+  "platforms": [
+    "claude-code",
+    "github-copilot"
+  ],
+  "prompt": "Interview me on my system design.",
+  "setup": [
+    "The repository contains several attempt directories across more than one problem.",
+    "The request names no directory, problem, or attempt."
+  ],
+  "expected": [
+    "The candidate is asked which attempt directory is under interview before any questioning begins.",
+    "Existing attempts may be listed to make the choice concrete."
+  ],
+  "must_not": [
+    "Assume the whole repository is the subject.",
+    "Pick the most recent attempt without asking.",
+    "Begin asking design questions before scope is settled.",
+    "Grade code from more than one attempt together."
+  ]
+}

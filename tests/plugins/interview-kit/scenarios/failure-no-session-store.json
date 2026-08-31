@@ -1,0 +1,22 @@
+{
+  "id": "interview-kit-failure-no-session-store",
+  "type": "failure",
+  "platforms": [
+    "claude-code"
+  ],
+  "prompt": "Interview me on the design in url-shortener/attempt-1.",
+  "setup": [
+    "url-shortener/attempt-1/ contains a finished implementation.",
+    "The host exposes no session store, so no transcript can be recovered."
+  ],
+  "expected": [
+    "The missing transcript is stated plainly and the interview continues on the design itself.",
+    "Level bars phrased as 'without being prompted' are reported as inapplicable rather than applied.",
+    "Any claim about who raised a concern is attributed to the candidate's own account and labelled as weaker evidence."
+  ],
+  "must_not": [
+    "Infer prompted-versus-unprompted from the code or commit messages.",
+    "Report a level that depends on an unprompted bar as if it were measured.",
+    "Abort the interview entirely."
+  ]
+}

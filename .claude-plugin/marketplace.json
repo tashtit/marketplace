@@ -69,6 +69,18 @@
       "category": "Developer Tools"
     },
     {
+      "name": "interview-kit",
+      "source": "./plugins/interview-kit",
+      "description": "Mock system design interviews graded against a cited concept library, plus the extractor that grows that library one source at a time. Enable it after an implementation is built, never during.",
+      "version": "0.1.0",
+      "license": "Apache-2.0",
+      "category": "Developer Tools",
+      "platforms": [
+        "claude-code",
+        "github-copilot"
+      ]
+    },
+    {
       "name": "logging-standards",
       "source": "./plugins/logging-standards",
       "description": "Secure structured logging standards for production applications.",

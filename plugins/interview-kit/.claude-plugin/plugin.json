@@ -1,0 +1,35 @@
+{
+  "name": "interview-kit",
+  "version": "0.1.0",
+  "description": "Mock system design interviews graded against a cited concept library, plus the extractor that grows that library one source at a time. Enable it after an implementation is built, never during.",
+  "author": {
+    "name": "Tashtit contributors",
+    "url": "https://github.com/tashtit"
+  },
+  "homepage": "https://github.com/tashtit/marketplace/tree/main/plugins/interview-kit",
+  "repository": "https://github.com/tashtit/marketplace",
+  "license": "Apache-2.0",
+  "keywords": [
+    "system-design",
+    "interview",
+    "practice",
+    "assessment",
+    "citations"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Interview Kit",
+    "shortDescription": "Mock system design interviews against a cited library",
+    "longDescription": "Conduct a mock system design interview about an implementation the candidate already built. The interview scopes to one attempt directory, reads it and its git history, recovers session transcripts to distinguish decisions the candidate prompted from ones an agent volunteered, asks questions one at a time using symptom scenarios that never name the concern, follows up on thin answers instead of accepting them, and ends with a level assessment. Questions and level bars come from a bundled library in which every claim cites the source that stated it; the second skill is that library's only writer, mining one named source per run and recording gaps rather than filling them. Because the library is the answer key, the plugin is designed to be enabled only after the implementation is finished.",
+    "developerName": "Tashtit contributors",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Mock design interview with level assessment",
+      "Cited concept extraction from a source",
+      "Prompted-versus-unprompted transcript analysis"
+    ],
+    "defaultPrompt": [
+      "Interview me on the design in url-shortener/attempt-1."
+    ]
+  }
+}
