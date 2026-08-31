@@ -1,0 +1,13 @@
+# Scoped to this plugin. The concept library cites sources as [S1], and pairs
+# them as [S1][S2] to mark corroboration between two sources. MD052 reads that
+# second pair as an undefined reference link. The tags are library-global and
+# permanent — they are embedded in citations across every concept file — so the
+# rule is disabled here rather than the convention rewritten.
+config:
+  default: true
+  line-length: false
+  first-line-heading: false
+  no-duplicate-heading:
+    siblings_only: true
+  no-inline-html: false
+  reference-links-images: false

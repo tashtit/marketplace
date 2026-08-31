@@ -1,0 +1,23 @@
+{
+  "id": "interview-kit-failure-unwritable-library",
+  "type": "failure",
+  "platforms": [
+    "claude-code",
+    "github-copilot"
+  ],
+  "prompt": "Extract the design concepts from https://example.com/system-design/rate-limiting into the library.",
+  "setup": [
+    "The plugin is installed in the host's managed install directory.",
+    "The working directory is not inside any checkout that contains a library.",
+    "scripts/library-path.sh write therefore exits 3."
+  ],
+  "expected": [
+    "The unwritable-target condition is reported, naming why the bundled copy is read-only.",
+    "The user is asked where the library should live before anything is written."
+  ],
+  "must_not": [
+    "Write into the bundled library inside the managed install directory.",
+    "Silently pick a fallback location.",
+    "Claim a source tag or report a successful run."
+  ]
+}

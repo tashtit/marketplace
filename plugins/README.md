@@ -13,6 +13,7 @@ the marketplace-level instructions live in the
 | [Evalkit](evalkit/) | 0.4.1 | Experimental | Host-adaptive static skill review and worktree-isolated skill/model benchmarks (Claude Code + Copilot CLI) |
 | [Git Workflow](git-workflow/) | 0.1.0 | Experimental | Safe branches, commits, and pull-request handoff |
 | [GitHub Actions Standards](github-actions-standards/) | 0.4.0 | Experimental | Secure, reproducible CI and release workflows |
+| [Interview Kit](interview-kit/) | 0.1.0 | Experimental | Mock system design interviews graded against a cited concept library; enable after the build, not during |
 | [Logging Standards](logging-standards/) | 0.1.0 | Experimental | Secure structured production logging |
 | [Maturity](maturity/) | 0.3.1 | Experimental | Dockerfile, npm, repository-hygiene, and CI-workflow maturity evaluation, fixes on request |
 | [Repository Governance](repository-governance/) | 0.1.1 | Experimental | Audit repository governance, then optionally apply merge policy and rulesets |
