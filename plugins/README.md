@@ -7,6 +7,7 @@ the marketplace-level instructions live in the
 
 | Plugin | Version | Maturity | Purpose |
 | --- | --- | --- | --- |
+| [Agent Parity](agent-parity/) | 0.1.0 | Experimental | Cross-agent instructions, MCP, skills, and plugin parity report, fixes on request |
 | [API Design Standards](api-design-standards/) | 0.1.0 | Experimental | Async REST jobs and safe API deprecation |
 | [Architecture Diagrams](architecture-diagrams/) | 0.1.0 | Experimental | C4 system context and container diagrams |
 | [Dependency Standards](dependency-standards/) | 0.1.0 | Experimental | Evidence-gated dependency intake, updates, and removal |

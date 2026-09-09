@@ -1,0 +1,27 @@
+{
+  "id": "agent-parity-positive-apply-mcp-to-codex",
+  "type": "positive",
+  "platforms": [
+    "claude-code",
+    "codex",
+    "github-copilot"
+  ],
+  "prompt": "Copy the 'github' MCP server from Claude Code to Codex.",
+  "setup": [
+    "~/.claude.json defines a user-scope server 'github' as { \"type\": \"http\", \"url\": \"https://api.example.com/mcp\" }.",
+    "~/.codex/config.toml has a [projects] table, an existing [mcp_servers.idea] section with an inline comment on its header line, and no 'github' server.",
+    "~/.copilot/mcp-config.json also defines 'github'."
+  ],
+  "expected": [
+    "The plan names ~/.codex/config.toml with the operation 'append section' and prints a backup path.",
+    "The file gains a [mcp_servers.github] section with url = \"https://api.example.com/mcp\" at the end, preceded by one blank line.",
+    "Every pre-existing line of config.toml, including the [mcp_servers.idea] section and its comment, is byte-identical.",
+    "The comparison is re-run and 'github' is reported as present on all three agents."
+  ],
+  "must_not": [
+    "Rewrite or reformat any existing TOML section.",
+    "Touch ~/.claude.json or ~/.copilot/mcp-config.json.",
+    "Write a quoted key for a bare-safe name or an unquoted key for a dotted name.",
+    "Start the server to verify."
+  ]
+}

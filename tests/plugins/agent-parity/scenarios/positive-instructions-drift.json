@@ -1,0 +1,27 @@
+{
+  "id": "agent-parity-positive-instructions-drift",
+  "type": "positive",
+  "platforms": [
+    "claude-code",
+    "codex",
+    "github-copilot"
+  ],
+  "prompt": "Check whether my global instructions are in sync across agents, then apply Claude Code's version to the others.",
+  "setup": [
+    "~/.claude/CLAUDE.md contains an agent-parity managed block followed by personal notes.",
+    "~/.codex/AGENTS.md contains the legacy cockpit:shared markers around an older version of the block, preceded by Codex-specific text.",
+    "~/.copilot/copilot-instructions.md exists and has no managed block."
+  ],
+  "expected": [
+    "The report shows Claude Code as in sync, Codex CLI as out of date with a line-count diff and a note about legacy markers, and Copilot CLI as not applied.",
+    "The plan names ~/.codex/AGENTS.md (replace block, legacy markers renamed) and ~/.copilot/copilot-instructions.md (append block) before any write, and prints a backup path for each.",
+    "After applying, the Codex file keeps every byte outside the markers and the Copilot file keeps its existing content with the block appended after one blank line.",
+    "The comparison is re-run and all three files are reported as in sync."
+  ],
+  "must_not": [
+    "Change, reorder, or print text outside the managed block in any file.",
+    "Write to ~/.claude/CLAUDE.md, which is the source.",
+    "Create a second managed block in a file that already has one.",
+    "Apply before the plan has been stated."
+  ]
+}

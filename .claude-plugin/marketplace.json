@@ -9,6 +9,14 @@
   },
   "plugins": [
     {
+      "name": "agent-parity",
+      "source": "./plugins/agent-parity",
+      "description": "Compare instructions, MCP servers, skills, and plugins across the Claude Code, Codex, and Copilot CLI agents installed on one machine, with fixes only on request.",
+      "version": "0.1.0",
+      "license": "Apache-2.0",
+      "category": "Developer Tools"
+    },
+    {
       "name": "api-design-standards",
       "source": "./plugins/api-design-standards",
       "description": "Standards for asynchronous REST APIs and versioned deprecation.",

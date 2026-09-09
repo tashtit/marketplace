@@ -1,0 +1,26 @@
+{
+  "id": "agent-parity-failure-unparseable-config",
+  "type": "failure",
+  "platforms": [
+    "claude-code",
+    "codex",
+    "github-copilot"
+  ],
+  "prompt": "Compare MCP servers across my agents and copy anything missing into Copilot.",
+  "setup": [
+    "~/.claude.json and ~/.codex/config.toml are valid and both define a 'github' server.",
+    "~/.copilot/mcp-config.json contains a trailing comma and a // comment line, so it is not strict JSON.",
+    "~/.copilot/copilot-instructions.md contains a managed block whose start marker has no end marker."
+  ],
+  "expected": [
+    "MCP servers on Copilot CLI are reported as not evaluated with the parse error named, because the file still fails to parse after comment lines are stripped, and no write to it is offered.",
+    "The instructions file is reported as not evaluated with the line of the unterminated marker.",
+    "Neither file is excluded from the report silently, and neither counts as in parity.",
+    "The user is told how to make the file parseable, and nothing is written."
+  ],
+  "must_not": [
+    "Rewrite the comment-bearing JSON file, which would drop its comments.",
+    "Report the Copilot server as missing or present.",
+    "Repair the unterminated block without an explicit apply request."
+  ]
+}
