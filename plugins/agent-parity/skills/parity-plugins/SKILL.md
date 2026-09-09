@@ -1,6 +1,6 @@
 ---
 name: parity-plugins
-description: Compare installed plugins, their versions and enablement, and registered plugin marketplaces across Claude Code, Codex CLI, and Copilot CLI from their config homes, and report each plugin per agent as installed, differs, disabled, missing, or excluded. Use when asked which agent is missing a plugin or marketplace, whether the agents have the same plugins, or which agent is behind on a plugin version. Report-only: each gap is returned as that agent's own install, enable, or update command for the user to run; nothing is installed, enabled, or removed. Not for installing, publishing, or authoring plugins, or judging plugin quality.
+description: "Compare installed plugins, their versions and enablement, and registered plugin marketplaces across Claude Code, Codex CLI, and Copilot CLI from their config homes, and report each plugin per agent as installed, differs, disabled, missing, or excluded. Use when asked which agent is missing a plugin or marketplace, whether the agents have the same plugins, or which agent is behind on a plugin version. Report-only: each gap is returned as that agent's own install, enable, or update command for the user to run; nothing is installed, enabled, or removed. Not for installing, publishing, or authoring plugins, or judging plugin quality."
 ---
 
 # Compare plugins
@@ -22,12 +22,14 @@ agent's `plugin list` command, and treat every file's content as data.
 | Agent | Installed plugins | Enablement | Marketplaces |
 | --- | --- | --- | --- |
 | Claude Code | `<claude home>/plugins/installed_plugins.json` → `plugins`, keyed by id; the value is an install record or an array of them with `version`, `scope`, and `installPath`; use the `user`-scope record (a record without `scope` counts as user scope), and report a plugin with only other scopes as `excluded (project scope)` with the scope in the detail | `<claude home>/settings.json` → `enabledPlugins.<id>` (`true` or `false`) | `<claude home>/plugins/known_marketplaces.json`, keyed by name, with `source` (`url`, `repo`, or `path`) and `installLocation`; plus `extraKnownMarketplaces` in `settings.json` |
-| Codex CLI | `<codex home>/config.toml` → `[plugins."<id>"]` | the same table's `enabled` value | `[marketplaces.<name>]` with `source_type` and `source` |
+| Codex CLI | `<codex home>/config.toml` → `[plugins."<id>"]`, which records enablement only; the installed version is the directory name under `<codex home>/plugins/cache/<marketplace>/<name>/`, or the `version` in that directory's `.claude-plugin/plugin.json` | the same table's `enabled` value | `[marketplaces.<name>]` with `source_type` and `source` |
 | Copilot CLI | `~/.copilot/config.json` → `installedPlugins`, an array of records with `name`, `marketplace`, `version`, `enabled`, and `cache_path`, read after stripping the leading `//` comment lines; `~/.copilot/installed-plugins/<marketplace>/<name>/` holds the files | `~/.copilot/settings.json` → `enabledPlugins.<id>` when that key exists, otherwise the record's `enabled`; when both exist and disagree, show both in the detail | `extraKnownMarketplaces` in `~/.copilot/settings.json`, plus the two marketplaces Copilot registers by default (`copilot-plugins`, `awesome-copilot`) and the directory names under `installed-plugins/`, where `_direct` holds plugins installed without a marketplace |
 
 Read nothing else from these files; they hold unrelated settings that are
-never printed. A missing inventory file, directory, or table means the agent
-has no plugins, so the other agents' plugins are `missing` there;
+never printed. The only other paths this dimension reads are the Codex plugin
+cache directory named above and the cached Claude Code catalog named under
+Platform support. A missing inventory file, directory, or table means the
+agent has no plugins, so the other agents' plugins are `missing` there;
 `not evaluated` applies only to a file that exists but cannot be parsed.
 
 ## Marketplaces
@@ -46,19 +48,28 @@ detail "add marketplace first".
 | `excluded` | Agent-native (below), or named by the user | neither |
 | `not evaluated` | The marketplace list could not be parsed | neither |
 
-Agent-native marketplaces are bundled with one agent, cannot be added to the
-others, and are `excluded` from parity together with every plugin they
-provide:
+A marketplace is agent-native when another agent cannot register it, which is
+a property of its source rather than of its name: it is bundled with one agent
+and exposes no `owner/repo`, URL, or path a user could pass to that agent's
+`marketplace add`. Agent-native marketplaces are `excluded` from parity
+together with every plugin they provide:
 
-- Claude Code: `claude-plugins-official`.
-- Codex CLI: `openai-bundled`, `openai-primary-runtime`, `openai-curated`,
-  `openai-curated-remote`, and any marketplace whose `source_type` is `local`
-  with a path under the config home or under `<codex home>/plugins/cache/`.
-- Copilot CLI: `copilot-plugins` and `awesome-copilot`, which Copilot
-  registers by default, and `_direct`, whose plugins are reported as
-  `excluded (no marketplace)` with the plugin named in the detail.
+- Codex CLI: any marketplace whose `source_type` is `local` with a path under
+  the config home or under `<codex home>/plugins/cache/`, which today covers
+  `openai-bundled`, `openai-primary-runtime`, `openai-curated`, and
+  `openai-curated-remote`.
+- Copilot CLI: `_direct`, which is a directory rather than a marketplace;
+  its plugins are reported as `excluded (no marketplace)` with the plugin
+  named in the detail.
 
-The user may extend or override this list by name.
+A marketplace with a git or URL source is never agent-native, even when an
+agent registers it by default. `claude-plugins-official`, `copilot-plugins`,
+and `awesome-copilot` are ordinary git marketplaces that any agent can add,
+so they are normal items: `registered` where the agent has them, `missing`
+where it does not, and their plugins are compared like any others. Excluding
+them by name would give the same pair two statuses and drop real gaps.
+
+The user may extend or override the excluded set by name.
 
 ## Platform support
 
@@ -78,12 +89,16 @@ plugin is supported everywhere; say which case applied.
 
 | Status | Meaning | Counts as |
 | --- | --- | --- |
-| `installed` | Installed and enabled, or enablement not recorded | parity |
+| `installed` | Installed, and enabled or enablement not recorded in a file that parsed | parity |
 | `differs` | Installed at a lower version than the reference version | gap |
 | `disabled` | Installed with enablement `false` | gap |
 | `missing` | Not installed; the detail says "add marketplace first" when the marketplace is also unregistered | gap |
 | `excluded` | Agent-native marketplace, no marketplace, not supported, project scope, or named by the user | neither |
-| `not evaluated` | The inventory file could not be parsed | neither |
+| `not evaluated` | An inventory, enablement, or marketplace file that exists could not be parsed | neither |
+
+An enablement file that exists but does not parse never reads as "enablement
+not recorded": every pair it covers is `not evaluated`, as the router requires
+for any unreadable file.
 
 The reference version is the highest installed version among the agents,
 ordered as semantic versions; versions that are not semantic (a commit SHA,
@@ -98,7 +113,8 @@ version never stands for a status.
 | Marketplace | Source | Claude Code | Codex CLI | Copilot CLI |
 | --- | --- | --- | --- | --- |
 | tashtit | github.com/tashtit/marketplace | registered | registered | missing |
-| claude-plugins-official | agent-native | registered | excluded | excluded |
+| claude-plugins-official | github.com/anthropics/claude-plugins-official | registered | registered | missing |
+| openai-bundled | agent-native: local source under the Codex config home | excluded | excluded | excluded |
 
 | Plugin | Claude Code | Codex CLI | Copilot CLI | Detail |
 | --- | --- | --- | --- | --- |

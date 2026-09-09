@@ -47,7 +47,7 @@ boundaries each sub-skill defines.
 | --- | --- | --- | --- |
 | Claude Code | `~/.claude/` plus the state file `~/.claude.json` | `CLAUDE_CONFIG_DIR`; the state file is then `<dir>/.claude.json` | the config home directory exists |
 | Codex CLI | `~/.codex/` | `CODEX_HOME` | the config home directory exists |
-| Copilot CLI | `~/.copilot/` | none | the config home directory exists |
+| Copilot CLI | `~/.copilot/` | `COPILOT_HOME`; older releases resolved `$XDG_CONFIG_HOME/.copilot` | the config home directory exists |
 
 Resolve `~` from `HOME`. Detection is a directory check; never create a config
 home. Also note whether each CLI is on `PATH` (`command -v claude codex
@@ -55,9 +55,11 @@ copilot`), which is informational and does not change the comparison. If fewer
 than two agents are installed there is nothing to compare: name the agent that
 was found, report parity as not applicable, and stop.
 
-The sub-skills refer to these resolved paths as `<claude home>` and
-`<codex home>`. Hosts namespace plugin skills, so the sub-skills below are
-invoked as `agent-parity:parity-<dimension>`.
+The sub-skills refer to these resolved paths as `<claude home>`,
+`<codex home>`, and `<copilot home>`; where a sub-skill spells a Copilot path
+`~/.copilot/...`, read it as `<copilot home>/...`. Hosts namespace plugin
+skills, so the sub-skills below are invoked as
+`agent-parity:parity-<dimension>`.
 
 ## Scope
 

@@ -27,14 +27,19 @@
 - [ ] Skills: the fingerprint covers every non-dot, non-credential-named file,
       lists symlinks without following them, and a copy lands in the agent's
       documented write target, never in `~/.codex/skills`.
-- [ ] Plugins: enablement comes from settings.json (Claude Code, Copilot CLI)
-      or the plugins table (Codex CLI); a catalog entry without platforms
-      counts as supported everywhere.
-- [ ] MCP: Codex TOML edits leave every unrelated line byte-identical; JSON
-      edits set one key and refuse comment-bearing files; `tools: ["*"]` is
-      disclosed on Copilot writes.
-- [ ] Skills: `differs` is never overwritten without an explicit replace; copies
-      skip credential-looking files.
+- [ ] Plugins: enablement comes from settings.json (Claude Code, and Copilot
+      CLI when the key exists, otherwise the config.json record) or the
+      plugins table (Codex CLI); an enablement file that exists but does not
+      parse yields "not evaluated", never "installed"; a catalog entry without
+      platforms counts as supported everywhere; a git-sourced marketplace is
+      never excluded as agent-native.
+- [ ] MCP: Codex TOML edits leave every unrelated line byte-identical; a JSON
+      file that parses strictly is writable and only one that needs comment
+      stripping is refused; `tools: ["*"]` is disclosed on Copilot writes; a
+      liveness check prints no process arguments.
+- [ ] Skills: `differs` is never overwritten without an explicit replace; a
+      copy prunes dotfiles and credential-named files from the target and
+      still compares as `present`.
 - [ ] Plugins: no install, enable, update, or uninstall command is executed;
       the printed commands carry the real marketplace source and plugin id.
 - [ ] Every apply names each file and operation before writing, backs the file

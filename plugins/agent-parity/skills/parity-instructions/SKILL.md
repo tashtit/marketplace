@@ -22,7 +22,7 @@ that agent's own: it is never compared, summarized, printed, or changed.
 | Global | Claude Code | `<claude home>/CLAUDE.md` (default `~/.claude/CLAUDE.md`) |
 | Global | Codex CLI | `<codex home>/AGENTS.md` (default `~/.codex/AGENTS.md`) |
 | Global | Copilot CLI | `~/.copilot/copilot-instructions.md` |
-| Repository | Claude Code | `<root>/CLAUDE.md`, or `<root>/.claude/CLAUDE.md` when only that one exists; Claude Code reads either |
+| Repository | Claude Code | `<root>/CLAUDE.md` and `<root>/.claude/CLAUDE.md`; Claude Code loads and concatenates both when both exist |
 | Repository | Codex CLI and Copilot CLI | `<root>/AGENTS.md` (both read it natively) |
 
 A file is a target only when its agent is installed. Repository targets are
@@ -32,9 +32,15 @@ evaluated only when the working directory is inside a Git repository.
 files: list them as present or absent on the report's last line, but never
 manage them.
 
+When both Claude repository files exist, read both: the one holding a managed
+block is the managed target, and a block in each is reported with the warning
+`duplicate: two Claude files`, because Claude Code then loads the shared text
+twice. Apply writes only to the file that already holds the block, or to
+`<root>/CLAUDE.md` when neither does.
+
 Each target file and agent that reads it is one pair for scoring, so a
 repository `AGENTS.md` contributes two pairs when both Codex and Copilot are
-installed.
+installed, while the two Claude repository files together count as one pair.
 
 ## Managed block
 
@@ -45,10 +51,13 @@ The shared baseline text.
 ```
 
 The legacy markers `<!-- cockpit:shared:start -->` and
-`<!-- cockpit:shared:end -->` were written by an earlier tool and denote the
-same block. Read either style, in any combination; write only the canonical
-pair. Claude Code strips block-level HTML comments before loading a file, so
-the markers cost it nothing; Codex and Copilot see them as inert comments.
+`<!-- cockpit:shared:end -->` denote the same block and are written by
+Cockpit (<https://github.com/tashtit/cockpit>), which manages these same files
+and is still maintained. Read either style, in any combination. Write the
+canonical pair for a block this skill creates, and keep the style a file
+already uses when replacing an existing block. Claude Code strips block-level
+HTML comments before loading a file, so the markers cost it nothing; Codex and
+Copilot see them as inert comments.
 
 A marker counts only when it is the entire content of its line and is not
 inside a fenced code block. To extract a block: find the first start marker,
@@ -143,7 +152,7 @@ ask for a source and do not write.
 | `not applied (missing)` | create file |
 | `not evaluated` (unterminated block) | repair block, offered under "Not scored" and applied only when the user names the file |
 | `<status> (by import)` or `<status> (linked)` | skip; the operation lands on the imported file, and the plan names every agent that reads it |
-| `in sync` | none; legacy markers are normalized only when the file is next written |
+| `in sync` | none; legacy markers are left as they are |
 
 State the plan first — one line per file with its operation — then write,
 after the backup step the router defines. Write by replacing the exact span
@@ -152,9 +161,10 @@ every byte outside the span is unchanged.
 
 - **Replace block.** The file has a start and end marker (canonical or
   legacy): replace from the start marker through the end marker, inclusive,
-  with the canonical block. Legacy markers become canonical markers here; say
-  so in the plan, because the earlier tool will then stop recognizing the
-  block.
+  with a block in the marker style the file already uses. Renaming legacy
+  markers to the canonical pair happens only when the user asks for it, and
+  the plan then says that Cockpit will report the file as unmanaged and append
+  a second copy of the baseline on its next apply.
 - **Repair block.** The file has a start marker with no end marker: replace
   the lone start marker with the full canonical block and keep everything that
   followed it, which then remains as the agent's own unmanaged text; say so in
