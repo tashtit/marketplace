@@ -22,7 +22,7 @@
   "interface": {
     "displayName": "Agent Parity",
     "shortDescription": "Cross-agent configuration parity report and sync",
-    "longDescription": "Read the configuration homes of every AI coding agent installed on this machine (Claude Code, OpenAI Codex CLI, GitHub Copilot CLI) and report how they differ across shared instructions, MCP servers, personal skills, and installed plugins, with a weighted parity score. Runs from any of the three hosts and gives the same answer, because the config homes are plain files. Never reads credentials. Closes a gap only when explicitly asked, by writing inside a managed block or a single server section and leaving everything else untouched.",
+    "longDescription": "Read the configuration homes of every AI coding agent installed on this machine (Claude Code, OpenAI Codex CLI, GitHub Copilot CLI) and report how they differ across shared instructions, MCP servers, personal skills, and installed plugins, with a weighted parity score. Runs from any of the three hosts and gives the same answer, because the config homes are plain files. Never reads credentials. Closes a gap only when explicitly asked, and each fix is bounded: a managed block inside an instructions file, a single MCP server entry, or one skill directory copied, replaced (the existing one is moved to a printed backup), or symlinked. Everything else is left untouched.",
     "developerName": "Tashtit contributors",
     "category": "Developer Tools",
     "capabilities": [

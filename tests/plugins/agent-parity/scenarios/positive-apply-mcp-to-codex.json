@@ -3,14 +3,14 @@
   "type": "positive",
   "platforms": [
     "claude-code",
-    "codex",
     "github-copilot"
   ],
   "prompt": "Copy the 'github' MCP server from Claude Code to Codex.",
   "setup": [
     "~/.claude.json defines a user-scope server 'github' as { \"type\": \"http\", \"url\": \"https://api.example.com/mcp\" }.",
     "~/.codex/config.toml has a [projects] table, an existing [mcp_servers.idea] section with an inline comment on its header line, and no 'github' server.",
-    "~/.copilot/mcp-config.json also defines 'github'."
+    "~/.copilot/mcp-config.json also defines 'github'.",
+    "The review is conducted from Claude Code or Copilot CLI, not from Codex CLI: the target is the Codex MCP file, and the running-host caveat forbids writing an MCP file that belongs to the agent running the skill."
   ],
   "expected": [
     "The plan names ~/.codex/config.toml with the operation 'append section' and prints a backup path.",
@@ -22,6 +22,7 @@
     "Rewrite or reformat any existing TOML section.",
     "Touch ~/.claude.json or ~/.copilot/mcp-config.json.",
     "Write a quoted key for a bare-safe name or an unquoted key for a dotted name.",
-    "Start the server to verify."
+    "Start the server to verify.",
+    "Write the Codex MCP file when the skill is running inside Codex CLI; there it prints the codex mcp add command instead, which is why this scenario does not claim the codex platform."
   ]
 }

@@ -32,11 +32,15 @@ evaluated only when the working directory is inside a Git repository.
 files: list them as present or absent on the report's last line, but never
 manage them.
 
-When both Claude repository files exist, read both: the one holding a managed
-block is the managed target, and a block in each is reported with the warning
-`duplicate: two Claude files`, because Claude Code then loads the shared text
-twice. Apply writes only to the file that already holds the block, or to
-`<root>/CLAUDE.md` when neither does.
+When both Claude repository files exist, read both. The pair takes the worse
+of their two statuses, ordered `not evaluated` last and otherwise gap before
+parity, so a stale block in either file is never hidden by a current block in
+the other. When exactly one holds a managed block, that file is the managed
+target; when both do, the report carries the warning
+`duplicate: two Claude files`, because Claude Code loads and concatenates
+both, and the plan names the file it will write. Apply writes only to the
+file that already holds the block, or to `<root>/CLAUDE.md` when neither
+does.
 
 Each target file and agent that reads it is one pair for scoring, so a
 repository `AGENTS.md` contributes two pairs when both Codex and Copilot are
@@ -150,7 +154,7 @@ ask for a source and do not write.
 | `out of date` | replace block |
 | `not applied` | append block |
 | `not applied (missing)` | create file |
-| `not evaluated` (unterminated block) | repair block, offered under "Not scored" and applied only when the user names the file |
+| `not evaluated` (unterminated block) | repair block, listed under "Fixable on request" with its file and operation like any other offer, and applied only when the user names the file; the file also appears under "Not scored" with the reason it could not be evaluated |
 | `<status> (by import)` or `<status> (linked)` | skip; the operation lands on the imported file, and the plan names every agent that reads it |
 | `in sync` | none; legacy markers are left as they are |
 

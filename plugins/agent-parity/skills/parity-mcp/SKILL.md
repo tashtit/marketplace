@@ -124,7 +124,11 @@ server, not the shared value, and each still counts under its own name.
 
 Redaction happens inside the shell command, before anything is printed:
 
-- Print URLs without userinfo and without the query string.
+- Print URLs with the userinfo and the query string replaced by `<redacted>`
+  rather than silently dropped, so `https://user:pw@host/p?api_key=v` prints
+  as `https://<redacted>@host/p?<redacted>`. A later apply can then tell that
+  the URL carries a hidden value; a URL printed with neither marker carries
+  none.
 - Print `env` and `headers` as key names only.
 - Print `command` and `args` verbatim, except an argument that is redacted:
   one that follows a flag whose name contains `token`, `key`, `secret`,
@@ -133,15 +137,22 @@ Redaction happens inside the shell command, before anything is printed:
   `^[A-Za-z0-9_./+=:@~-]{24,}$`, which is opaque credential-shaped text. The
   character class is deliberately wide: a narrower one misses base64 secrets
   ending `==`, keys containing `/`, dotted personal access tokens, and JWTs.
-  Print a redacted argument as `<redacted>`. Long paths and package
-  specifiers may be caught too; that errs on the safe side.
+  Print a redacted argument as `<redacted:NNNN>`, where `NNNN` is the first
+  four hex characters of the SHA-256 of the value. The digest matters because
+  the comparison runs on this printed output: a bare `<redacted>` makes two
+  different values compare as equal, so two agents launching different
+  programs would be scored `present`. Long paths and package specifiers are
+  caught by the wide class too; that errs on the safe side, and the digest
+  keeps them distinguishable.
 - Replace any URL path segment matching `^[A-Za-z0-9_./+=:@~-]{24,}$` with
-  `<redacted>`; hosted endpoints often carry the secret in the path.
+  the same `<redacted:NNNN>` form; hosted endpoints often carry the secret in
+  the path.
 - For an argument of the form `NAME=value`, redact the part after `=` when
   `NAME` contains one of the listed words or the value matches the credential
   pattern.
 - Never quote an env value, a header value, or a redacted argument into the
-  report or the transcript.
+  report or the transcript. The four-hex digest is not a value: it is 16 bits
+  of a hash, printed so that unequal secrets stay unequal.
 
 ## Report
 
@@ -173,8 +184,14 @@ file:
 
 ```json
 { "command": "<command>", "args": ["<arg>"], "env": { "NAME": "<value>" } }
-{ "type": "http", "url": "https://example.com/mcp" }
+{ "type": "<http|sse>", "url": "https://example.com/mcp", "headers": { "NAME": "<value>" } }
 ```
+
+Take `type` from the source definition rather than defaulting it, and carry
+`headers` across: both are compared fields between Claude Code and Copilot
+CLI, so writing `http` for an `sse` source, or dropping headers, leaves the
+server reported `differs` on every re-run. Omit `headers` when the source has
+none.
 
 Parse the file, set exactly that key (omit `env` when empty), and re-serialize
 with the file's existing indentation, detected from its first indented line,
@@ -222,8 +239,11 @@ names follow the same rule. Every string value is written double-quoted with
 
 ```json
 { "command": "<command>", "args": ["<arg>"], "tools": ["*"], "env": { "NAME": "<value>" } }
-{ "type": "http", "url": "https://example.com/mcp", "tools": ["*"] }
+{ "type": "<http|sse>", "url": "https://example.com/mcp", "headers": { "NAME": "<value>" }, "tools": ["*"] }
 ```
+
+As for Claude Code, `type` comes from the source and `headers` are carried
+across, because both agents compare them.
 
 `tools` is Copilot's per-server allow-list. Write `["*"]` for a new entry and
 say so, so the user can narrow it; on a replace keep the existing `tools`. A
@@ -244,18 +264,27 @@ Rules that hold for every target:
   whose value is a `${VAR}` reference,
   with interpreter errors redirected to a file in the backup directory. A
   TOML source's string values are read with a real TOML parser (`python3`
-  with `tomllib`); when none is available, or no shell is available, write
-  each such key with an empty value and tell the user which keys to fill in
-  by hand. A `${VAR}` reference is copied literally with a note that the
-  target agent may not expand it.
+  with `tomllib`); when no TOML parser is available, write each such key with
+  an empty value and tell the user which keys to fill in by hand. Without a
+  shell there is no sanctioned way to read these files at all, so the whole
+  MCP dimension is `not evaluated` and nothing is applied; never fall back to
+  opening a config file with a file-reading tool. A `${VAR}` reference is
+  copied literally with a note that the target agent may not expand it.
 - Never write a Claude Code local entry or a repository project entry into
   another agent's user scope unless the user asks; the plan must then say the
   scope changes.
 - Never edit `<root>/.mcp.json` or `<root>/.github/mcp.json`: they are shared
   through the repository and changing them is a code change.
-- Before writing `~/.claude.json` from another host, run `pgrep -qf claude`,
-  which reports only an exit status; if it succeeds, a Claude Code session may
-  rewrite the file on exit, so print the command instead of writing. Never use
+- Before writing `~/.claude.json` from another host, run
+  `pgrep -qf '/[c]laude( |$)'`, which reports only an exit status; if it
+  succeeds, a Claude Code session may rewrite the file on exit, so print the
+  command instead of writing. The pattern is anchored to the executable at a
+  path boundary, not to the word anywhere in an argument list: an unanchored
+  `claude` also matches unrelated processes whose arguments merely contain a
+  `.claude/` path, and on this machine it matched fourteen processes against
+  the anchored pattern's two. The bracket around the first letter keeps the
+  guard from matching the shell that runs it, which matters on systems whose
+  `pgrep` excludes only its own process and not its ancestors. Never use
   `pgrep -fl`, which prints every matching process's full argument list and can
   echo a token or header into the transcript, and never `pgrep -x claude`,
   which misses an npm-installed Claude Code running as `node`. A false

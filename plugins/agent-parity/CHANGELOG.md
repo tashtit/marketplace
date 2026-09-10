@@ -32,7 +32,9 @@ All notable changes to this plugin are documented here. Versions follow
   whole-directory fingerprint across every directory each agent documents,
   including the shared `~/.agents/skills`, the repository `.claude/skills`,
   `.agents/skills`, and `.github/skills` locations, and linked directories.
-  Apply copies one directory from a named source.
+  Apply copies one directory from a named source, replaces one (moving the
+  existing directory to a printed backup) when the user says replace, or
+  creates a symlink when the user asks for one.
 - `parity-plugins` skill: installed plugins, versions, enablement, and
   marketplaces per agent, with agent-native marketplaces and catalog
   `platforms` exclusions. Report-only; each gap is returned as the agent's

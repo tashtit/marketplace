@@ -4,8 +4,9 @@ Compare the configuration of every AI coding agent installed on one machine —
 Claude Code, OpenAI Codex CLI, and GitHub Copilot CLI — and report how they
 differ across shared instructions, MCP servers, personal skills, and installed
 plugins, with a weighted parity score. Gaps are closed only when you ask, and
-only inside a bounded edit: a managed block, a single server entry, or a copied
-skill directory.
+only inside a bounded edit: a managed block, a single server entry, or one
+skill directory copied, replaced, or symlinked. A replace moves the existing
+directory to a printed backup; a symlink is created only when you ask for one.
 
 The comparison is host-agnostic. The agents' config homes (`~/.claude`,
 `~/.codex`, `~/.copilot`) are plain files, so the report is the same whichever

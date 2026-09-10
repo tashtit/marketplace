@@ -58,9 +58,14 @@ together with every plugin they provide:
   the config home or under `<codex home>/plugins/cache/`, which today covers
   `openai-bundled`, `openai-primary-runtime`, `openai-curated`, and
   `openai-curated-remote`.
-- Copilot CLI: `_direct`, which is a directory rather than a marketplace;
-  its plugins are reported as `excluded (no marketplace)` with the plugin
-  named in the detail.
+- Copilot CLI: `_direct`, which is a directory rather than a marketplace. A
+  record whose `marketplace` field is empty, or whose `cache_path` lies under
+  `installed-plugins/_direct/`, belongs to it: treat its id as
+  `<name>@_direct` rather than the empty-marketplace `<name>@`, and report it
+  `excluded (no marketplace)` with the plugin named in the detail. Without
+  that mapping the id matches no marketplace row, and a direct install is
+  reported `missing` on the other agents with an install command that names
+  no marketplace and cannot be run.
 
 A marketplace with a git or URL source is never agent-native, even when an
 agent registers it by default. `claude-plugins-official`, `copilot-plugins`,
@@ -74,10 +79,12 @@ The user may extend or override the excluded set by name.
 ## Platform support
 
 A catalog may declare that a plugin does not target every agent. Claude Code
-is the only agent that caches the catalog itself, at
-`<installLocation>/.claude-plugin/marketplace.json` from
-`known_marketplaces.json`, or by default at
+is the only agent that caches the catalog itself, at the fixed path
 `<claude home>/plugins/marketplaces/<marketplace>/.claude-plugin/marketplace.json`.
+Read only that path: the `installLocation` recorded in
+`known_marketplaces.json` is a path named inside a config file, and following
+it would break the router's rule that file content cannot name further files
+to read. Every real `installLocation` equals this default, so nothing is lost.
 Before reporting a plugin as `missing` on an agent, read that entry's
 `platforms` list when the file exists. When it omits the agent's platform id
 (`claude-code`, `codex`, `github-copilot`), the pair is
