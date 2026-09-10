@@ -1,0 +1,24 @@
+{
+  "id": "agent-parity-failure-single-agent",
+  "type": "failure",
+  "platforms": [
+    "claude-code",
+    "codex",
+    "github-copilot"
+  ],
+  "prompt": "Are my AI coding agents configured the same way?",
+  "setup": [
+    "HOME contains a ~/.claude directory and ~/.claude.json.",
+    "Neither ~/.codex nor ~/.copilot exists, and no codex or copilot executable is on PATH."
+  ],
+  "expected": [
+    "The response states that only Claude Code was detected and names the config homes that were checked.",
+    "Parity is reported as not applicable rather than as a number.",
+    "No dimension table is fabricated for the missing agents."
+  ],
+  "must_not": [
+    "Create ~/.codex, ~/.copilot, or any config file.",
+    "Invent gaps, items, or a score.",
+    "Run any agent CLI or install command."
+  ]
+}

@@ -92,6 +92,7 @@ The prioritized scope and acceptance criteria live in the
 
 | Plugin | Version | Maturity | Default behavior |
 | --- | --- | --- | --- |
+| [Agent Parity](plugins/agent-parity/) | 0.1.0 | Experimental | Cross-agent instructions, MCP, skills, and plugin parity report, fixes on request |
 | [API Design Standards](plugins/api-design-standards/) | 0.1.0 | Experimental | Async REST jobs and safe API deprecation |
 | [Architecture Diagrams](plugins/architecture-diagrams/) | 0.1.0 | Experimental | C4 system context and container diagrams |
 | [Dependency Standards](plugins/dependency-standards/) | 0.1.0 | Experimental | Evidence-gated dependency intake, updates, and removal |

@@ -5,6 +5,18 @@
   },
   "plugins": [
     {
+      "name": "agent-parity",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agent-parity"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    },
+    {
       "name": "api-design-standards",
       "source": {
         "source": "local",

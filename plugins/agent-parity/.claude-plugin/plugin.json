@@ -1,0 +1,37 @@
+{
+  "name": "agent-parity",
+  "version": "0.1.0",
+  "description": "Compare instructions, MCP servers, skills, and plugins across the Claude Code, Codex, and Copilot CLI agents installed on one machine, with fixes only on request.",
+  "author": {
+    "name": "Tashtit contributors",
+    "url": "https://github.com/tashtit"
+  },
+  "homepage": "https://github.com/tashtit/marketplace/tree/main/plugins/agent-parity",
+  "repository": "https://github.com/tashtit/marketplace",
+  "license": "Apache-2.0",
+  "keywords": [
+    "claude-code",
+    "codex",
+    "copilot",
+    "mcp",
+    "skills",
+    "plugins",
+    "configuration-drift"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Agent Parity",
+    "shortDescription": "Cross-agent configuration parity report and sync",
+    "longDescription": "Read the configuration homes of every AI coding agent installed on this machine (Claude Code, OpenAI Codex CLI, GitHub Copilot CLI) and report how they differ across shared instructions, MCP servers, personal skills, and installed plugins, with a weighted parity score. Runs from any of the three hosts and gives the same answer, because the config homes are plain files. Never reads credentials. Closes a gap only when explicitly asked, and each fix is bounded: a managed block inside an instructions file, a single MCP server entry, or one skill directory copied, replaced (the existing one is moved to a printed backup), or symlinked. Everything else is left untouched.",
+    "developerName": "Tashtit contributors",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Read-only cross-agent comparison",
+      "Weighted parity scoring",
+      "Opt-in bounded fixes"
+    ],
+    "defaultPrompt": [
+      "Compare my Claude Code, Codex, and Copilot CLI setups and report where they differ."
+    ]
+  }
+}

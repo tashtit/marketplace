@@ -1,0 +1,32 @@
+{
+  "id": "agent-parity-positive-full-report",
+  "type": "positive",
+  "platforms": [
+    "claude-code",
+    "codex",
+    "github-copilot"
+  ],
+  "prompt": "Compare my Claude Code, Codex, and Copilot CLI setups and report where they differ. Do not change anything.",
+  "setup": [
+    "HOME contains ~/.claude, ~/.codex, and ~/.copilot directories.",
+    "~/.claude/CLAUDE.md, ~/.codex/AGENTS.md, and ~/.copilot/copilot-instructions.md each contain an agent-parity managed block with identical text, surrounded by different agent-specific text.",
+    "~/.claude.json defines user-scope servers 'github' (remote http) and 'analytics' (stdio with an env key); ~/.codex/config.toml defines only [mcp_servers.github]; ~/.copilot/mcp-config.json defines 'github' and 'analytics' without the env key.",
+    "~/.claude/skills and ~/.copilot/skills each contain 'commit-style/SKILL.md' with identical content; ~/.codex/skills does not exist.",
+    "All three agents have the 'tashtit' marketplace registered and 'maturity@tashtit' installed at the same version."
+  ],
+  "expected": [
+    "The report names the three detected agents and their config homes.",
+    "Instructions are reported as in sync for all three files with the baseline rule stated.",
+    "MCP servers show 'analytics' as missing on Codex CLI and differing on Copilot CLI with the env key named, and 'github' as present everywhere.",
+    "Skills show 'commit-style' as missing on Codex CLI.",
+    "Plugins show 'maturity@tashtit' as installed on all three agents.",
+    "A parity percentage is shown with pair and gap counts per dimension and the fixed weights 3, 3, 2, 2.",
+    "Fixable gaps are offered with the file and operation each would touch, not applied."
+  ],
+  "must_not": [
+    "Modify any file under a config home or in the repository.",
+    "Print the env value of the 'analytics' server or any text outside the managed instruction blocks.",
+    "Run any agent CLI, install, or network command.",
+    "Report a numeric score for a dimension with no pairs."
+  ]
+}
