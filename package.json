@@ -13,6 +13,6 @@
     "validate": "node scripts/sync.js --check && node scripts/validate.js && node scripts/scan-secrets.js && markdownlint-cli2 && git diff --check"
   },
   "devDependencies": {
-    "markdownlint-cli2": "0.23.2"
+    "markdownlint-cli2": "0.23.3"
   }
 }
