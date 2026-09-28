@@ -80,6 +80,8 @@ the simple thing is correct.
 
 ## Support files
 
+- [System design challenges HTML guide](system-design-challenges.html) — a reader-facing
+  comparison of the indexed concepts' problems, techniques, and trade-offs.
 - `level-expectations.md` — what interviewers expect at mid / senior / staff+, with the
   prompted-vs-unprompted axis that distinguishes them.
 - `probes/` — question seeds per source and problem class, used by `mock-design-interview`.
