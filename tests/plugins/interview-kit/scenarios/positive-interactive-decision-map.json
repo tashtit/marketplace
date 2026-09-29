@@ -1,0 +1,21 @@
+{
+  "id": "interview-kit-positive-interactive-decision-map",
+  "type": "positive",
+  "platforms": [
+    "claude-code",
+    "github-copilot"
+  ],
+  "prompt": "Show me an interactive map of the system design challenges in the Interview Kit reference library.",
+  "setup": [
+    "The system-design-concerns directory contains the challenges HTML guide and its cited concept files."
+  ],
+  "expected": [
+    "Open the interactive decision map at references/system-design-concerns/system-design-challenges.html#map.",
+    "Readers can select a category, a challenge, and a technique to compare its benefit and cost, or search across challenges and techniques.",
+    "Technique details link to the cited concept files, and the comparison tables remain accessible."
+  ],
+  "must_not": [
+    "Present an option as universally correct or invent an unsupported selection criterion.",
+    "Duplicate and hand-maintain the challenge comparisons in a separate data source."
+  ]
+}

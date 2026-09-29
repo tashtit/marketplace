@@ -7,10 +7,17 @@
 <style>
 :root{color-scheme:light;--ink:#182334;--muted:#536478;--line:#d9e1e9;--surface:#fff;--accent:#175f7c;--soft:#edf6f8}*{box-sizing:border-box}body{margin:0;background:#f4f7f9;color:var(--ink);font:16px/1.55 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}a{color:var(--accent)}a:hover{text-decoration-thickness:2px}header{background:#132d3d;color:white;padding:3rem max(1.5rem,calc((100% - 1100px)/2))}header p{max-width:72ch;color:#d4e4ea}h1{font-size:clamp(2rem,4vw,3rem);line-height:1.12;margin:.4rem 0}main{max-width:1150px;margin:auto;padding:1.5rem}nav{display:flex;flex-wrap:wrap;gap:.5rem;margin:1rem 0 2rem}nav a{padding:.35rem .7rem;border:1px solid #b5cbd5;border-radius:999px;background:white;text-decoration:none}section{margin:2.5rem 0}section>h2{border-bottom:2px solid var(--accent);padding-bottom:.4rem}article{background:var(--surface);border:1px solid var(--line);border-radius:12px;margin:1rem 0;padding:1.25rem;box-shadow:0 2px 8px #1530470b}article h3{margin:.1rem 0 .35rem}article>p{margin:.4rem 0 1rem;color:var(--muted)}.table-wrap{overflow-x:auto}table{border-collapse:collapse;width:100%;min-width:680px}th,td{text-align:left;vertical-align:top;border-top:1px solid var(--line);padding:.7rem .8rem}th{background:var(--soft);font-size:.86rem;text-transform:uppercase;letter-spacing:.03em}td:first-child{width:24%;font-weight:650}td:nth-child(2),td:nth-child(3){width:38%}.source{font-size:.89rem;margin-top:1rem!important}footer{max-width:1150px;margin:auto;padding:0 1.5rem 3rem;color:var(--muted)}:focus-visible{outline:3px solid #e89e39;outline-offset:3px}@media(max-width:700px){header{padding:2rem 1.5rem}main{padding:1rem}article{padding:.9rem}th,td{padding:.55rem}}@media print{body{background:white}header{background:white;color:var(--ink);padding:1rem}header p{color:var(--muted)}nav{display:none}article{break-inside:avoid;box-shadow:none}section{break-before:auto}}
 </style>
+<style>
+:root{--map-accent:oklch(0.49 0.11 220);--map-ink:oklch(0.23 0.025 240);--map-soft:oklch(0.96 0.012 220);--map-line:oklch(0.83 0.018 220)}
+.view-switch{max-width:1150px;margin:1.2rem auto 0;padding:0 1.5rem;display:flex;flex-wrap:wrap;align-items:center;gap:.7rem}.view-switch a{display:inline-block;border:1px solid var(--map-line);padding:.42rem .85rem;border-radius:999px;background:white;text-decoration:none;color:var(--map-ink)}.view-switch a[aria-current=page]{background:var(--map-ink);color:white}.view-switch span{color:var(--muted);font-size:.9rem}
+#decision-map[hidden]{display:none}body.map-mode main>nav,body.map-mode main>section:not(#decision-map){display:none}#decision-map{margin:0 auto 2rem}#decision-map>h2{margin-bottom:.3rem}#decision-map>p{color:var(--muted);margin-top:0;max-width:75ch}.map-controls{display:flex;gap:.7rem;align-items:end;flex-wrap:wrap;margin:1.2rem 0}.map-controls label{font-weight:600;flex:1;min-width:220px}.map-controls input{display:block;width:100%;font:inherit;padding:.55rem .75rem;border:1px solid var(--map-line);border-radius:8px;background:white;color:var(--map-ink)}.map-controls button,.map-list button{font:inherit;cursor:pointer}.map-controls button{border:1px solid var(--map-line);background:white;border-radius:8px;padding:.55rem .85rem;color:var(--map-ink)}.map-controls button:hover,.map-list button:hover{border-color:var(--map-accent);background:var(--map-soft)}.map-grid{display:grid;grid-template-columns:minmax(210px,1fr) minmax(230px,1.15fr) minmax(310px,1.65fr);gap:1rem;align-items:start}.map-panel{min-width:0;background:white;border:1px solid var(--map-line);border-radius:12px;padding:1rem;min-height:310px}.map-panel h3{margin:0 0 .15rem;font-size:1.06rem}.map-panel .hint{font-size:.85rem;color:var(--muted);margin:.1rem 0 1rem}.map-list{display:grid;gap:.5rem}.map-list button{width:100%;border:1px solid var(--map-line);border-radius:8px;background:white;color:var(--map-ink);text-align:left;padding:.7rem .8rem;line-height:1.4}.map-list button[aria-pressed=true]{background:var(--map-soft);border-color:var(--map-accent);box-shadow:inset 4px 0 var(--map-accent)}.map-list button small{display:block;color:var(--muted);margin-top:.2rem}.map-panel .map-detail{margin:1rem 0;border-left:3px solid var(--map-accent);padding-left:.8rem}.map-detail dt{font-weight:700;color:var(--map-ink);margin:.8rem 0 .15rem}.map-detail dd{margin:0;line-height:1.6}.map-detail dt:first-child{margin-top:0}.map-path{background:var(--map-soft);border-radius:8px;padding:.65rem .8rem;color:var(--map-ink);font-size:.9rem;overflow-wrap:anywhere}.map-sources{border-top:1px solid var(--map-line);padding-top:.7rem;line-height:1.7}.map-empty{color:var(--muted)}@media(max-width:850px){.map-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.map-grid .map-panel:last-child{grid-column:1/-1;min-height:200px}}@media(max-width:580px){.map-grid{grid-template-columns:1fr}.map-grid .map-panel:last-child{grid-column:auto}.map-panel{min-height:unset}}@media print{body.map-mode main>nav,body.map-mode main>section:not(#decision-map){display:block}#decision-map,.view-switch{display:none!important}}
+</style>
 </head>
 <body>
 <header><small>INTERVIEW KIT · CONCEPT MAP</small><h1>System design: challenges and trade-offs</h1><p>From all 33 cited concepts in the Interview Kit reference library. Each row compares a source-backed technique with its benefit and cost; links lead to the full claims, citations, and open questions. These are options, not universal prescriptions.</p></header>
+<div class="view-switch" aria-label="Choose visualization"><a href="#framing" id="table-view">Comparison tables</a><a href="#map" id="map-view">Interactive decision map</a><span>Explore the same cited comparisons by category, challenge and technique.</span></div>
 <main>
+<section id="decision-map" hidden aria-label="Interactive decision map"><h2>Explore the decision map</h2><p>Follow a category to a challenge, then compare techniques. These are source-backed options, not a decision algorithm; open the cited concepts for the full reasoning and gaps.</p><div class="map-controls"><label for="map-search">Find a challenge or technique<input id="map-search" type="search" placeholder="e.g. read latency, caching, replicas"></label><button type="button" id="map-reset">Clear search</button></div><div class="map-grid"><div class="map-panel"><h3>1 · Category</h3><p class="hint">Select an area of concern</p><div class="map-list" id="map-categories"></div></div><div class="map-panel"><h3>2 · Challenge</h3><p class="hint">What needs to be resolved?</p><div class="map-list" id="map-challenges"></div></div><div class="map-panel"><h3>3 · Technique &amp; trade-off</h3><p class="hint">Compare alternatives in this challenge</p><div class="map-path" id="map-path" aria-live="polite"></div><div class="map-list" id="map-techniques"></div><div id="map-detail"></div></div></div></section>
 <nav aria-label="Challenge categories"><a href="#framing">Frame &amp; size</a><a href="#reads">Reads &amp; discovery</a><a href="#load">Load &amp; availability</a><a href="#correctness">Correctness &amp; modeling</a><a href="#transfer">Transfer &amp; integration</a></nav>
 <section id="framing"><h2>Frame &amp; size the problem</h2>
 <article><h3>1 · Unclear requirements lead to the wrong architecture</h3><p>“Fast” and “consistent” do not select a design until the relevant operation, workload, and measurable bar are stated.</p><div class="table-wrap"><table><thead><tr><th>Technique</th><th>Benefit / when</th><th>Cost / trade-off</th></tr></thead><tbody>
@@ -137,5 +144,110 @@
 </tbody></table></div><p class="source">Concept: <a href="concepts/client-cached-responses.md">client-cached responses</a> · S1</p></article>
 </section>
 </main><footer><p><strong>Scope:</strong> This map covers the 33 indexed concepts (S1–S6), not every system-design technique. In particular, replication, partitioning and caching each target different bottlenecks; none is an automatic fix for “slow reads.” The linked concept files contain the original source URLs and <em>Not covered by sources</em> questions. Open this file alongside the repository so the relative links resolve.</p></footer>
+<script>
+(() => {
+  const sections = [...document.querySelectorAll('main > section:not(#decision-map)')];
+  const data = sections.map(section => ({
+    id: section.id,
+    name: section.querySelector('h2').textContent,
+    challenges: [...section.querySelectorAll('article')].map(article => ({
+      id: article.querySelector('h3').textContent.split(' · ')[0],
+      name: article.querySelector('h3').textContent.replace(/^\d+ · /, ''),
+      context: article.querySelector(':scope > p:not(.source)')?.textContent || '',
+      techniques: [...article.querySelectorAll('tbody tr')].map(row => [...row.cells].map(cell => cell.textContent.trim())),
+      source: article.querySelector('.source')
+    }))
+  }));
+  const byId = id => document.getElementById(id);
+  const categoryList = byId('map-categories');
+  const challengeList = byId('map-challenges');
+  const techniqueList = byId('map-techniques');
+  const detail = byId('map-detail');
+  const path = byId('map-path');
+  const search = byId('map-search');
+  let categoryId = data[0].id;
+  let challengeId = data[0].challenges[0].id;
+  let techniqueIndex = 0;
+
+  function button(label, selected, action, subtitle) {
+    const item = document.createElement('button');
+    item.type = 'button';
+    item.textContent = label;
+    if (subtitle) {
+      const small = document.createElement('small');
+      small.textContent = subtitle;
+      item.append(small);
+    }
+    item.setAttribute('aria-pressed', String(selected));
+    item.addEventListener('click', () => {
+      const list = item.parentElement;
+      action();
+      list?.querySelector('button[aria-pressed="true"]')?.focus();
+    });
+    return item;
+  }
+
+  function render() {
+    const query = search.value.trim().toLocaleLowerCase();
+    const matches = challenge => [challenge.name, challenge.context, ...challenge.techniques.flat()].join(' ').toLocaleLowerCase().includes(query);
+    const categories = data.filter(category => !query || category.name.toLocaleLowerCase().includes(query) || category.challenges.some(matches));
+    const previousCategoryId = categoryId;
+    const previousChallengeId = challengeId;
+    const category = categories.find(item => item.id === categoryId) || categories[0];
+    categoryId = category?.id;
+    categoryList.replaceChildren(...categories.map(item => button(item.name, item.id === categoryId, () => { categoryId = item.id; challengeId = ''; techniqueIndex = 0; render(); }, `${item.challenges.length} challenges`)));
+    const challenges = category ? category.challenges.filter(item => !query || category.name.toLocaleLowerCase().includes(query) || matches(item)) : [];
+    const challenge = challenges.find(item => item.id === challengeId) || challenges[0];
+    challengeId = challenge?.id;
+    if (previousCategoryId !== categoryId || previousChallengeId !== challengeId) techniqueIndex = 0;
+    challengeList.replaceChildren(...challenges.map(item => button(item.name, item.id === challengeId, () => { challengeId = item.id; techniqueIndex = 0; render(); }, `${item.techniques.length} techniques`)));
+    if (!category) {
+      categoryList.textContent = 'No matching decisions. Try another search.';
+      challengeList.textContent = '';
+    }
+    path.textContent = challenge ? `${category.name} → ${challenge.name}` : 'Choose a challenge to see its techniques.';
+    techniqueList.replaceChildren();
+    detail.replaceChildren();
+    if (!challenge) return;
+    techniqueIndex = Math.min(techniqueIndex, challenge.techniques.length - 1);
+    challenge.techniques.forEach(([name], index) => techniqueList.append(button(name, index === techniqueIndex, () => { techniqueIndex = index; render(); })));
+    const [name, benefit, cost] = challenge.techniques[techniqueIndex];
+    const heading = document.createElement('h4');
+    heading.textContent = name;
+    const description = document.createElement('p');
+    description.textContent = challenge.context;
+    const terms = document.createElement('dl');
+    terms.className = 'map-detail';
+    for (const [term, value] of [['Benefit / when', benefit], ['Cost / trade-off', cost]]) {
+      const dt = document.createElement('dt');
+      dt.textContent = term;
+      const dd = document.createElement('dd');
+      dd.textContent = value;
+      terms.append(dt, dd);
+    }
+    const sources = challenge.source.cloneNode(true);
+    sources.className = 'map-sources';
+    const tableLink = document.createElement('a');
+    tableLink.href = `#${category.id}`;
+    tableLink.textContent = 'View comparison table';
+    const navigation = document.createElement('p');
+    navigation.append(tableLink);
+    detail.append(heading, description, terms, sources, navigation);
+  }
+
+  function setView() {
+    const isMap = location.hash === '#map';
+    document.body.classList.toggle('map-mode', isMap);
+    byId('decision-map').hidden = !isMap;
+    byId('table-view').setAttribute('aria-current', isMap ? 'false' : 'page');
+    byId('map-view').setAttribute('aria-current', isMap ? 'page' : 'false');
+    render();
+  }
+  search.addEventListener('input', render);
+  byId('map-reset').addEventListener('click', () => { search.value = ''; categoryId = data[0].id; challengeId = data[0].challenges[0].id; techniqueIndex = 0; render(); search.focus(); });
+  window.addEventListener('hashchange', setView);
+  setView();
+})();
+</script>
 </body>
 </html>

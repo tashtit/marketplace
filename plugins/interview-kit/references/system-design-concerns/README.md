@@ -81,7 +81,9 @@ the simple thing is correct.
 ## Support files
 
 - [System design challenges HTML guide](system-design-challenges.html) — a reader-facing
-  comparison of the indexed concepts' problems, techniques, and trade-offs.
+  comparison of the indexed concepts' problems, techniques, and trade-offs. Its
+  [interactive decision map](system-design-challenges.html#map) explores those same comparisons
+  by category, challenge, and technique, with searchable benefits, costs, and concept links.
 - `level-expectations.md` — what interviewers expect at mid / senior / staff+, with the
   prompted-vs-unprompted axis that distinguishes them.
 - `probes/` — question seeds per source and problem class, used by `mock-design-interview`.
