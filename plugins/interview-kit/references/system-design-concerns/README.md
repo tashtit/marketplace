@@ -47,7 +47,7 @@ the simple thing is correct.
 | [requirements-scoping](concepts/requirements-scoping.md) | Starting a design; deciding what's out of scope; naming where the emphasis lies; turning "should be fast" into a benchmark; ranking consistency against availability — per operation, not per system | S1, S2, S3, S4, S5 |
 | [capacity-estimation](concepts/capacity-estimation.md) | A scale target is stated and a storage, infrastructure, or transfer-time choice follows from it; a needed figure has to be derived from the one you were given | S1, S2, S4, S5 |
 | [read-heavy-workloads](concepts/read-heavy-workloads.md) | Reads outnumber writes by orders of magnitude; sizing peak load; splitting read and write paths; scaling a service horizontally | S1, S3, S4, S5 |
-| [caching-the-read-path](concepts/caching-the-read-path.md) | Read volume exceeds what disk can serve; data is mostly static after creation; distant users see single-region latency; choosing what to cache and for how long | S1, S2, S3, S4, S5 |
+| [caching-the-read-path](concepts/caching-the-read-path.md) | Read volume exceeds what disk can serve; data is mostly static after creation; distant users see single-region latency; choosing what to cache and for how long; personalized cached results can go stale | S1, S2, S3, S4, S5, S6 |
 | [point-lookup-indexing](concepts/point-lookup-indexing.md) | The dominant query is "find the one row matching this key" over a large table; weighing the write cost of an index | S1, S3, S5 |
 | [unique-identifier-generation](concepts/unique-identifier-generation.md) | Minting short identifiers users will see and share; collisions would break correctness | S1, S2 |
 | [content-addressed-identity](concepts/content-addressed-identity.md) | You need to recognize identical content across uploads — for dedup or to resume a transfer | S2 |
@@ -66,7 +66,7 @@ the simple thing is correct.
 | [admission-control](concepts/admission-control.md) | Demand for a contended resource so far exceeds supply that a faster interface stops helping | S3 |
 | [full-text-search](concepts/full-text-search.md) | Users search free text by keyword and a wildcard query would scan the table | S3 |
 | [delegating-external-operations](concepts/delegating-external-operations.md) | A third party performs an operation and reports the outcome by callback, handles data you should never store, or computes an answer synchronously on your read path | S3, S4 |
-| [service-and-data-boundaries](concepts/service-and-data-boundaries.md) | Deciding whether separate services get separate databases | S3, S4, S5 |
+| [service-and-data-boundaries](concepts/service-and-data-boundaries.md) | Deciding whether separate services get separate databases, especially when write volume and query patterns diverge | S3, S4, S5, S6 |
 | [entity-granularity](concepts/entity-granularity.md) | A concern could be its own entity or attributes on an existing one; the abstract type and the physical instance are being conflated | S3, S4, S5 |
 | [aggregating-availability-across-locations](concepts/aggregating-availability-across-locations.md) | A resource is spread across places and each caller can only reach some of them, so no stored total is correct | S4 |
 | [proximity-candidate-filtering](concepts/proximity-candidate-filtering.md) | Deciding what is "near enough" needs an expensive predicate — travel time, not distance — evaluated per candidate | S4 |
@@ -74,9 +74,17 @@ the simple thing is correct.
 | [fan-out-on-read-vs-write](concepts/fan-out-on-read-vs-write.md) | One request must gather data from many other records, or one write must update many; deciding whether to assemble at read time or precompute at write time | S5 |
 | [hot-key-load-distribution](concepts/hot-key-load-distribution.md) | A store or cache scales on aggregate throughput but the load is concentrated on a few keys | S5 |
 | [cursor-pagination](concepts/cursor-pagination.md) | A client walks a long ordered result a page at a time, and the position has to be carried between calls | S5 |
+| [atomic-reciprocal-actions](concepts/atomic-reciprocal-actions.md) | Two independently initiated reciprocal actions must yield an immediate result despite concurrent writes | S6 |
+| [personalized-candidate-generation](concepts/personalized-candidate-generation.md) | Personalized, location-filtered candidates must arrive quickly without exhausting a cached list or remaining stale | S6 |
+| [excluding-processed-candidates](concepts/excluding-processed-candidates.md) | A personalized list must not repeat entries the viewer already acted on, including recent writes | S6 |
 
 ## Support files
 
+- [System design challenges HTML guide](system-design-challenges.html) — a reader-facing
+  comparison of the indexed concepts' problems, techniques, trade-offs, and individually cited
+  examples (including multiple distinct cases where the sources support them). Its
+  [interactive decision map](system-design-challenges.html#map) explores those same comparisons
+  by category, challenge, and technique, with searchable examples and concept links.
 - `level-expectations.md` — what interviewers expect at mid / senior / staff+, with the
   prompted-vs-unprompted axis that distinguishes them.
 - `probes/` — question seeds per source and problem class, used by `mock-design-interview`.
@@ -116,6 +124,14 @@ purpose of the library, because a reader can no longer tell which claims are ver
 | S3 | [Hello Interview — Design Ticketmaster](https://www.hellointerview.com/learn/system-design/problem-breakdowns/ticketmaster) | 2026-08 | 6 created, 6 extended; level bars; 21 probe seeds |
 | S4 | [Hello Interview — Design a Local Delivery Service like Gopuff](https://www.hellointerview.com/learn/system-design/problem-breakdowns/gopuff) | 2026-08 | 3 created, 8 extended; level bars; 21 probe seeds |
 | S5 | [Hello Interview — Design Facebook's News Feed](https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-news-feed) | 2026-08 | 3 created, 8 extended; level bars; 21 probe seeds |
+| S6 | [Hello Interview — Design a Dating App Like Tinder](https://www.hellointerview.com/learn/system-design/problem-breakdowns/tinder) | 2026-09 | 3 created, 2 extended; level bars; 4 probe seeds |
+
+### Rejected from S6
+
+- **Authentication and credential placement** — the source states a header-versus-body convention but does not develop an authentication design.
+- **Native push notification services** — named as an external delivery mechanism without reasoning about provider choice, failure handling, or delivery guarantees.
+- **Pagination** — the source explicitly says the personalized recommendation list can be requested again instead of paginated; no generic pagination method is developed.
+- **Fraud detection, profile photos, direct messaging, premium features, monitoring and alerting** — explicitly excluded from scope.
 
 ### Rejected from S1
 
