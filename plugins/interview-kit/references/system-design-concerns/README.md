@@ -81,7 +81,8 @@ the simple thing is correct.
 ## Support files
 
 - [System design challenges HTML guide](system-design-challenges.html) — a reader-facing
-  comparison of the indexed concepts' problems, techniques, trade-offs, and cited examples. Its
+  comparison of the indexed concepts' problems, techniques, trade-offs, and individually cited
+  examples (including multiple distinct cases where the sources support them). Its
   [interactive decision map](system-design-challenges.html#map) explores those same comparisons
   by category, challenge, and technique, with searchable examples and concept links.
 - `level-expectations.md` — what interviewers expect at mid / senior / staff+, with the

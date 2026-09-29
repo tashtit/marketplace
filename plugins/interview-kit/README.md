@@ -101,7 +101,8 @@ Bundled at `references/system-design-concerns/`: `concepts/` (what is true),
 hedges preserved), `probes/` (how to ask), `rubric.md` (a generic 0–5 scale), and
 `README.md` (the concept index and which sources have been processed).
 The [system design challenges HTML guide](references/system-design-concerns/system-design-challenges.html)
-compares the cited concepts' techniques, trade-offs, and concrete source-linked examples for readers; its
+compares the cited concepts' techniques, trade-offs, and individually cited examples for readers,
+including multiple cases where the sources support them; its
 [interactive decision map](references/system-design-concerns/system-design-challenges.html#map)
 lets readers search those examples and explore the same comparisons by category, challenge, and technique.
 
