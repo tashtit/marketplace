@@ -1,0 +1,20 @@
+{
+  "id": "typescript-style-standards-positive-type-assertions",
+  "type": "positive",
+  "platforms": ["claude-code", "codex", "github-copilot"],
+  "prompt": "Write a function that maps raw rows to Item objects and drops rows that fail to map.",
+  "setup": [
+    "The repository has no assertion-related lint rules and compiles with TypeScript 5.5 or later.",
+    "Item is an existing exported type with required id and name fields."
+  ],
+  "expected": [
+    "The mapped object's shape is checked with a return-type annotation or satisfies Item.",
+    "Undefined results are removed with a type predicate, inferred or explicit.",
+    "No type assertion appears; if one is unavoidable it sits at a trust boundary with a comment explaining why."
+  ],
+  "must_not": [
+    "Assert a constructed object with as Item, which would hide a missing or misspelled field.",
+    "Cast a filtered array with as Item[] instead of narrowing it.",
+    "Use as unknown as T outside a validated trust boundary."
+  ]
+}

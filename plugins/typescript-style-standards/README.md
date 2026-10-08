@@ -2,9 +2,10 @@
 
 Establish, apply, and review TypeScript and JavaScript code style: type
 aliases versus interfaces, readonly immutability, function parameter design,
-file and export naming, and type-safety hygiene.
+file and export naming, and type-safety hygiene, including when a type
+assertion is acceptable and what to use instead.
 
-**Maturity: Experimental — 0.1.0.** Style is inherently repository-specific;
+**Maturity: Experimental — 0.2.0.** Style is inherently repository-specific;
 this plugin's rules are defaults for convention-free code, never an
 instruction to restyle an existing codebase.
 

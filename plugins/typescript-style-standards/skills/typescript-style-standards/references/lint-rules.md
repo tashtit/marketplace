@@ -20,6 +20,9 @@ effect of a style change.
 | Named exports | `import/no-default-export`, with per-glob overrides for framework-required defaults |
 | No `any` | `@typescript-eslint/no-explicit-any` |
 | No unexplained suppressions | `@typescript-eslint/ban-ts-comment` (default requires description for `@ts-expect-error`) |
+| No assertions on object literals | `@typescript-eslint/consistent-type-assertions: ["error", { "assertionStyle": "as", "objectLiteralTypeAssertions": "never" }]` |
+| No redundant assertions | `@typescript-eslint/no-unnecessary-type-assertion` (type-aware) |
+| Non-null assertions only for unexpressible invariants | `@typescript-eslint/no-non-null-assertion` |
 | Type-only imports | `@typescript-eslint/consistent-type-imports` |
 | Unions/`as const` over `enum` | `no-restricted-syntax` targeting `TSEnumDeclaration` |
 | `const` over `let`, no `var` | `prefer-const`, `no-var` |
