@@ -67,6 +67,10 @@ design, and that separate tables were used to keep the discussion clearer [S5]. 
 habit is labelling a simplification as a simplification, rather than defending it as a decision —
 the same move S4 makes about its colocated catalog [S4][S5].
 
+## Separating a high-volume write path
+
+S6 separates a frequent action-write workload from less frequently updated profile data to scale them independently and choose a write-optimized store for the former [S6]. Its sizing example is 20M daily active users × 100 actions/day × 100 bytes/action ≈ 200GB/day [S6]. This is a reason to split for workload divergence, not a rule that every service needs its own database [S6].
+
 ## Not covered by sources
 
 - What would change the answer — at what scale or ownership boundary a split becomes worth it.
@@ -87,3 +91,5 @@ the same move S4 makes about its colocated catalog [S4][S5].
   <https://www.hellointerview.com/learn/system-design/problem-breakdowns/gopuff>
 - **[S5]** Hello Interview — Design Facebook's News Feed —
   <https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-news-feed>
+- **[S6]** Hello Interview — Design a Dating App Like Tinder —
+  <https://www.hellointerview.com/learn/system-design/problem-breakdowns/tinder>
