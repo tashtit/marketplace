@@ -16,6 +16,9 @@
 - [ ] Named exports are used unless a framework requires a default export.
 - [ ] No `any`, unexplained suppressions, or weakened `tsconfig` strictness
       is introduced to make errors disappear.
+- [ ] Constructed values are pinned with `satisfies` or a return-type
+      annotation, filters use type predicates, and any `as unknown as T` sits
+      at a validated trust boundary with a comment.
 - [ ] Machine-checkable rules are proposed as lint configuration, not prose.
 - [ ] Review requests produce findings with citations, not unrequested edits.
 - [ ] Output is materially equivalent on each claimed platform.

@@ -1,6 +1,6 @@
 ---
 name: typescript-style-standards
-description: Establish, apply, or review TypeScript and JavaScript code style conventions - type aliases versus interfaces, readonly properties and immutability, function parameter design and options objects, file and export naming, and type-safety hygiene. Use when writing new TypeScript modules, choosing between type and interface, deciding parameter shape or an options object, naming files, configuring or reviewing lint style rules, or judging whether code should follow an existing repository convention or this baseline. Defers to established repository conventions and lint configuration wherever they exist.
+description: Establish, apply, or review TypeScript and JavaScript code style conventions - type aliases versus interfaces, readonly properties and immutability, function parameter design and options objects, file and export naming, and type-safety hygiene including type assertions. Use when writing new TypeScript modules, choosing between type and interface, deciding parameter shape or an options object, choosing between a cast and satisfies, naming files, configuring or reviewing lint style rules, or judging whether code should follow an existing repository convention or this baseline. Defers to established repository conventions and lint configuration wherever they exist.
 ---
 
 # TypeScript Style Standards
@@ -120,14 +120,54 @@ error messages, and can silently collapse to `never` on conflict.
 - MUST NOT introduce `any`, `@ts-ignore`, `@ts-expect-error` without a
   reason, or `@ts-nocheck` to silence a type error. Fix the type, or narrow
   from `unknown` with validation at the trust boundary.
-- `as` casts belong at trust boundaries next to validation, not scattered
-  through application logic.
+- Type assertions (`as T`) SHOULD be rare. An assertion only requires the
+  types to overlap, so it hides missing, misspelled, and newly required
+  fields. Prefer a construct the compiler checks (see
+  [Type assertions](#type-assertions)).
 - SHOULD use `import type { ... }` for type-only imports.
 - SHOULD pick one nullish convention per repository - typically prefer
   `undefined` and reserve `null` for external contracts that require it.
 - New TypeScript configuration MUST enable `strict`; SHOULD enable
   `noUncheckedIndexedAccess`. Never weaken existing strictness to land a
   change.
+
+### Type assertions
+
+Choose the least powerful tool that expresses the intent:
+
+1. **Pin the shape of a constructed value with `satisfies T` or a return-type
+   annotation**, never `as T`. Both report missing and excess properties;
+   `satisfies` also keeps the narrower inferred type
+   ([TypeScript 4.9](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-4-9.html#the-satisfies-operator)).
+
+   ```ts
+   const config = { retries: 3, mode: "strict" } satisfies Config;
+   const toItem = (row: Row): Item => ({ id: row.id, name: row.name });
+   ```
+
+2. **Filter with a type predicate, not a cast.** TypeScript 5.5 and later
+   infer the predicate from a direct check
+   ([TypeScript 5.5](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-5.html#inferred-type-predicates));
+   on older compilers write it out.
+
+   ```ts
+   const present = items.filter((item) => item !== undefined); // TS 5.5+
+   const legacy = items.filter((item): item is Item => item !== undefined);
+   ```
+
+3. **Narrow untrusted data with validation**: a schema parser or a
+   user-defined type guard at the trust boundary, which yields a checked type
+   without an assertion.
+4. **`as T` MAY narrow a value only when the compiler cannot see a fact that
+   is already guaranteed**, such as a loosely typed framework API or a value
+   validated elsewhere. Keep it at the boundary, not scattered through
+   application logic.
+5. **A double assertion (`as unknown as T`) MUST be confined to a trust
+   boundary directly after runtime validation, or to a known library typing
+   gap, with a comment stating why.**
+
+Non-null assertions (`value!`) follow the same rule: prefer a check that
+narrows, and reserve `!` for invariants the compiler cannot express.
 
 ## Enforce with lint rules, not prose
 

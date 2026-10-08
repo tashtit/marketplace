@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.2.0 - 2026-10-08
+
+- Added type-assertion guidance: pin constructed values with `satisfies` or a
+  return-type annotation, filter with type predicates, narrow untrusted data
+  with validation, and confine `as unknown as T` to commented trust
+  boundaries.
+- Added lint-rule mappings for object-literal assertions, redundant
+  assertions, and non-null assertions.
+- Added an acceptance scenario and review item for assertion alternatives.
+
 ## 0.1.0 - 2026-08-12
 
 - Added convention-first precedence rules: local convention and lint
