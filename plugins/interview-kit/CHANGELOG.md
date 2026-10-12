@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+- Library: mined source S6 (Hello Interview, "Design a Coding Platform Like
+  LeetCode"). It adds five concept files: `untrusted-code-execution`,
+  `live-ranking`, `asynchronous-work-queue`, `scaling-compute-bound-work` and
+  `cross-runtime-test-harness`. It extends seven existing files, adds S6 level
+  bars, and adds `probes/s6-untrusted-code-execution.md` with 12 seeds.
+
 ## 0.1.0 - 2026-08-31
 
 Initial release. Two skills and a cited concept library, extracted from a

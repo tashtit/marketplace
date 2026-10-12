@@ -44,11 +44,11 @@ the simple thing is correct.
 
 | Concept | Consider it when | Sources |
 | --------- | ------------------ | --------- |
-| [requirements-scoping](concepts/requirements-scoping.md) | Starting a design; deciding what's out of scope; naming where the emphasis lies; turning "should be fast" into a benchmark; ranking consistency against availability — per operation, not per system | S1, S2, S3, S4, S5 |
-| [capacity-estimation](concepts/capacity-estimation.md) | A scale target is stated and a storage, infrastructure, or transfer-time choice follows from it; a needed figure has to be derived from the one you were given | S1, S2, S4, S5 |
+| [requirements-scoping](concepts/requirements-scoping.md) | Starting a design; deciding what's out of scope; naming where the emphasis lies; turning "should be fast" into a benchmark; ranking consistency against availability — per operation, not per system | S1, S2, S3, S4, S5, S6 |
+| [capacity-estimation](concepts/capacity-estimation.md) | A scale target is stated and a storage, compute, infrastructure, or transfer-time choice follows from it; a needed figure has to be derived from the one you were given | S1, S2, S4, S5, S6 |
 | [read-heavy-workloads](concepts/read-heavy-workloads.md) | Reads outnumber writes by orders of magnitude; sizing peak load; splitting read and write paths; scaling a service horizontally | S1, S3, S4, S5 |
-| [caching-the-read-path](concepts/caching-the-read-path.md) | Read volume exceeds what disk can serve; data is mostly static after creation; distant users see single-region latency; choosing what to cache and for how long | S1, S2, S3, S4, S5 |
-| [point-lookup-indexing](concepts/point-lookup-indexing.md) | The dominant query is "find the one row matching this key" over a large table; weighing the write cost of an index | S1, S3, S5 |
+| [caching-the-read-path](concepts/caching-the-read-path.md) | Read volume exceeds what disk can serve; data is mostly static after creation; distant users see single-region latency; choosing what to cache, for how long, and whether to refresh on a timer or on write | S1, S2, S3, S4, S5, S6 |
+| [point-lookup-indexing](concepts/point-lookup-indexing.md) | The dominant query is "find the one row matching this key" over a large table, or all rows for an attribute that cannot be the primary key; weighing the write cost of an index | S1, S3, S5, S6 |
 | [unique-identifier-generation](concepts/unique-identifier-generation.md) | Minting short identifiers users will see and share; collisions would break correctness | S1, S2 |
 | [content-addressed-identity](concepts/content-addressed-identity.md) | You need to recognize identical content across uploads — for dedup or to resume a transfer | S2 |
 | [shared-counter-coordination](concepts/shared-counter-coordination.md) | Correctness depends on one shared counter and the service is being scaled horizontally | S1 |
@@ -57,8 +57,8 @@ the simple thing is correct.
 | [redundancy-for-availability](concepts/redundancy-for-availability.md) | An availability target is stated and a single stateful dependency is on the critical path | S1, S2 |
 | [large-file-transfer](concepts/large-file-transfer.md) | A payload could exceed a request timeout or size limit; progress or resumption is required | S2 |
 | [bypassing-the-application-server](concepts/bypassing-the-application-server.md) | Bulk data passes through your server on its way to or from a storage service | S2 |
-| [client-authority-and-verification](concepts/client-authority-and-verification.md) | Server state mirrors work the client performed out of the server's sight | S2 |
-| [propagating-changes-to-clients](concepts/propagating-changes-to-clients.md) | The same state lives on multiple clients and must converge after a change | S2, S3 |
+| [client-authority-and-verification](concepts/client-authority-and-verification.md) | Server state mirrors work the client performed out of the server's sight; a request carries identity or a timestamp the server could establish itself | S2, S6 |
+| [propagating-changes-to-clients](concepts/propagating-changes-to-clients.md) | The same state lives on multiple clients and must converge after a change; deciding whether polling alone is enough | S2, S3, S6 |
 | [bidirectional-relationship-queries](concepts/bidirectional-relationship-queries.md) | A many-to-many relationship is embedded on one side and queried from the other | S2, S5 |
 | [signed-url-access-control](concepts/signed-url-access-control.md) | Clients fetch directly from storage or a CDN, so your server can't check permissions at fetch time | S2 |
 | [compression-tradeoffs](concepts/compression-tradeoffs.md) | Deciding whether to compress before transferring, and in what order with encryption | S2 |
@@ -66,7 +66,7 @@ the simple thing is correct.
 | [admission-control](concepts/admission-control.md) | Demand for a contended resource so far exceeds supply that a faster interface stops helping | S3 |
 | [full-text-search](concepts/full-text-search.md) | Users search free text by keyword and a wildcard query would scan the table | S3 |
 | [delegating-external-operations](concepts/delegating-external-operations.md) | A third party performs an operation and reports the outcome by callback, handles data you should never store, or computes an answer synchronously on your read path | S3, S4 |
-| [service-and-data-boundaries](concepts/service-and-data-boundaries.md) | Deciding whether separate services get separate databases | S3, S4, S5 |
+| [service-and-data-boundaries](concepts/service-and-data-boundaries.md) | Deciding whether separate services get separate databases, or whether a small system needs separate services at all | S3, S4, S5, S6 |
 | [entity-granularity](concepts/entity-granularity.md) | A concern could be its own entity or attributes on an existing one; the abstract type and the physical instance are being conflated | S3, S4, S5 |
 | [aggregating-availability-across-locations](concepts/aggregating-availability-across-locations.md) | A resource is spread across places and each caller can only reach some of them, so no stored total is correct | S4 |
 | [proximity-candidate-filtering](concepts/proximity-candidate-filtering.md) | Deciding what is "near enough" needs an expensive predicate — travel time, not distance — evaluated per candidate | S4 |
@@ -74,6 +74,11 @@ the simple thing is correct.
 | [fan-out-on-read-vs-write](concepts/fan-out-on-read-vs-write.md) | One request must gather data from many other records, or one write must update many; deciding whether to assemble at read time or precompute at write time | S5 |
 | [hot-key-load-distribution](concepts/hot-key-load-distribution.md) | A store or cache scales on aggregate throughput but the load is concentrated on a few keys | S5 |
 | [cursor-pagination](concepts/cursor-pagination.md) | A client walks a long ordered result a page at a time, and the position has to be carried between calls | S5 |
+| [untrusted-code-execution](concepts/untrusted-code-execution.md) | Users submit code the system must run; choosing between VMs, containers and serverless, and hardening the sandbox | S6 |
+| [live-ranking](concepts/live-ranking.md) | Many clients poll a top-N ranking whose scores change as users act | S6 |
+| [asynchronous-work-queue](concepts/asynchronous-work-queue.md) | Slow work behind a request may spike past worker capacity or fail mid-run; deciding whether a buffer is worth making the flow asynchronous | S6 |
+| [scaling-compute-bound-work](concepts/scaling-compute-bound-work.md) | Each request does substantial CPU work; choosing between a bigger machine and more machines | S6 |
+| [cross-runtime-test-harness](concepts/cross-runtime-test-harness.md) | The same checks must run against code written in several languages | S6 |
 
 ## Support files
 
@@ -116,6 +121,7 @@ purpose of the library, because a reader can no longer tell which claims are ver
 | S3 | [Hello Interview — Design Ticketmaster](https://www.hellointerview.com/learn/system-design/problem-breakdowns/ticketmaster) | 2026-08 | 6 created, 6 extended; level bars; 21 probe seeds |
 | S4 | [Hello Interview — Design a Local Delivery Service like Gopuff](https://www.hellointerview.com/learn/system-design/problem-breakdowns/gopuff) | 2026-08 | 3 created, 8 extended; level bars; 21 probe seeds |
 | S5 | [Hello Interview — Design Facebook's News Feed](https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-news-feed) | 2026-08 | 3 created, 8 extended; level bars; 21 probe seeds |
+| S6 | [Hello Interview — Design a Coding Platform Like LeetCode](https://www.hellointerview.com/learn/system-design/problem-breakdowns/leetcode) | 2026-10 | 5 created, 7 extended; level bars; 12 probe seeds |
 
 ### Rejected from S1
 
@@ -212,3 +218,19 @@ created:
 - **Ranking and relevance** — the source's ordering is reverse chronological by requirement; it
   makes no claim about scoring.
 - **Observability, rate limiting, multi-region deployment, disaster recovery** — not discussed.
+
+### Rejected from S6
+
+- **Database selection** — the source picks a document store because it needs no complex queries
+  and wants to nest test cases inside the problem record, after saying either kind would work. That
+  is a preference with a thin reason, and it is the same non-discriminating choice S1 and S2 already
+  record in `capacity-estimation.md`.
+- **Pagination of lists** — offset pages are used because there are too many items for one
+  response, with no reasoning about the scheme. `cursor-pagination.md` is untouched.
+- **Code-stub generation and the in-browser editor** — product detail with no transferable
+  reasoning.
+- **Leaving the user entity implicit** — interview meta-advice.
+- **Availability over consistency** — stated as a requirement and never developed.
+- **User authentication, profiles, payments, analytics, social features, fault tolerance, purchase
+  security, CI/CD, backups** — declared out of scope by the source.
+- **Observability, rate limiting, multi-region deployment** — not discussed.

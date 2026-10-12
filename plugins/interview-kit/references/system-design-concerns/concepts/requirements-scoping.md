@@ -126,6 +126,21 @@ S5 also states a requirement as the *absence* of a bound — unlimited relations
 directions [S5] — which is what makes its fan-out problem exist at all. An explicitly unbounded
 requirement is a design constraint, not a missing one.
 
+## Letting a small stated scale shape the design
+
+S6 states its scale and then names what follows from it. The system has only a few hundred
+thousand users and about 4,000 records, which makes it small compared with most design problems.
+The source says this "will have a significant impact on our design" [S6]. Its later decisions bear
+that out: a single deployable unit instead of separate services (see
+`service-and-data-boundaries.md`), polling instead of persistent connections (see
+`propagating-changes-to-clients.md`), and a queue it admits is overkill on volume alone (see
+`asynchronous-work-queue.md`) [S6]. Even a target of 100,000 concurrent users for an event is,
+in its words, still not a lot [S6].
+
+Put simply, a small number is as much a design input as a large one. It is the requirement that
+licenses the simpler option. S6's staff-level bar states the same goal: a very simple system,
+free of overengineering, with a clear path to scale if needed [S6]. See `level-expectations.md`.
+
 ## Negotiating the product instead of the architecture
 
 S5 raises an option the other sources do not: when a requirement is what makes the problem hard, ask
@@ -178,6 +193,13 @@ early, which it calls a common mistake because it burns time without changing th
 S5 makes the complementary move at the same step — deliberately leaving the internal structure of
 its main record undefined for now, in order to protect time for the harder parts [S5].
 
+S6 confirms the same sequence: satisfy the functional requirements first, then layer in the
+non-functional ones through the deeper passes [S6]. It adds a completeness check at each step. The
+API should have at least one endpoint for each functional requirement, which is how you make sure
+nothing is missing [S6]. The high-level design should then have components that serve each endpoint,
+stating explicitly how data flows and where state is stored or updated [S6]. Its list endpoint
+returns only the fields the list view needs, not the whole record [S6].
+
 ## Treating exclusions as assertions
 
 S4 adds a stance on *how* exclusions get agreed. Out-of-scope items usually surface as a question
@@ -188,6 +210,10 @@ open question, because it can be contradicted; a silent one cannot.
 
 Its own exclusions are payment handling, routing and delivery, catalog and search, cancellations and
 returns, privacy and security, and disaster recovery [S4].
+
+S6 sets a limit on how far to go beyond the core. Proposing out-of-scope features shows product
+thinking and lets the interviewer reprioritize, but the source calls it a nice-to-have and says not
+to spend time on it if ideas do not come quickly [S6].
 
 ## Failure modes
 
@@ -209,6 +235,7 @@ returns, privacy and security, and disaster recovery [S4].
 - **Engineering for an extreme case that the product could simply exclude** from the guarantee
   [S5].
 - **Stating a latency target loosely enough that it rules no architecture out** [S5].
+- **Ignoring a stated small scale**, and designing for load the requirements never asked for [S6].
 
 ## Not covered by sources
 
@@ -223,6 +250,7 @@ returns, privacy and security, and disaster recovery [S4].
 - When the design-functional-first default should be abandoned for a scale-first approach.
 - How to tell which requirement is negotiable as a product decision rather than an engineering one.
 - How to choose a staleness tolerance, as opposed to being handed one.
+- At what size a system stops counting as "small" for the purposes of S6's simplifications.
 
 ## Sources
 
@@ -236,3 +264,5 @@ returns, privacy and security, and disaster recovery [S4].
   <https://www.hellointerview.com/learn/system-design/problem-breakdowns/gopuff>
 - **[S5]** Hello Interview — Design Facebook's News Feed —
   <https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-news-feed>
+- **[S6]** Hello Interview — Design a Coding Platform Like LeetCode —
+  <https://www.hellointerview.com/learn/system-design/problem-breakdowns/leetcode>

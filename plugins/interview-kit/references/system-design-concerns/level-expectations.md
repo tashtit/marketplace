@@ -309,6 +309,55 @@ a step above S2's and S4's **easy** [S2][S4].
   "and/or some that we haven't enumerated" clause is the distinct part: at this level the enumerated
   list is a floor, not the scope.
 
+## S6 — sandboxed execution of untrusted work (easier problem)
+
+S6 uses the same breadth/depth ratios and mid-level and senior headings as S5, so those are not
+repeated here. What follows is what S6 states distinctly [S6]. S6 calls its own problem **"on the
+easier side"**, and says it does not usually ask it of staff+ candidates for that reason [S6].
+
+S6 also states the prompting axis for deep dives specifically. At mid-level it is **"entirely
+reasonable for the interviewer to lead most of the deep dives"**. At senior and staff+, the
+candidate is expected to **proactively anticipate challenges** and identify issues in the design
+[S6].
+
+### Mid-level [S6]
+
+- **"80% vs 20%" breadth over depth**, with **probing the basics** and a **mixture of driving and
+  taking the backseat**, in the same terms as S5 [S5][S6].
+- **The stated bar:** clearly defined API endpoints and data model, and a functional high-level
+  design that meets the requirements [S6].
+- **One concern is named at this level:** the candidate should have **"understood the need for
+  security and isolation when running user code"** and **"ideally"** proposed a container, VM, or
+  serverless approach [S6]. "Ideally" is the hedge: recognizing the need is the bar, and naming a
+  mechanism is above it. See `concepts/untrusted-code-execution.md`.
+
+### Senior [S6]
+
+- **"About 60% breadth and 40% depth"**, with the same articulation and proactivity expectations as
+  S5 [S5][S6].
+- **The stated bar:** **speed through the initial high-level design** so that time goes to
+  discussing, **in detail**, how to run user code securely and in isolation [S6].
+- **Compare the three sandboxing options:** discuss the pros and cons of a container, a VM and a
+  serverless function, and **justify the choice** [S6].
+- **Leave "box drawing mode":** explain how test cases would actually run against user code [S6].
+  See `concepts/cross-runtime-test-harness.md`. S6 asks this follow-up specifically to move the
+  candidate from boxes to implementation [S6].
+
+### Staff+ [S6]
+
+S6 states this bar conditionally, because it does not usually ask this problem at this level [S6]:
+
+- **Drive the entire conversation**, proactively identifying issues in the design and proposing
+  solutions [S6].
+- **Discuss and justify tradeoffs** between approaches [S6].
+- **Cover the senior items as well:** how test cases run, and secure, isolated execution **while
+  meeting the 5-second response requirement** [S6].
+- **The distinct part:** **"a very simple system free of over engineering, but with a clear path to
+  scale if needed"** [S6]. S6 adds that staff candidates in particular strike this balance: they
+  **know the more complex solution** and are **clear about why it is likely overkill** for the
+  system at hand [S6]. Here, simplicity is graded and complexity is not rewarded. See
+  `concepts/requirements-scoping.md`.
+
 ## Using these bars
 
 - **Grade the highest bar cleared, not the concepts touched.** Staff+ requires the read-heavy
@@ -320,9 +369,9 @@ a step above S2's and S4's **easy** [S2][S4].
   relevant" and "if you took the counter batching approach" — a concern that does not apply to
   the design cannot be graded against it [S1]. S2 does the same with "not strictly required" for
   naming specific APIs [S2].
-- **Match the bar to the problem class.** The S1, S2, S3, S4 and S5 bars are stated for their own
-  problem classes and their concrete "The Bar for…" bullets do not transfer; the breadth/depth
-  ratios and the prompting axis do [S1][S2][S3][S4][S5].
+- **Match the bar to the problem class.** The S1–S6 bars are stated for their own problem classes
+  and their concrete "The Bar for…" bullets do not transfer; the breadth/depth ratios and the
+  prompting axis do [S1][S2][S3][S4][S5][S6].
 - **Weigh the bar against the problem's stated difficulty.** S4 rates its own problem easy and sets
   a correspondingly forgiving mid-level bar — tolerating a "Bad" solution given a good discussion —
   where S3 required at least its good solution on the equivalent concern [S3][S4]. A bar is relative
@@ -339,11 +388,18 @@ a step above S2's and S4's **easy** [S2][S4].
   candidate to cover the deep dives "and/or some that we haven't enumerated" [S5], and S4 sets its
   staff bar on the *number* of areas rather than on which ones [S4]. Covering the listed items
   completely is therefore not automatically a staff+ performance.
+- **Do not reward complexity the requirements did not ask for.** S6's staff+ bar asks for a very
+  simple system with a path to scale, and credits knowing the complex option *and* declining it
+  [S6]. A candidate who builds the complex option at a small stated scale has missed that part of
+  the bar, even if the design works [S6].
 
 ## Not covered by sources
 
 - Bars for problem classes other than identifier-mapping systems, large-payload storage,
-  high-contention reservation, geographically distributed availability, and social feed generation.
+  high-contention reservation, geographically distributed availability, social feed generation, and
+  sandboxed execution of untrusted work.
+- How to grade a staff+ candidate on a problem the source says it does not usually ask at that
+  level (S6).
 - How much weight each bullet carries relative to the others, or how many misses drop a level.
 - What distinguishes staff from principal.
 - How to grade a candidate who exceeds a bar on one axis and misses on another.
@@ -377,3 +433,5 @@ a step above S2's and S4's **easy** [S2][S4].
   <https://www.hellointerview.com/learn/system-design/problem-breakdowns/gopuff>
 - **[S5]** Hello Interview — Design Facebook's News Feed —
   <https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-news-feed>
+- **[S6]** Hello Interview — Design a Coding Platform Like LeetCode —
+  <https://www.hellointerview.com/learn/system-design/problem-breakdowns/leetcode>

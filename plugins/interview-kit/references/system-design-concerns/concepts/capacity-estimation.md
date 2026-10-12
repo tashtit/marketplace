@@ -67,6 +67,14 @@ connection is `50GB × 8 bits/byte / 100Mbps = 4000 seconds`, then
 every timeout in the path" — see `large-file-transfer.md`. S2 frames this as arithmetic worth
 doing on the spot, at the moment the constraint appears [S2].
 
+**Size the compute, not just the data.** When each request does substantial CPU work, multiply
+the units of work by the time each one takes and compare the result with what one machine offers.
+S6's example: 10k submissions × 100 test cases × 100ms = 100,000 CPU-seconds, or about 1,667 cores
+to finish within one minute. Set against instances that top out at a few hundred vCPUs, this rules
+vertical scaling out [S6]. The full worked example is in `scaling-compute-bound-work.md`. S6 also
+labels its per-unit figure conservative and gives the typical range next to it (100ms assumed,
+10–50ms typical), so the reader can see how much margin the estimate carries [S6].
+
 ## Choosing the technology afterward
 
 The source's guidance, once the numbers show the workload is unremarkable: pick whichever
@@ -93,6 +101,8 @@ discriminate, the choice is not load-bearing.
   argued with [S4].
 - **Adopting a derived structure without sizing it first**, so its storage cost surfaces after it is
   built [S5].
+- **Estimating storage but not compute**, for a workload that is CPU-bound rather than data-bound
+  [S6].
 
 ## Not covered by sources
 
@@ -115,3 +125,5 @@ discriminate, the choice is not load-bearing.
   <https://www.hellointerview.com/learn/system-design/problem-breakdowns/gopuff>
 - **[S5]** Hello Interview — Design Facebook's News Feed —
   <https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-news-feed>
+- **[S6]** Hello Interview — Design a Coding Platform Like LeetCode —
+  <https://www.hellointerview.com/learn/system-design/problem-breakdowns/leetcode>
