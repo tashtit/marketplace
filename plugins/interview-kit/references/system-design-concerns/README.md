@@ -83,8 +83,9 @@ the simple thing is correct.
 - [System design challenges HTML guide](system-design-challenges.html) — a reader-facing
   comparison of the indexed concepts' problems, techniques, trade-offs, and individually cited
   examples (including multiple distinct cases where the sources support them). Its
-  [interactive decision map](system-design-challenges.html#map) explores those same comparisons
-  by category, challenge, and technique, with searchable examples and concept links.
+  [problem-first explorer](system-design-challenges.html#map) compares techniques for a challenge;
+  the [solution-first explorer](system-design-challenges.html#solutions) shows what each technique
+  addresses, when it helps, its costs, and cited examples. Both use the tables as their source.
 - `level-expectations.md` — what interviewers expect at mid / senior / staff+, with the
   prompted-vs-unprompted axis that distinguishes them.
 - `probes/` — question seeds per source and problem class, used by `mock-design-interview`.

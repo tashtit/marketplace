@@ -11,7 +11,9 @@
   ],
   "expected": [
     "Open the interactive decision map at references/system-design-concerns/system-design-challenges.html#map.",
-    "Readers can select a category, a challenge, and a technique to compare its benefit, cost, and individually cited source examples, or search across challenges, techniques, and examples.",
+    "Readers can select a category, problem, and solution to compare its benefit, cost, and individually cited source examples, or search across problems, solutions, and examples.",
+    "The solution-first view at #solutions allows searching all 68 techniques, then shows each technique's problem, when it helps, trade-offs and cited examples with a link back to the matching problem-first selection.",
+    "Deep links to either view and individual comparison rows preserve the selected context and source citations.",
     "Each of the 68 techniques has at least one cited example in its comparison table; where distinct source-backed cases apply, multiple separately cited list items appear. The map reuses that table cell and preserves all concept links.",
     "Technique details link to the cited concept files, and the comparison tables remain accessible."
   ],
