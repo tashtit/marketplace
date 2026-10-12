@@ -11,6 +11,8 @@ expensive read path and one expensive write path [S5].
   sort the results [S5].
 - The number of related entities is unbounded, or bounded only by product policy [S5].
 - A latency requirement applies to the request doing the gathering [S5].
+- The result is an expensive filtered query, such as candidates matching several attributes and a
+  location, that the user expects to be ready the moment they open the app [S7].
 
 ## The two directions, named
 
@@ -99,6 +101,54 @@ and total space stays small [S5]. Two consequences it draws:
 
 See `cursor-pagination.md` for the stated reason a small bound is acceptable at all.
 
+## Precomputing on a schedule, with a live fallback
+
+S7 precomputes on a timer rather than on write, and grades three options for a low-latency
+candidate feed [S7]:
+
+**Query an indexed search store in real time — graded good** [S7]. Index the fields the feed filters
+on, including a geospatial index on location, in a search-optimized store, and build each feed on
+demand [S7]. The challenge is keeping that store in sync with the primary database. Lag or failure
+shows users outdated profiles or misses new candidates [S7]. See `full-text-search.md` for the sync
+mechanism and `proximity-candidate-filtering.md` for the location filter.
+
+**Precompute and cache feeds in background jobs — graded good** [S7]. Periodic jobs build each
+user's feed and cache it, so it is ready when the app opens. The jobs can run off-peak [S7].
+Challenges [S7]:
+
+- Very active users exhaust their cached feed and wait while more is generated.
+- Precomputed feeds miss recent changes to profiles and preferences, and new users.
+- Running out of the cached feed means running the expensive query again.
+
+**Combine the two — graded great** [S7]. Serve the precomputed feed immediately. As it runs low,
+generate more in real time from the indexed store [S7]. Trigger the refresh when only a few items
+remain, so the feed appears endless to the user [S7]. This has the same shape as S5's bounded
+precomputed result with a fallback to the general path [S5][S7].
+
+### Staleness of a scheduled precomputation
+
+S7 names the cost of precomputing as **stale entries**: candidates that no longer match the user's
+filter [S7]. Entries become stale when [S7]:
+
+- a candidate moves out of range, or changes the attributes that qualified them;
+- the user changes their own filters, or moves a significant distance.
+
+Its stated mitigations [S7]:
+
+- **A strict TTL on cached feeds**, under an hour, with a background job recomputing on a schedule.
+- **Precompute only for users active within a chosen window.** Doing the work several times a day
+  for everyone is expensive at scale, so warm the caches only for users likely to use them.
+- **Refresh in the background when the user changes their filters or location**, so that the next
+  feed is ready when they start using it.
+
+### Tunable parameters as a design property
+
+S7 draws a general lesson from these mitigations. The TTL, the number of cached entries, and the set
+of users whose feeds are precomputed can all be tuned without changing the system's logic [S7]. Such
+parameters let operators find an efficient configuration for the scale, adjust it over time, and
+control the system's health without reworking it [S7]. S5's threshold and bound are parameters of
+the same kind [S5].
+
 ## Failure modes
 
 - **A read that fans out into thousands of downstream requests** under a latency requirement [S5].
@@ -109,6 +159,9 @@ See `cursor-pagination.md` for the stated reason a small bound is acceptable at 
 - **A queue whose entries have order-of-magnitude different costs**, so workers cannot be sized
   [S5].
 - **Precomputing for the extreme case anyway**, when excluding it was the point [S5].
+- **Serving entries that no longer qualify**, from a precomputed result whose inputs changed [S7].
+- **Very active users outrunning a precomputed result** and waiting on the expensive path [S7].
+- **Precomputing for users who never return**, paying the cost with no benefit [S7].
 
 ## Not covered by sources
 
@@ -121,8 +174,14 @@ See `cursor-pagination.md` for the stated reason a small bound is acceptable at 
 - How to backfill precomputed results when a new relationship is created, as opposed to a new
   record.
 - Whether the excluded-entity flag can be changed live, and what happens to in-flight work.
+- How to choose the activity window for precomputing, or the number of remaining entries that
+  triggers a refresh.
+- How a change on a candidate's side, as opposed to the user's, reaches the precomputed results that
+  already contain that candidate.
 
 ## Sources
 
 - **[S5]** Hello Interview — Design Facebook's News Feed —
   <https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-news-feed>
+- **[S7]** Hello Interview — Design a Dating App Like Tinder —
+  <https://www.hellointerview.com/learn/system-design/problem-breakdowns/tinder>

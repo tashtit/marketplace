@@ -7,6 +7,11 @@
   `live-ranking`, `asynchronous-work-queue`, `scaling-compute-bound-work` and
   `cross-runtime-test-harness`. It extends seven existing files, adds S6 level
   bars, and adds `probes/s6-untrusted-code-execution.md` with 12 seeds.
+- Library: mined source S7 (Hello Interview, "Design a Dating App Like
+  Tinder"). It adds two concept files, `detecting-mutual-actions` and
+  `excluding-previously-seen-items`. It extends eleven existing files,
+  including scheduled precompute and staleness in `fan-out-on-read-vs-write`.
+  It adds S7 level bars and `probes/s7-mutual-matching-feed.md` with 11 seeds.
 
 ## 0.1.0 - 2026-08-31
 

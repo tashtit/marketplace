@@ -55,6 +55,14 @@ The costs are integration costs, not query costs [S3]:
 - Synchronization is complex and needs a reliable mechanism to keep the two consistent [S3].
 - Operating the search cluster adds infrastructure complexity and cost [S3].
 
+## Beyond text: a search store for filtered queries
+
+S7 uses a search-optimized store for a feed that filters on several attributes plus location, with
+a geospatial index [S7]. It confirms the integration cost named above: keeping the search store in
+sync with the transactional database is the main challenge, and change data capture is the
+mechanism [S3][S7]. It adds a write-side caution. Depending on the update rate, batch writes into the
+search store, because it is optimized for read-heavy workloads, not write-heavy ones [S7].
+
 ## How to decide
 
 The source escalates in order — index and tune, then in-database full-text, then a separate
@@ -68,7 +76,8 @@ this class of problem; see `level-expectations.md` [S3].
 - **Full table scans** on wildcard text queries [S3].
 - **Missed matches on partial words** when relying on standard indexes [S3].
 - **Write slowdown and storage growth** from over-indexing [S3].
-- **Search index drift** from the system of record when synchronization is unreliable [S3].
+- **Search index drift** from the system of record when synchronization is unreliable [S3]; S7
+  names the symptom as users seeing outdated profiles or missing new ones [S7].
 
 ## Not covered by sources
 
@@ -77,8 +86,11 @@ this class of problem; see `level-expectations.md` [S3].
 - How to tune relevance or ranking of results.
 - Whether full-text indexes inside the database can carry fuzzy matching.
 - The write-path cost of change data capture on the source database.
+- How to choose a batching interval for syncing into a search store, and what staleness it adds.
 
 ## Sources
 
 - **[S3]** Hello Interview — Design Ticketmaster —
   <https://www.hellointerview.com/learn/system-design/problem-breakdowns/ticketmaster>
+- **[S7]** Hello Interview — Design a Dating App Like Tinder —
+  <https://www.hellointerview.com/learn/system-design/problem-breakdowns/tinder>

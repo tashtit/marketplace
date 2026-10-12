@@ -75,6 +75,13 @@ vertical scaling out [S6]. The full worked example is in `scaling-compute-bound-
 labels its per-unit figure conservative and gives the typical range next to it (100ms assumed,
 10–50ms typical), so the reader can see how much margin the estimate carries [S6].
 
+**Size the daily growth of a write-heavy record.** S7 multiplies users by actions per user by bytes
+per action: 20M daily users × 100 actions a day × 100 bytes ≈ 200GB of new data a day [S7]. The
+figure is what justifies a separate, write-optimized store and partitioning [S7]. See
+`service-and-data-boundaries.md`. Note that S7 is not consistent on its own input. The requirement
+and one deep dive use 100 actions a day (2B a day), while the high-level design uses 200 (4B a day)
+[S7]. Either figure leads to the same decision, that the data must be partitioned [S7].
+
 ## Choosing the technology afterward
 
 The source's guidance, once the numbers show the workload is unremarkable: pick whichever
@@ -103,6 +110,8 @@ discriminate, the choice is not load-bearing.
   built [S5].
 - **Estimating storage but not compute**, for a workload that is CPU-bound rather than data-bound
   [S6].
+- **Using different input figures in different parts of the same estimate**, as S7 does with its
+  per-user action rate [S7].
 
 ## Not covered by sources
 
@@ -127,3 +136,5 @@ discriminate, the choice is not load-bearing.
   <https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-news-feed>
 - **[S6]** Hello Interview — Design a Coding Platform Like LeetCode —
   <https://www.hellointerview.com/learn/system-design/problem-breakdowns/leetcode>
+- **[S7]** Hello Interview — Design a Dating App Like Tinder —
+  <https://www.hellointerview.com/learn/system-design/problem-breakdowns/tinder>

@@ -57,6 +57,11 @@ understanding of security practice [S6]. In its own interfaces, the submission e
 code and language but not the user identifier, because the identifier is read from the session
 [S6].
 
+S7 confirms the identity rule. User information travels in headers, through a session token or
+JWT, and not in the request body, because the body is easily manipulated [S7]. It draws a contrasting
+case: the user's current location *is* sent by the client on each request, rather than stored on the
+server, because it can always change [S7]. S7 does not discuss whether location can be trusted.
+
 ## Failure modes
 
 - **A client marking work complete that never happened**, leaving a record that cannot be read
@@ -77,6 +82,8 @@ state that is only informational [S2].
   reconciled.
 - Whether the same trust boundary applies to other client-reported values, such as the content
   fingerprint. S6 settles it for identity and timestamps only.
+- Whether a client-reported value the server cannot know, such as current location, needs any
+  verification.
 
 ## Sources
 
@@ -84,3 +91,5 @@ state that is only informational [S2].
   <https://www.hellointerview.com/learn/system-design/problem-breakdowns/dropbox>
 - **[S6]** Hello Interview — Design a Coding Platform Like LeetCode —
   <https://www.hellointerview.com/learn/system-design/problem-breakdowns/leetcode>
+- **[S7]** Hello Interview — Design a Dating App Like Tinder —
+  <https://www.hellointerview.com/learn/system-design/problem-breakdowns/tinder>

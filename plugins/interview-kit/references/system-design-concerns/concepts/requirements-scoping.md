@@ -77,6 +77,11 @@ ratio of **100:1**, a search latency target of **under 500ms**, and a peak of **
 on a single item** [S3]. All three are the figures the later deep dives are measured against —
 which is what makes them requirements rather than aspirations.
 
+S7 makes the same split, with a different operation as the consistent one. The mutual action must be
+strongly consistent, because the second party has to be told immediately [S7]. S7 also names the
+alternative: relax that to availability with a periodic reconciliation pass, at the cost of making
+the problem less challenging [S7]. See `detecting-mutual-actions.md`.
+
 S4 splits the same way and states the split as its two core non-functional requirements: reads
 should be fast (**<100ms**), and the claim path should be strongly consistent so that two callers
 cannot purchase the same physical item [S4]. It attaches a *reason* to its latency number that is
@@ -107,6 +112,10 @@ complete design** [S5]. Its rule is to cover the breadth of the requirements bef
 depth on any of them — while still moving quickly [S5]. The companion move is stating the
 inadequacy out loud: S5 deliberately builds a naive solution first, saying plainly that it will not
 scale and that the scaling problems will be solved separately [S5].
+
+S7 tells you how to find the emphasis when it is not stated. If you are unsure which features to
+focus on, ask the interviewer which part of the system they care about most. It will usually be the
+functionality that makes the app unique or the most complex [S7].
 
 ## Quantifying a requirement so it discriminates between architectures
 
@@ -266,3 +275,5 @@ to spend time on it if ideas do not come quickly [S6].
   <https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-news-feed>
 - **[S6]** Hello Interview — Design a Coding Platform Like LeetCode —
   <https://www.hellointerview.com/learn/system-design/problem-breakdowns/leetcode>
+- **[S7]** Hello Interview — Design a Dating App Like Tinder —
+  <https://www.hellointerview.com/learn/system-design/problem-breakdowns/tinder>

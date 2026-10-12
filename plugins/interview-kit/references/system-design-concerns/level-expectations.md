@@ -358,6 +358,46 @@ S6 states this bar conditionally, because it does not usually ask this problem a
   system at hand [S6]. Here, simplicity is graded and complexity is not rewarded. See
   `concepts/requirements-scoping.md`.
 
+## S7 — candidate feeds and mutual matching (recommendation problem)
+
+S7 uses the same breadth/depth ratios and the same mid-level, senior and staff+ framing paragraphs
+as S5, so they are not repeated here. What follows is what S7 states distinctly [S5][S7]. S7 also
+says that how much of the deep dives the candidate drives depends on seniority [S7].
+
+### Mid-level [S7]
+
+- **The stated bar:** clearly defined API endpoints and data model, and a high-level design that
+  works for **all of** feed creation, the action itself, and matching [S7].
+- **Technology depth is explicitly not required:** S7 does **"not expect candidates to know
+  in-depth information about specific technologies"** [S7].
+- **Two specific designs are required at this level, not deferred to senior** [S7]:
+  - a solution that supports **traditional filters and geo-spatial filters**;
+  - a solution that **avoids re-showing** items already acted on. See
+    `concepts/excluding-previously-seen-items.md`.
+
+### Senior [S7]
+
+- S7 adds **advanced system design** to the senior items S5 lists: familiarity with different
+  technologies, their use cases, and how they fit together [S7].
+- **The stated bar:** go **quickly** through the initial high-level design so that time goes to
+  discussing **in detail** efficient, scalable feed generation and management, and how to ensure
+  matches are created successfully [S7]. See `concepts/fan-out-on-read-vs-write.md` and
+  `concepts/detecting-mutual-actions.md`.
+- **Be proactive** in calling out the different tradeoffs for feed building [S7].
+- **Have "some knowledge" of the type of index** that could power the feed. The hedge "some"
+  matters [S7].
+- **Be aware of when feed caches might become "stale"** [S7].
+
+### Staff+ [S7]
+
+- **The stated bar:** high expectations for the depth and quality of solutions, especially in the
+  complex scenarios [S7].
+- **Exceptional** candidates go into detail on **each** of the topics above. They **"may even steer
+  the conversation in a different direction"**, focusing on a topic they find particularly
+  interesting or relevant [S7].
+- **Understand the tradeoffs between solutions and explain them clearly, "treating the interviewer
+  as a peer"** [S7].
+
 ## Using these bars
 
 - **Grade the highest bar cleared, not the concepts touched.** Staff+ requires the read-heavy
@@ -369,9 +409,9 @@ S6 states this bar conditionally, because it does not usually ask this problem a
   relevant" and "if you took the counter batching approach" — a concern that does not apply to
   the design cannot be graded against it [S1]. S2 does the same with "not strictly required" for
   naming specific APIs [S2].
-- **Match the bar to the problem class.** The S1–S6 bars are stated for their own problem classes
+- **Match the bar to the problem class.** The S1–S7 bars are stated for their own problem classes
   and their concrete "The Bar for…" bullets do not transfer; the breadth/depth ratios and the
-  prompting axis do [S1][S2][S3][S4][S5][S6].
+  prompting axis do [S1][S2][S3][S4][S5][S6][S7].
 - **Weigh the bar against the problem's stated difficulty.** S4 rates its own problem easy and sets
   a correspondingly forgiving mid-level bar — tolerating a "Bad" solution given a good discussion —
   where S3 required at least its good solution on the equivalent concern [S3][S4]. A bar is relative
@@ -397,7 +437,9 @@ S6 states this bar conditionally, because it does not usually ask this problem a
 
 - Bars for problem classes other than identifier-mapping systems, large-payload storage,
   high-contention reservation, geographically distributed availability, social feed generation, and
-  sandboxed execution of untrusted work.
+  sandboxed execution of untrusted work, and candidate feeds with mutual matching.
+- Whether S7's mid-level requirement to avoid re-showing items means the simplest working
+  approach, or one of its graded solutions.
 - How to grade a staff+ candidate on a problem the source says it does not usually ask at that
   level (S6).
 - How much weight each bullet carries relative to the others, or how many misses drop a level.
@@ -435,3 +477,5 @@ S6 states this bar conditionally, because it does not usually ask this problem a
   <https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-news-feed>
 - **[S6]** Hello Interview — Design a Coding Platform Like LeetCode —
   <https://www.hellointerview.com/learn/system-design/problem-breakdowns/leetcode>
+- **[S7]** Hello Interview — Design a Dating App Like Tinder —
+  <https://www.hellointerview.com/learn/system-design/problem-breakdowns/tinder>

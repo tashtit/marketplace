@@ -43,11 +43,18 @@ The consequence for the design is that the deep tail can be served by a slower f
 rather than by the optimized one — see `fan-out-on-read-vs-write.md` for the bounded precomputed
 result this permits, and the fallback to the underlying tables when a caller exhausts it [S5].
 
+## A generated feed may not need paging at all
+
+S7 goes further for a list that is generated, not stored. Paginating a recommendation feed is
+superfluous because the endpoint is generating recommendations. When the client runs out, it calls
+the endpoint again for more [S7].
+
 ## Failure modes
 
 - **Paginating on an attribute with no supporting index**, turning each page into a scan [S5].
 - **Sizing the fast path for depths real callers never reach**, paying for a tail that does not
   exist [S5].
+- **Adding pagination to a generated feed**, where asking again already does the job [S7].
 - **A caller reaching the end of a bounded precomputed result** with no fallback path defined
   [S5].
 
@@ -63,3 +70,5 @@ result this permits, and the fallback to the underlying tables when a caller exh
 
 - **[S5]** Hello Interview — Design Facebook's News Feed —
   <https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-news-feed>
+- **[S7]** Hello Interview — Design a Dating App Like Tinder —
+  <https://www.hellointerview.com/learn/system-design/problem-breakdowns/tinder>

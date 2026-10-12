@@ -63,6 +63,13 @@ Resolving the nearby set is only the first half of the read; see
 `aggregating-availability-across-locations.md` for what happens once the candidates are known, and
 `delegating-external-operations.md` for the external-dependency framing.
 
+## Indexing the location itself
+
+S7 states the simpler case, where nearness is a radius rather than a travel cost. Filtering by
+latitude and longitude ranges is very slow even with basic indexing [S7]. A geospatial index lets
+the store efficiently fetch the records within an area [S7]. S7 does not cover a predicate like S4's
+drive time, so it does not settle whether a spatial index replaces S4's two-stage prune.
+
 ## Failure modes
 
 - **Answering a drive-time requirement with a distance query**, so results are wrong wherever
@@ -70,6 +77,7 @@ Resolving the nearby set is only the first half of the read; see
 - **Exhausting an external service's capacity** by evaluating candidates that could never qualify
   [S4].
 - **Ignoring density**, treating several locations in one city as interchangeable [S4].
+- **Range filters on raw coordinates**, which stay slow even with basic indexes [S7].
 
 ## Not covered by sources
 
@@ -84,3 +92,5 @@ Resolving the nearby set is only the first half of the read; see
 
 - **[S4]** Hello Interview — Design a Local Delivery Service like Gopuff —
   <https://www.hellointerview.com/learn/system-design/problem-breakdowns/gopuff>
+- **[S7]** Hello Interview — Design a Dating App Like Tinder —
+  <https://www.hellointerview.com/learn/system-design/problem-breakdowns/tinder>
