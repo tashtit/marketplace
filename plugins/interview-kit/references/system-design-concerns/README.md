@@ -86,6 +86,7 @@ the simple thing is correct.
   [problem-first explorer](system-design-challenges.html#map) compares techniques for a challenge;
   the [solution-first explorer](system-design-challenges.html#solutions) shows what each technique
   addresses, when it helps, its costs, and cited examples. Both use the tables as their source.
+  A light/dark button remembers the reader's preference.
 - `level-expectations.md` — what interviewers expect at mid / senior / staff+, with the
   prompted-vs-unprompted axis that distinguishes them.
 - `probes/` — question seeds per source and problem class, used by `mock-design-interview`.
