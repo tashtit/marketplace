@@ -39,18 +39,18 @@ html{scroll-behavior:smooth}body{background:var(--canvas);color:var(--night)}hea
 .flow-progress{display:flex;list-style:none;padding:0;margin:1.8rem 0 1rem;gap:.5rem}.flow-progress li{flex:1;border-top:3px solid var(--line);padding:.6rem .2rem;color:var(--muted);font-size:.85rem;font-weight:650}.flow-progress li[aria-current=step]{border-color:var(--teal);color:var(--night)}
 .flow-card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:clamp(1rem,3vw,2rem);box-shadow:0 8px 30px #132d3d14}.flow-heading{display:flex;justify-content:space-between;align-items:center;gap:1rem}.flow-card h3{font-size:clamp(1.3rem,2.5vw,1.8rem);margin:.7rem 0 .3rem}.flow-card>p{color:var(--muted)}.flow-choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.65rem;margin:1.2rem 0}.flow-choices button,.flow-secondary{font:inherit;color:var(--night);cursor:pointer;border:1px solid var(--line);background:var(--soft);padding:.7rem .9rem;border-radius:9px;text-align:left}.flow-choices button:hover,.flow-secondary:hover{border-color:var(--teal);background:var(--map-soft)}.flow-secondary{background:var(--surface);font-size:.88rem;padding:.4rem .65rem}.flow-status{font-size:.85rem}.flow-result{box-shadow:none;border-left:4px solid var(--teal);padding:1rem;margin:1rem 0}.flow-result h4{margin:0 0 .35rem;font-size:1.1rem}.flow-result p{margin:.35rem 0}.flow-result .flow-evidence{background:var(--soft);padding:.65rem .8rem;border-radius:8px;margin:.7rem 0}.flow-result>a{display:inline-block;margin-top:.5rem;font-weight:650}.flow-disclaimer{border-left:3px solid var(--gold);padding:.55rem .8rem;background:var(--soft)}
 @media(max-width:580px){.flow-choices{grid-template-columns:1fr}.flow-progress li{font-size:.75rem}}@media print{body.flow-mode main>nav,body.flow-mode main>section:not(#decision-flow){display:block}#decision-flow{display:none!important}}
+.icon-control,.icon-link{display:inline-flex;align-items:center;justify-content:center;min-width:2.75rem;min-height:2.75rem;line-height:1;font-size:1.35rem;text-decoration:none;vertical-align:middle}.map-controls .icon-control,.flow-choices .icon-control{padding:.4rem}.flow-choices .icon-control{justify-self:start}.flow-result .icon-link{border-radius:8px;background:var(--soft);padding:.3rem}.flow-card>p:empty{display:none}.flow-result .flow-evidence ul{margin:.25rem 0}.view-switch .icon-control{margin-left:auto}
 </style>
 </head>
 <body>
-<header><small>INTERVIEW KIT · DECISION ATLAS</small><h1>System design: challenges and trade-offs</h1><p>From all 33 cited concepts in the Interview Kit reference library. Each row compares a source-backed technique with its benefit, cost and relevant cited examples; links lead to the full claims, citations, and open questions. These are options, not universal prescriptions.</p></header>
-<div class="view-switch" role="navigation" aria-label="Choose how to explore"><a href="#flow" id="flow-view">Decision flow</a><a href="#map" id="map-view">Start with a problem</a><a href="#solutions" id="solutions-view">Start with a solution</a><a href="#framing" id="table-view">Browse all comparisons</a><span>Three paths through the same cited evidence.</span><button type="button" class="theme-toggle" id="theme-toggle" aria-label="Switch to dark theme" aria-pressed="false">Dark theme</button></div>
+<header><small>INTERVIEW KIT · DECISION ATLAS</small><h1>System design: challenges and trade-offs</h1><p>33 cited concepts · Compare techniques, trade-offs, and examples. No universal prescriptions.</p></header>
+<div class="view-switch" role="navigation" aria-label="Choose how to explore"><a href="#flow" id="flow-view">Flow</a><a href="#map" id="map-view">Problems</a><a href="#solutions" id="solutions-view">Solutions</a><a href="#framing" id="table-view">Tables</a><button type="button" class="theme-toggle icon-control" id="theme-toggle" aria-label="Switch to dark theme" title="Switch to dark theme" aria-pressed="false">☾</button></div>
 <main>
-<section id="decision-map" hidden aria-label="Decision explorer"><div id="problem-explorer"><span class="eyebrow">Path 01 · Problem → solutions</span><h2>What are you trying to solve?</h2><p>Choose a challenge, then explore the source-backed techniques, when they help, their costs and cited examples. Compare alternatives before committing to a design.</p><div class="map-controls"><label for="map-search">Search problems, solutions or examples<input id="map-search" type="search" placeholder="e.g. read latency, caching, replicas"></label><button type="button" id="map-reset">Clear search</button></div><div class="map-grid"><div class="map-panel"><h3>1 · Category</h3><p class="hint">Select an area of concern</p><div class="map-list" id="map-categories"></div></div><div class="map-panel"><h3>2 · Problem</h3><p class="hint">What needs to be resolved?</p><div class="map-list" id="map-challenges"></div></div><div class="map-panel"><h3>3 · Possible solutions</h3><p class="hint">Select a technique for evidence and trade-offs</p><div class="map-path" id="map-path" aria-live="polite"></div><div class="map-list" id="map-techniques"></div><div id="map-detail"></div></div></div></div><div id="solution-explorer"><span class="eyebrow">Path 02 · Solution → problems</span><h2>Where does a technique fit?</h2><p>Find a solution to see what it addresses, when to use it, its limitations and the examples supporting it.</p><div class="map-controls"><label for="solution-search">Search solutions, problems or examples<input id="solution-search" type="search" placeholder="e.g. replicas, deduplication, feed"></label><button type="button" id="solution-reset">Clear search</button></div><div class="solution-grid"><div class="map-panel"><h3>Solutions <span id="solution-count" class="result-count"></span></h3><p class="hint">Select one to inspect its context</p><div class="map-list solution-list" id="solution-list"></div></div><div id="solution-detail" class="solution-card" aria-live="polite"></div></div></div></section>
+<section id="decision-map" hidden aria-label="Decision explorer"><div id="problem-explorer"><h2>Problems → techniques</h2><div class="map-controls"><label for="map-search">Search<input id="map-search" type="search" placeholder="Problem, technique, example…"></label><button type="button" id="map-reset" class="icon-control" aria-label="Clear problem search" title="Clear problem search">↺</button></div><div class="map-grid"><div class="map-panel"><h3>1 · Category</h3><div class="map-list" id="map-categories"></div></div><div class="map-panel"><h3>2 · Problem</h3><div class="map-list" id="map-challenges"></div></div><div class="map-panel"><h3>3 · Techniques</h3><div class="map-path" id="map-path" aria-live="polite"></div><div class="map-list" id="map-techniques"></div><div id="map-detail"></div></div></div></div><div id="solution-explorer"><h2>Techniques → problems</h2><div class="map-controls"><label for="solution-search">Search<input id="solution-search" type="search" placeholder="Technique, problem, example…"></label><button type="button" id="solution-reset" class="icon-control" aria-label="Clear solution search" title="Clear solution search">↺</button></div><div class="solution-grid"><div class="map-panel"><h3>Solutions <span id="solution-count" class="result-count"></span></h3><div class="map-list solution-list" id="solution-list"></div></div><div id="solution-detail" class="solution-card" aria-live="polite"></div></div></div></section>
 <section id="decision-flow" hidden aria-label="Guided decision flow">
-  <span class="eyebrow">Path 03 · Guided exploration</span><h2>Start with the concern, then examine the options</h2>
-  <p class="flow-intro">Move from a broad system-design concern to a specific challenge. The final step shows every technique from the cited comparison table, not a prescribed answer.</p>
-  <ol class="flow-progress" aria-label="Decision flow steps"><li id="flow-step-1">1 · Concern</li><li id="flow-step-2">2 · Challenge</li><li id="flow-step-3">3 · Options &amp; evidence</li></ol>
-  <div class="flow-card"><div class="flow-heading"><span class="eyebrow" id="flow-step-label">Step 1 of 3</span><button type="button" id="flow-restart" class="flow-secondary">Start over</button></div><h3 id="flow-question"></h3><p id="flow-guidance"></p><div id="flow-choices" class="flow-choices"></div><div id="flow-results" hidden></div><p id="flow-status" class="flow-status" role="status"></p></div>
+  <h2>Decision flow</h2>
+  <ol class="flow-progress" aria-label="Decision flow steps"><li id="flow-step-1">1 · Concern</li><li id="flow-step-2">2 · Challenge</li><li id="flow-step-3">3 · Options</li></ol>
+  <div class="flow-card"><div class="flow-heading"><span class="eyebrow" id="flow-step-label">1 / 3</span><button type="button" id="flow-restart" class="flow-secondary icon-control" aria-label="Start over" title="Start over">↺</button></div><h3 id="flow-question"></h3><p id="flow-guidance"></p><div id="flow-choices" class="flow-choices"></div><div id="flow-results" hidden></div><p id="flow-status" class="flow-status" role="status"></p></div>
 </section>
 <nav aria-label="Challenge categories"><a href="#framing">Frame &amp; size</a><a href="#reads">Reads &amp; discovery</a><a href="#load">Load &amp; availability</a><a href="#correctness">Correctness &amp; modeling</a><a href="#transfer">Transfer &amp; integration</a></nav>
 <section id="framing"><h2>Frame &amp; size the problem</h2>
@@ -177,7 +177,7 @@ html{scroll-behavior:smooth}body{background:var(--canvas);color:var(--night)}hea
 <tr><td>Nonpermanent response</td><td>Keeps the mapping under server control and preserves request statistics.</td><td>More requests reach the server; less client caching benefit.</td><td>Use a temporary redirect so changing a short link still takes effect on the next request. <a href="concepts/client-cached-responses.md">[S1]</a></td></tr>
 </tbody></table></div><p class="source">Concept: <a href="concepts/client-cached-responses.md">client-cached responses</a> · S1</p></article>
 </section>
-</main><footer><p><strong>Scope:</strong> This map covers the 33 indexed concepts (S1–S6), not every system-design technique. In particular, replication, partitioning and caching each target different bottlenecks; none is an automatic fix for “slow reads.” The linked concept files contain the original source URLs and <em>Not covered by sources</em> questions. Open this file alongside the repository so the relative links resolve.</p></footer>
+</main><footer><p><strong>Scope:</strong> 33 indexed concepts (S1–S6); not an exhaustive design catalog. Linked concept files contain source URLs and open questions. Keep this file alongside the repository so relative links work.</p></footer>
 <script>
 (() => {
   const sections = [...document.querySelectorAll('main > section:not(#decision-map):not(#decision-flow)')];
@@ -199,8 +199,9 @@ html{scroll-behavior:smooth}body{background:var(--canvas);color:var(--night)}hea
   const themeToggle = byId('theme-toggle');
   function updateThemeButton() {
     const dark = document.documentElement.dataset.theme === 'dark';
-    themeToggle.textContent = dark ? 'Light theme' : 'Dark theme';
+    themeToggle.textContent = dark ? '☀' : '☾';
     themeToggle.setAttribute('aria-label', `Switch to ${dark ? 'light' : 'dark'} theme`);
+    themeToggle.title = themeToggle.getAttribute('aria-label');
     themeToggle.setAttribute('aria-pressed', String(dark));
   }
   themeToggle.addEventListener('click', () => {
@@ -235,14 +236,18 @@ html{scroll-behavior:smooth}body{background:var(--canvas);color:var(--night)}hea
   function flowButton(label, action, secondary = false) {
     const item = document.createElement('button');
     item.type = 'button';
-    item.textContent = label;
-    if (secondary) item.className = 'flow-secondary';
+    item.textContent = secondary ? '←' : label;
+    if (secondary) {
+      item.className = 'flow-secondary icon-control';
+      item.setAttribute('aria-label', label);
+      item.title = label;
+    }
     item.addEventListener('click', action);
     return item;
   }
   function renderFlow() {
     const step = flowChallenge ? 3 : flowCategory ? 2 : 1;
-    byId('flow-step-label').textContent = `Step ${step} of 3`;
+    byId('flow-step-label').textContent = `${step} / 3`;
     flowSection.querySelectorAll('.flow-progress li').forEach((item, index) => {
       if (index + 1 === step) item.setAttribute('aria-current', 'step');
       else item.removeAttribute('aria-current');
@@ -251,25 +256,24 @@ html{scroll-behavior:smooth}body{background:var(--canvas);color:var(--night)}hea
     flowResults.replaceChildren();
     flowResults.hidden = step !== 3;
     if (step === 1) {
-      flowQuestion.textContent = 'Which part of the design needs attention?';
-      flowGuidance.textContent = 'Choose a concern to browse its challenges. These are categories from the guide, not a diagnosis.';
-      flowStatus.textContent = `${data.length} source-backed concerns available.`;
-      data.forEach(category => flowChoices.append(flowButton(`${category.name} · ${category.challenges.length} challenges`, () => { flowCategory = category; renderFlow(); })));
+      flowQuestion.textContent = 'Which concern?';
+      flowGuidance.textContent = '';
+      flowStatus.textContent = '';
+      data.forEach(category => flowChoices.append(flowButton(category.name, () => { flowCategory = category; renderFlow(); })));
     } else if (step === 2) {
-      flowQuestion.textContent = `What challenge in ${flowCategory.name} matches your situation?`;
-      flowGuidance.textContent = 'Select a challenge to compare all of its techniques.';
-      flowStatus.textContent = `${flowCategory.challenges.length} challenges available.`;
-      flowChoices.append(flowButton('← Change concern', () => { flowCategory = null; renderFlow(); }, true));
+      flowQuestion.textContent = `Which challenge? · ${flowCategory.name}`;
+      flowGuidance.textContent = '';
+      flowStatus.textContent = '';
+      flowChoices.append(flowButton('Change concern', () => { flowCategory = null; renderFlow(); }, true));
       flowCategory.challenges.forEach(challenge => flowChoices.append(flowButton(challenge.name, () => { flowChallenge = challenge; renderFlow(); })));
     } else {
       flowQuestion.textContent = flowChallenge.name;
       flowGuidance.textContent = flowChallenge.context;
-      flowStatus.textContent = `${flowChallenge.techniques.length} source-backed techniques to compare.`;
-      flowChoices.append(flowButton('← Change challenge', () => { flowChallenge = null; renderFlow(); }, true));
-      flowChoices.append(flowButton('← Change concern', () => { flowChallenge = null; flowCategory = null; renderFlow(); }, true));
+      flowStatus.textContent = '';
+      flowChoices.append(flowButton('Change challenge', () => { flowChallenge = null; renderFlow(); }, true));
       const note = document.createElement('p');
       note.className = 'flow-disclaimer';
-      note.textContent = 'Compare benefits, costs, and cited examples before choosing. These options are not ranked recommendations.';
+      note.textContent = 'Compare the options; none is universally correct.';
       flowResults.append(note);
       flowChallenge.techniques.forEach(({ cells, rowId }) => {
         const card = document.createElement('article');
@@ -287,7 +291,10 @@ html{scroll-behavior:smooth}body{background:var(--canvas);color:var(--night)}hea
         }
         const link = document.createElement('a');
         link.href = `#${rowId}`;
-        link.textContent = 'Open comparison table ↗';
+        link.textContent = '↗';
+        link.className = 'icon-link';
+        link.setAttribute('aria-label', `Open comparison table for ${title.textContent}`);
+        link.title = link.getAttribute('aria-label');
         card.append(link);
         flowResults.append(card);
       });
@@ -323,17 +330,17 @@ html{scroll-behavior:smooth}body{background:var(--canvas);color:var(--night)}hea
     const previousChallengeId = challengeId;
     const category = categories.find(item => item.id === categoryId) || categories[0];
     categoryId = category?.id;
-    categoryList.replaceChildren(...categories.map(item => button(item.name, item.id === categoryId, () => { categoryId = item.id; challengeId = ''; techniqueIndex = 0; render(); }, `${item.challenges.length} challenges`)));
+    categoryList.replaceChildren(...categories.map(item => button(item.name, item.id === categoryId, () => { categoryId = item.id; challengeId = ''; techniqueIndex = 0; render(); })));
     const challenges = category ? category.challenges.filter(item => !query || category.name.toLocaleLowerCase().includes(query) || matches(item)) : [];
     const challenge = challenges.find(item => item.id === challengeId) || challenges[0];
     challengeId = challenge?.id;
     if (previousCategoryId !== categoryId || previousChallengeId !== challengeId) techniqueIndex = 0;
-    challengeList.replaceChildren(...challenges.map(item => button(item.name, item.id === challengeId, () => { challengeId = item.id; techniqueIndex = 0; render(); }, `${item.techniques.length} techniques`)));
+    challengeList.replaceChildren(...challenges.map(item => button(item.name, item.id === challengeId, () => { challengeId = item.id; techniqueIndex = 0; render(); })));
     if (!category) {
       categoryList.textContent = 'No matching decisions. Try another search.';
       challengeList.textContent = '';
     }
-    path.textContent = challenge ? `${category.name} → ${challenge.name}` : 'Choose a challenge to see its techniques.';
+    path.textContent = challenge ? `${category.name} → ${challenge.name}` : '';
     techniqueList.replaceChildren();
     detail.replaceChildren();
     if (!challenge) return;
@@ -343,8 +350,6 @@ html{scroll-behavior:smooth}body{background:var(--canvas);color:var(--night)}hea
     const [name, benefit, cost, example] = selected.cells;
     const heading = document.createElement('h4');
     heading.textContent = name.textContent;
-    const description = document.createElement('p');
-    description.textContent = challenge.context;
     const terms = document.createElement('dl');
     terms.className = 'map-detail';
     for (const [term, cell] of [['Benefit / when', benefit], ['Cost / trade-off', cost], ['Examples from sources', example]]) {
@@ -358,14 +363,19 @@ html{scroll-behavior:smooth}body{background:var(--canvas);color:var(--night)}hea
     sources.className = 'map-sources';
     const tableLink = document.createElement('a');
     tableLink.href = `#${selected.rowId}`;
-    tableLink.textContent = 'See this row in the comparison table';
+    tableLink.textContent = '↗';
+    tableLink.className = 'icon-link';
+    tableLink.setAttribute('aria-label', `Open comparison table for ${name.textContent}`);
+    tableLink.title = tableLink.getAttribute('aria-label');
     const reverseLink = document.createElement('a');
     reverseLink.href = `#solutions/${selected.rowId}`;
-    reverseLink.className = 'jump-link';
-    reverseLink.textContent = 'Explore this solution →';
+    reverseLink.className = 'jump-link icon-link';
+    reverseLink.textContent = '⇄';
+    reverseLink.setAttribute('aria-label', `Explore ${name.textContent} in solutions`);
+    reverseLink.title = reverseLink.getAttribute('aria-label');
     const navigation = document.createElement('p');
     navigation.append(reverseLink, ' ', tableLink);
-    detail.append(heading, description, terms, sources, navigation);
+    detail.append(heading, terms, sources, navigation);
   }
 
   function renderSolutions() {
@@ -388,7 +398,7 @@ html{scroll-behavior:smooth}body{background:var(--canvas);color:var(--night)}hea
     const context = document.createElement('p');
     context.className = 'selected-context';
     const contextTitle = document.createElement('strong');
-    contextTitle.textContent = `Problem it addresses: ${challenge.name}`;
+    contextTitle.textContent = challenge.name;
     context.append(contextTitle, challenge.context);
     const terms = document.createElement('dl');
     terms.className = 'map-detail';
@@ -405,12 +415,16 @@ html{scroll-behavior:smooth}body{background:var(--canvas);color:var(--night)}hea
     links.className = 'solution-links';
     const problemLink = document.createElement('a');
     problemLink.href = `#map/${challenge.id}/${selectedSolution.index + 1}`;
-    problemLink.className = 'jump-link';
-    problemLink.textContent = 'Compare other solutions to this problem →';
+    problemLink.className = 'jump-link icon-link';
+    problemLink.textContent = '⇄';
+    problemLink.setAttribute('aria-label', `Compare techniques for ${challenge.name}`);
+    problemLink.title = problemLink.getAttribute('aria-label');
     const tableLink = document.createElement('a');
     tableLink.href = `#${technique.rowId}`;
-    tableLink.className = 'jump-link';
-    tableLink.textContent = 'Open comparison table ↗';
+    tableLink.className = 'jump-link icon-link';
+    tableLink.textContent = '↗';
+    tableLink.setAttribute('aria-label', `Open comparison table for ${title.textContent}`);
+    tableLink.title = tableLink.getAttribute('aria-label');
     links.append(problemLink, tableLink);
     solutionDetail.append(eyebrow, title, context, terms, sources, links);
   }
