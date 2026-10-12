@@ -106,8 +106,11 @@ including multiple cases where the sources support them; its
 [problem-first explorer](references/system-design-concerns/system-design-challenges.html#map)
 shows possible solutions to a challenge, while the [solution-first explorer](references/system-design-concerns/system-design-challenges.html#solutions)
 shows when a technique helps, the problem it addresses, its trade-offs, and its cited examples.
-Both search the same comparison tables; no separate content is maintained. A light/dark
-button saves the reader's theme preference across visits.
+The [decision flow](references/system-design-concerns/system-design-challenges.html#flow)
+steps from a broad concern to a specific challenge, then displays every source-backed
+technique with its trade-offs and examples. All three views read the same comparison
+tables; no separate content is maintained. A light/dark button saves the reader's
+theme preference across visits.
 
 It has **no frontmatter and is deliberately not a skill** — there is nothing to
 select, and the two skills open it by path.

@@ -85,8 +85,10 @@ the simple thing is correct.
   examples (including multiple distinct cases where the sources support them). Its
   [problem-first explorer](system-design-challenges.html#map) compares techniques for a challenge;
   the [solution-first explorer](system-design-challenges.html#solutions) shows what each technique
-  addresses, when it helps, its costs, and cited examples. Both use the tables as their source.
-  A light/dark button remembers the reader's preference.
+  addresses, when it helps, its costs, and cited examples. The
+  [decision flow](system-design-challenges.html#flow) narrows from a concern to a challenge,
+  then compares all source-backed techniques and trade-offs. All three views use the tables
+  as their source. A light/dark button remembers the reader's preference.
 - `level-expectations.md` — what interviewers expect at mid / senior / staff+, with the
   prompted-vs-unprompted axis that distinguishes them.
 - `probes/` — question seeds per source and problem class, used by `mock-design-interview`.

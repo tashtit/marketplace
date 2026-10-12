@@ -33,12 +33,25 @@ html{scroll-behavior:smooth}body{background:var(--canvas);color:var(--night)}hea
 :root[data-theme="dark"] article,:root[data-theme="dark"] .map-panel,:root[data-theme="dark"] .solution-card,:root[data-theme="dark"] .view-switch{box-shadow:0 5px 22px #0004}
 @media print{:root[data-theme="dark"]{color-scheme:light;--ink:#182334;--muted:#536478;--line:#d9e1e9;--surface:#fff;--accent:#175f7c;--soft:#edf6f8;--canvas:#fff;--paper:#fff;--night:#182334;--teal:#175f7c} :root[data-theme="dark"] body,:root[data-theme="dark"] header{background:#fff;color:#182334}:root[data-theme="dark"] header p{color:#536478}.theme-toggle{display:none}}
 </style>
+<style>
+#decision-flow[hidden]{display:none}body.flow-mode main>nav,body.flow-mode main>section:not(#decision-flow){display:none}
+#decision-flow{max-width:900px;margin:1.5rem auto 3rem}#decision-flow>h2{font-size:clamp(1.6rem,3vw,2.3rem);letter-spacing:-.03em;margin:.3rem 0;border:0}#decision-flow .flow-intro{color:var(--muted);max-width:70ch}
+.flow-progress{display:flex;list-style:none;padding:0;margin:1.8rem 0 1rem;gap:.5rem}.flow-progress li{flex:1;border-top:3px solid var(--line);padding:.6rem .2rem;color:var(--muted);font-size:.85rem;font-weight:650}.flow-progress li[aria-current=step]{border-color:var(--teal);color:var(--night)}
+.flow-card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:clamp(1rem,3vw,2rem);box-shadow:0 8px 30px #132d3d14}.flow-heading{display:flex;justify-content:space-between;align-items:center;gap:1rem}.flow-card h3{font-size:clamp(1.3rem,2.5vw,1.8rem);margin:.7rem 0 .3rem}.flow-card>p{color:var(--muted)}.flow-choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.65rem;margin:1.2rem 0}.flow-choices button,.flow-secondary{font:inherit;color:var(--night);cursor:pointer;border:1px solid var(--line);background:var(--soft);padding:.7rem .9rem;border-radius:9px;text-align:left}.flow-choices button:hover,.flow-secondary:hover{border-color:var(--teal);background:var(--map-soft)}.flow-secondary{background:var(--surface);font-size:.88rem;padding:.4rem .65rem}.flow-status{font-size:.85rem}.flow-result{box-shadow:none;border-left:4px solid var(--teal);padding:1rem;margin:1rem 0}.flow-result h4{margin:0 0 .35rem;font-size:1.1rem}.flow-result p{margin:.35rem 0}.flow-result .flow-evidence{background:var(--soft);padding:.65rem .8rem;border-radius:8px;margin:.7rem 0}.flow-result>a{display:inline-block;margin-top:.5rem;font-weight:650}.flow-disclaimer{border-left:3px solid var(--gold);padding:.55rem .8rem;background:var(--soft)}
+@media(max-width:580px){.flow-choices{grid-template-columns:1fr}.flow-progress li{font-size:.75rem}}@media print{body.flow-mode main>nav,body.flow-mode main>section:not(#decision-flow){display:block}#decision-flow{display:none!important}}
+</style>
 </head>
 <body>
 <header><small>INTERVIEW KIT · DECISION ATLAS</small><h1>System design: challenges and trade-offs</h1><p>From all 33 cited concepts in the Interview Kit reference library. Each row compares a source-backed technique with its benefit, cost and relevant cited examples; links lead to the full claims, citations, and open questions. These are options, not universal prescriptions.</p></header>
-<div class="view-switch" role="navigation" aria-label="Choose how to explore"><a href="#map" id="map-view">Start with a problem</a><a href="#solutions" id="solutions-view">Start with a solution</a><a href="#framing" id="table-view">Browse all comparisons</a><span>Two paths through the same cited evidence.</span><button type="button" class="theme-toggle" id="theme-toggle" aria-label="Switch to dark theme" aria-pressed="false">Dark theme</button></div>
+<div class="view-switch" role="navigation" aria-label="Choose how to explore"><a href="#flow" id="flow-view">Decision flow</a><a href="#map" id="map-view">Start with a problem</a><a href="#solutions" id="solutions-view">Start with a solution</a><a href="#framing" id="table-view">Browse all comparisons</a><span>Three paths through the same cited evidence.</span><button type="button" class="theme-toggle" id="theme-toggle" aria-label="Switch to dark theme" aria-pressed="false">Dark theme</button></div>
 <main>
 <section id="decision-map" hidden aria-label="Decision explorer"><div id="problem-explorer"><span class="eyebrow">Path 01 · Problem → solutions</span><h2>What are you trying to solve?</h2><p>Choose a challenge, then explore the source-backed techniques, when they help, their costs and cited examples. Compare alternatives before committing to a design.</p><div class="map-controls"><label for="map-search">Search problems, solutions or examples<input id="map-search" type="search" placeholder="e.g. read latency, caching, replicas"></label><button type="button" id="map-reset">Clear search</button></div><div class="map-grid"><div class="map-panel"><h3>1 · Category</h3><p class="hint">Select an area of concern</p><div class="map-list" id="map-categories"></div></div><div class="map-panel"><h3>2 · Problem</h3><p class="hint">What needs to be resolved?</p><div class="map-list" id="map-challenges"></div></div><div class="map-panel"><h3>3 · Possible solutions</h3><p class="hint">Select a technique for evidence and trade-offs</p><div class="map-path" id="map-path" aria-live="polite"></div><div class="map-list" id="map-techniques"></div><div id="map-detail"></div></div></div></div><div id="solution-explorer"><span class="eyebrow">Path 02 · Solution → problems</span><h2>Where does a technique fit?</h2><p>Find a solution to see what it addresses, when to use it, its limitations and the examples supporting it.</p><div class="map-controls"><label for="solution-search">Search solutions, problems or examples<input id="solution-search" type="search" placeholder="e.g. replicas, deduplication, feed"></label><button type="button" id="solution-reset">Clear search</button></div><div class="solution-grid"><div class="map-panel"><h3>Solutions <span id="solution-count" class="result-count"></span></h3><p class="hint">Select one to inspect its context</p><div class="map-list solution-list" id="solution-list"></div></div><div id="solution-detail" class="solution-card" aria-live="polite"></div></div></div></section>
+<section id="decision-flow" hidden aria-label="Guided decision flow">
+  <span class="eyebrow">Path 03 · Guided exploration</span><h2>Start with the concern, then examine the options</h2>
+  <p class="flow-intro">Move from a broad system-design concern to a specific challenge. The final step shows every technique from the cited comparison table, not a prescribed answer.</p>
+  <ol class="flow-progress" aria-label="Decision flow steps"><li id="flow-step-1">1 · Concern</li><li id="flow-step-2">2 · Challenge</li><li id="flow-step-3">3 · Options &amp; evidence</li></ol>
+  <div class="flow-card"><div class="flow-heading"><span class="eyebrow" id="flow-step-label">Step 1 of 3</span><button type="button" id="flow-restart" class="flow-secondary">Start over</button></div><h3 id="flow-question"></h3><p id="flow-guidance"></p><div id="flow-choices" class="flow-choices"></div><div id="flow-results" hidden></div><p id="flow-status" class="flow-status" role="status"></p></div>
+</section>
 <nav aria-label="Challenge categories"><a href="#framing">Frame &amp; size</a><a href="#reads">Reads &amp; discovery</a><a href="#load">Load &amp; availability</a><a href="#correctness">Correctness &amp; modeling</a><a href="#transfer">Transfer &amp; integration</a></nav>
 <section id="framing"><h2>Frame &amp; size the problem</h2>
 <article><h3>1 · Unclear requirements lead to the wrong architecture</h3><p>“Fast” and “consistent” do not select a design until the relevant operation, workload, and measurable bar are stated.</p><div class="table-wrap"><table><thead><tr><th>Technique</th><th>Benefit / when</th><th>Cost / trade-off</th><th>Examples from sources</th></tr></thead><tbody>
@@ -167,7 +180,7 @@ html{scroll-behavior:smooth}body{background:var(--canvas);color:var(--night)}hea
 </main><footer><p><strong>Scope:</strong> This map covers the 33 indexed concepts (S1–S6), not every system-design technique. In particular, replication, partitioning and caching each target different bottlenecks; none is an automatic fix for “slow reads.” The linked concept files contain the original source URLs and <em>Not covered by sources</em> questions. Open this file alongside the repository so the relative links resolve.</p></footer>
 <script>
 (() => {
-  const sections = [...document.querySelectorAll('main > section:not(#decision-map)')];
+  const sections = [...document.querySelectorAll('main > section:not(#decision-map):not(#decision-flow)')];
   const data = sections.map(section => ({
     id: section.id,
     name: section.querySelector('h2').textContent,
@@ -211,6 +224,78 @@ html{scroll-behavior:smooth}body{background:var(--canvas);color:var(--night)}hea
   let categoryId = data[0].id;
   let challengeId = data[0].challenges[0].id;
   let techniqueIndex = 0;
+  const flowSection = byId('decision-flow');
+  const flowQuestion = byId('flow-question');
+  const flowGuidance = byId('flow-guidance');
+  const flowChoices = byId('flow-choices');
+  const flowResults = byId('flow-results');
+  const flowStatus = byId('flow-status');
+  let flowCategory = null;
+  let flowChallenge = null;
+  function flowButton(label, action, secondary = false) {
+    const item = document.createElement('button');
+    item.type = 'button';
+    item.textContent = label;
+    if (secondary) item.className = 'flow-secondary';
+    item.addEventListener('click', action);
+    return item;
+  }
+  function renderFlow() {
+    const step = flowChallenge ? 3 : flowCategory ? 2 : 1;
+    byId('flow-step-label').textContent = `Step ${step} of 3`;
+    flowSection.querySelectorAll('.flow-progress li').forEach((item, index) => {
+      if (index + 1 === step) item.setAttribute('aria-current', 'step');
+      else item.removeAttribute('aria-current');
+    });
+    flowChoices.replaceChildren();
+    flowResults.replaceChildren();
+    flowResults.hidden = step !== 3;
+    if (step === 1) {
+      flowQuestion.textContent = 'Which part of the design needs attention?';
+      flowGuidance.textContent = 'Choose a concern to browse its challenges. These are categories from the guide, not a diagnosis.';
+      flowStatus.textContent = `${data.length} source-backed concerns available.`;
+      data.forEach(category => flowChoices.append(flowButton(`${category.name} · ${category.challenges.length} challenges`, () => { flowCategory = category; renderFlow(); })));
+    } else if (step === 2) {
+      flowQuestion.textContent = `What challenge in ${flowCategory.name} matches your situation?`;
+      flowGuidance.textContent = 'Select a challenge to compare all of its techniques.';
+      flowStatus.textContent = `${flowCategory.challenges.length} challenges available.`;
+      flowChoices.append(flowButton('← Change concern', () => { flowCategory = null; renderFlow(); }, true));
+      flowCategory.challenges.forEach(challenge => flowChoices.append(flowButton(challenge.name, () => { flowChallenge = challenge; renderFlow(); })));
+    } else {
+      flowQuestion.textContent = flowChallenge.name;
+      flowGuidance.textContent = flowChallenge.context;
+      flowStatus.textContent = `${flowChallenge.techniques.length} source-backed techniques to compare.`;
+      flowChoices.append(flowButton('← Change challenge', () => { flowChallenge = null; renderFlow(); }, true));
+      flowChoices.append(flowButton('← Change concern', () => { flowChallenge = null; flowCategory = null; renderFlow(); }, true));
+      const note = document.createElement('p');
+      note.className = 'flow-disclaimer';
+      note.textContent = 'Compare benefits, costs, and cited examples before choosing. These options are not ranked recommendations.';
+      flowResults.append(note);
+      flowChallenge.techniques.forEach(({ cells, rowId }) => {
+        const card = document.createElement('article');
+        card.className = 'flow-result';
+        const title = document.createElement('h4');
+        title.textContent = cells[0].textContent.trim();
+        card.append(title);
+        for (const [label, cell] of [['When it helps', cells[1]], ['Trade-off', cells[2]], ['Cited examples', cells[3]]]) {
+          const line = document.createElement('div');
+          line.className = label === 'Cited examples' ? 'flow-evidence' : '';
+          const strong = document.createElement('strong');
+          strong.textContent = `${label}: `;
+          line.append(strong, ...[...cell.childNodes].map(node => node.cloneNode(true)));
+          card.append(line);
+        }
+        const link = document.createElement('a');
+        link.href = `#${rowId}`;
+        link.textContent = 'Open comparison table ↗';
+        card.append(link);
+        flowResults.append(card);
+      });
+      flowResults.append(flowChallenge.source.cloneNode(true));
+    }
+  }
+  byId('flow-restart').addEventListener('click', () => { flowChallenge = null; flowCategory = null; renderFlow(); });
+  renderFlow();
 
   function button(label, selected, action, subtitle) {
     const item = document.createElement('button');
@@ -335,6 +420,7 @@ html{scroll-behavior:smooth}body{background:var(--canvas);color:var(--night)}hea
     let linkedTechnique;
     const isMap = hash === 'map' || hash.startsWith('map/');
     const isSolutions = hash === 'solutions' || hash.startsWith('solutions/');
+    const isFlow = hash === 'flow';
     if (hash.startsWith('map/')) {
       const [, id, position] = hash.split('/');
       const found = data.find(category => category.challenges.some(challenge => challenge.id === id));
@@ -352,8 +438,10 @@ html{scroll-behavior:smooth}body{background:var(--canvas);color:var(--night)}hea
     }
     document.body.classList.toggle('map-mode', isMap || isSolutions);
     document.body.classList.toggle('solutions-mode', isSolutions);
+    document.body.classList.toggle('flow-mode', isFlow);
+    flowSection.hidden = !isFlow;
     byId('decision-map').hidden = !(isMap || isSolutions);
-    for (const [id, current] of [['table-view', !(isMap || isSolutions)], ['map-view', isMap], ['solutions-view', isSolutions]]) {
+    for (const [id, current] of [['table-view', !(isMap || isSolutions || isFlow)], ['map-view', isMap], ['solutions-view', isSolutions], ['flow-view', isFlow]]) {
       const link = byId(id);
       if (current) link.setAttribute('aria-current', 'page');
       else link.removeAttribute('aria-current');
