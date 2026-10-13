@@ -309,6 +309,28 @@ a step above S2's and S4's **easy** [S2][S4].
   "and/or some that we haven't enumerated" clause is the distinct part: at this level the enumerated
   list is a floor, not the scope.
 
+## S6 — reciprocal matching and personalized candidate lists
+
+S6 states the same breadth/depth ratios as S2–S5, but gives bars specific to generating eligible candidates and recognizing reciprocal actions [S6].
+
+### Mid-level [S6]
+
+- **"80% vs 20%" breadth over depth**: define API endpoints and the data model, and provide a high-level design functional for candidate generation, actions, and reciprocal results [S6].
+- Design for conventional filters and geospatial filters, and avoid showing candidates already acted on [S6].
+- Drive early stages while the interviewer may probe basics and guide later stages; the source does not expect precise proactive diagnosis of all design problems [S6].
+
+### Senior [S6]
+
+- **"About 60% breadth and 40% depth"**: move quickly through the initial design to discuss efficient, scalable candidate generation and successful reciprocal-result creation in detail [S6].
+- Proactively discuss candidate-generation tradeoffs, know what kind of index can power the list, and recognize when precomputed lists may become stale [S6].
+- Articulate architectural pros and cons affecting scalability, performance, and maintainability, and anticipate bottlenecks and reliability concerns [S6].
+
+### Staff+ [S6]
+
+- **"About 40% breadth and 60% depth"**: cover the complex scenarios in depth, potentially steering toward a relevant topic, with tradeoffs explained as a peer [S6].
+- Proactively identify and address issues; the interviewer should intervene **"only to focus, not to steer"** [S6].
+- Ground technology decisions in practical experience and weigh scalability, reliability, performance, and maintenance under high load [S6].
+
 ## Using these bars
 
 - **Grade the highest bar cleared, not the concepts touched.** Staff+ requires the read-heavy
@@ -343,7 +365,8 @@ a step above S2's and S4's **easy** [S2][S4].
 ## Not covered by sources
 
 - Bars for problem classes other than identifier-mapping systems, large-payload storage,
-  high-contention reservation, geographically distributed availability, and social feed generation.
+  high-contention reservation, geographically distributed availability, social feed generation,
+  and reciprocal matching with personalized candidate lists.
 - How much weight each bullet carries relative to the others, or how many misses drop a level.
 - What distinguishes staff from principal.
 - How to grade a candidate who exceeds a bar on one axis and misses on another.
@@ -377,3 +400,5 @@ a step above S2's and S4's **easy** [S2][S4].
   <https://www.hellointerview.com/learn/system-design/problem-breakdowns/gopuff>
 - **[S5]** Hello Interview — Design Facebook's News Feed —
   <https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-news-feed>
+- **[S6]** Hello Interview — Design a Dating App Like Tinder —
+  <https://www.hellointerview.com/learn/system-design/problem-breakdowns/tinder>

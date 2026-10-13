@@ -100,6 +100,17 @@ Bundled at `references/system-design-concerns/`: `concepts/` (what is true),
 `level-expectations.md` (what is expected at each level, with the source's own
 hedges preserved), `probes/` (how to ask), `rubric.md` (a generic 0–5 scale), and
 `README.md` (the concept index and which sources have been processed).
+The [system design challenges HTML guide](references/system-design-concerns/system-design-challenges.html)
+compares the cited concepts' techniques, trade-offs, and individually cited examples for readers,
+including multiple cases where the sources support them; its
+[problem-first explorer](references/system-design-concerns/system-design-challenges.html#map)
+shows possible solutions to a challenge, while the [solution-first explorer](references/system-design-concerns/system-design-challenges.html#solutions)
+shows when a technique helps, the problem it addresses, its trade-offs, and its cited examples.
+The [decision flow](references/system-design-concerns/system-design-challenges.html#flow)
+steps from a broad concern to a specific challenge, then displays every source-backed
+technique with its trade-offs and examples. All three views read the same comparison
+tables; no separate content is maintained. A light/dark button saves the reader's
+theme preference across visits.
 
 It has **no frontmatter and is deliberately not a skill** — there is nothing to
 select, and the two skills open it by path.

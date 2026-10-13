@@ -161,6 +161,10 @@ expiration time, so stale entries are evicted automatically [S1]. See `record-ex
 - **A cache that inherits the skew of the store it fronts**, when it is sharded by the same key
   [S5].
 
+## Personalized feed freshness
+
+S6 applies caching to an entire personalized candidate list rather than to a stable record [S6]. Candidate locations, profiles, and the viewer's own filters can change, so a cached list can contain ineligible entries; its proposed controls are a TTL below one hour, scheduled background recomputation, and refresh after significant location or filter changes [S6]. Precomputing only for recently active viewers avoids paying to warm lists nobody opens, and cache TTL, list length, and the active-user window remain tunable parameters [S6]. See `personalized-candidate-generation.md` for the indexed real-time fallback when the cached list runs out [S6].
+
 ## Not covered by sources
 
 - Concrete invalidation mechanisms beyond TTL and cache-control lifetime (both sources name
@@ -189,3 +193,5 @@ expiration time, so stale entries are evicted automatically [S1]. See `record-ex
   <https://www.hellointerview.com/learn/system-design/problem-breakdowns/gopuff>
 - **[S5]** Hello Interview — Design Facebook's News Feed —
   <https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-news-feed>
+- **[S6]** Hello Interview — Design a Dating App Like Tinder —
+  <https://www.hellointerview.com/learn/system-design/problem-breakdowns/tinder>
