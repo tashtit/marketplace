@@ -67,6 +67,35 @@ design, and that separate tables were used to keep the discussion clearer [S5]. 
 habit is labelling a simplification as a simplification, rather than defending it as a decision —
 the same move S4 makes about its colocated catalog [S4][S5].
 
+## A split justified by write volume
+
+S7 splits a service *and* its database off, and justifies both [S7]:
+
+- **Different frequency.** Profiles are viewed and created far less often than actions are written,
+  so a separate service lets the write-heavy path scale independently [S7].
+- **Different data volume and store.** The action data is large (see `capacity-estimation.md`) and
+  suits a write-optimized store that may not suit the profile data [S7].
+- **Independent optimization.** The split allows logic and caching specific to the write path
+  without affecting the other service [S7].
+
+S7 marks it as a judgement, not a rule: separating is not right for every system, but here the pros
+outweigh the cons [S7]. It adds a cost of its choice. The write-optimized store brings eventual
+consistency, which later has to be worked around for the operation that needs consistency [S7]. See
+`detecting-mutual-actions.md`. This is the same criterion S4 and S5 give, divergent workload, here
+on the write side [S4][S5][S7].
+
+## Whether to split services at all
+
+S6 asks the question one level up: whether the system should have separate services at all. It
+notes that most systems designed in interviews are best served by microservices, but not all. For a
+small system, a monolith may fit better, because the codebase is easy to manage as one unit and the
+overhead of running several services is not worth it [S6]. It chooses a simple client–server
+architecture on that basis [S6].
+
+As in S3, S4 and S5, the deciding factor is cost against benefit for the system in front of you,
+not a rule. Here the input is the system's small stated scale [S3][S4][S5][S6]. See
+`requirements-scoping.md`.
+
 ## Not covered by sources
 
 - What would change the answer — at what scale or ownership boundary a split becomes worth it.
@@ -78,6 +107,7 @@ the same move S4 makes about its colocated catalog [S4][S5].
 - What "partly coupling the scaling" costs in practice, and when that coupling becomes the
   constraint.
 - Whether a divergent query pattern justifies a separate datastore as well as a separate service.
+- At what size or team structure a monolith stops being the better fit, in S6's terms.
 
 ## Sources
 
@@ -87,3 +117,7 @@ the same move S4 makes about its colocated catalog [S4][S5].
   <https://www.hellointerview.com/learn/system-design/problem-breakdowns/gopuff>
 - **[S5]** Hello Interview — Design Facebook's News Feed —
   <https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-news-feed>
+- **[S6]** Hello Interview — Design a Coding Platform Like LeetCode —
+  <https://www.hellointerview.com/learn/system-design/problem-breakdowns/leetcode>
+- **[S7]** Hello Interview — Design a Dating App Like Tinder —
+  <https://www.hellointerview.com/learn/system-design/problem-breakdowns/tinder>

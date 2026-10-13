@@ -63,6 +63,17 @@ S5 is also explicit about what this does *not* fix: the index makes each per-ent
 a request that must issue thousands of them is still slow, which is a fan-out problem rather than
 an indexing one [S5]. See `fan-out-on-read-vs-write.md`.
 
+## Indexing an attribute that cannot be the primary key
+
+S6 needs to find every record that belongs to a group, but the group attribute is optional and not
+unique, so it cannot be the table's primary key [S6]. Its answer is a secondary index whose
+partition key is that attribute. The index makes "all records for this group" an efficient query
+without changing the table's primary key [S6].
+
+The source then pulls the matching records into memory to group and sort them [S6]. It says
+plainly that this puts significant load on the database when it repeats on every frequent poll. Its
+fix is a structure that keeps the aggregate up to date as writes arrive [S6]. See `live-ranking.md`.
+
 ## Limits of indexing
 
 Indexing fixes lookup *efficiency*, not read *volume*. The source is explicit that even with
@@ -85,6 +96,8 @@ See `caching-the-read-path.md`.
 - **Indexing one side of a two-step read and not the other**, so the second step scans [S5].
 - **Treating a fan-out problem as an indexing problem**, when each individual query is already fast
   [S5].
+- **Repeating an aggregate over indexed rows on every request**, when the aggregate itself should be
+  maintained [S6].
 
 ## Not covered by sources
 
@@ -102,3 +115,5 @@ See `caching-the-read-path.md`.
   <https://www.hellointerview.com/learn/system-design/problem-breakdowns/ticketmaster>
 - **[S5]** Hello Interview — Design Facebook's News Feed —
   <https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-news-feed>
+- **[S6]** Hello Interview — Design a Coding Platform Like LeetCode —
+  <https://www.hellointerview.com/learn/system-design/problem-breakdowns/leetcode>

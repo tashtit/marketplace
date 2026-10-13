@@ -63,6 +63,12 @@ Two transferable points:
 S5's entity list is also notable for how short it is, and it says so: at this step a **short list
 of names is sufficient**, and the value is in agreeing the terms rather than in the modeling [S5].
 
+## When the actor is also the subject
+
+S7 lists the user as a core entity, which it says it usually leaves implied. The reason is that
+users act on other users, so the same entity is both the actor and the profile acted on [S7]. Its
+action entity records both roles explicitly, as the acting user and the target user [S7].
+
 ## Not covered by sources
 
 - What to do when the shared layout itself changes after child records were derived from it.
@@ -82,3 +88,5 @@ of names is sufficient**, and the value is in agreeing the terms rather than in 
   <https://www.hellointerview.com/learn/system-design/problem-breakdowns/gopuff>
 - **[S5]** Hello Interview — Design Facebook's News Feed —
   <https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-news-feed>
+- **[S7]** Hello Interview — Design a Dating App Like Tinder —
+  <https://www.hellointerview.com/learn/system-design/problem-breakdowns/tinder>
