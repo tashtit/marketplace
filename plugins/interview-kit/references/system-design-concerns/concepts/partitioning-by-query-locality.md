@@ -43,6 +43,18 @@ This is the same per-operation consistency reasoning as `requirements-scoping.md
 level of physical routing: the CAP ranking chosen per operation becomes which node the operation
 talks to.
 
+## Partitioning by the actor, or by the pair
+
+S7 shows that the key follows the question being asked. Partitioning action records by the acting
+user makes "did A act on B" hit one predictable partition [S7]. It also makes "everything A has
+acted on" a single-partition query [S7]. See `excluding-previously-seen-items.md`. When the question
+involves both directions, as in "has either party acted toward the other", S7 builds the key from
+the two IDs in sorted order so that both directions share a partition [S7]. See
+`detecting-mutual-actions.md`.
+
+S7 also names the cost of a pair key. Partitions grow as history accumulates, and very active users
+can make some partitions hot, so old data needs a cleanup strategy [S7].
+
 ## Costs
 
 S4 names two ongoing burdens rather than one-time ones [S4]:
@@ -60,6 +72,7 @@ S4 names two ongoing burdens rather than one-time ones [S4]:
 - **Under-provisioned replicas** as traffic grows past the sizing they were chosen for [S4].
 - **Sending a strongly consistent operation to a replica**, which is what the leader/replica split
   exists to prevent [S4].
+- **Partitions that grow without bound**, when the key accumulates history with no cleanup [S7].
 
 ## Not covered by sources
 
@@ -74,3 +87,5 @@ S4 names two ongoing burdens rather than one-time ones [S4]:
 
 - **[S4]** Hello Interview — Design a Local Delivery Service like Gopuff —
   <https://www.hellointerview.com/learn/system-design/problem-breakdowns/gopuff>
+- **[S7]** Hello Interview — Design a Dating App Like Tinder —
+  <https://www.hellointerview.com/learn/system-design/problem-breakdowns/tinder>

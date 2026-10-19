@@ -78,6 +78,8 @@ Both solve the caching problem; only one solves the hot-key problem [S5].
   scale [S5].
 - **A thundering set of misses on a newly popular key** in a replicated cache, bounded by the
   instance count [S5].
+- **Hot partitions from very active users**, under a key built from a pair of user ids [S7]. See
+  `detecting-mutual-actions.md`.
 - **Uneven work distribution on the write side too** — S5's rejected fan-out approach fails partly
   because one host does millions of writes while another is idle [S5]. See
   `fan-out-on-read-vs-write.md`.
@@ -96,3 +98,5 @@ Both solve the caching problem; only one solves the hot-key problem [S5].
 
 - **[S5]** Hello Interview — Design Facebook's News Feed —
   <https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-news-feed>
+- **[S7]** Hello Interview — Design a Dating App Like Tinder —
+  <https://www.hellointerview.com/learn/system-design/problem-breakdowns/tinder>

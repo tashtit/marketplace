@@ -7,6 +7,8 @@ Getting a change made in one place onto every other client that holds a copy [S2
 - The same state exists locally on multiple clients and authoritatively on a server, so changes
   have to travel in both directions [S2].
 - Clients need to learn about remote changes they did not make [S2].
+- A client is waiting for server-side state that changes over time, such as a live ranking or the
+  result of work it submitted [S6].
 
 ## The two directions are different problems
 
@@ -45,6 +47,28 @@ capability, so the simpler protocol is preferred over a bidirectional one [S3]. 
 keeping a shared view of contended state current without the user refreshing [S3]. It reiterates
 the choice for pushing queue-position updates: unidirectional is simpler, bidirectional works if
 you anticipate needing two-way traffic [S3].
+
+## When polling is enough
+
+S6 gives the case for polling alone. Many candidates propose persistent connections to deliver a
+live ranking. The source says this is not wrong, but it is overkill given a modest number of users
+and an acceptable 5-second delay [S6]. Plain polling every few seconds, against a structure that is
+cheap to read, balances freshness against simplicity and can be scaled up later if needed [S6]. See
+`live-ranking.md`.
+
+It reaches the same verdict for a client waiting on submitted work. A status endpoint polled every
+second is enough. A persistent connection would work but adds complexity that a one-second interval
+does not justify [S6]. See `asynchronous-work-queue.md`.
+
+**Polling cadence is a tunable, not a fixed choice.** If the interval turns out to be too frequent,
+it can be changed. S6 suggests progressive polling: faster when freshness matters most, for example
+every 2 seconds in the last minutes of an event, and slower otherwise, for example every 10 seconds
+[S6].
+
+S6 describes the staff-level skill here as knowing the more complex option and being clear about why
+it is likely overkill for this system [S6]. Read with S2, the conditions differ, not the reasoning.
+S2 needs changes on many devices to converge and adds push for near-instant propagation [S2]. S6
+states a tolerable delay and a small user base, so polling clears its bar [S6].
 
 ## When faster push stops helping
 
@@ -95,6 +119,8 @@ undermine this.
 - How many persistent connections a server can hold, or how the push side scales.
 - How a client that has been offline for a long time catches up.
 - At what contention level push stops being sufficient — S3 gives the symptom, not a threshold.
+- At what user count or delay tolerance S6's case for polling alone stops holding.
+- How a progressive polling schedule is chosen or switched at run time.
 
 ## Sources
 
@@ -102,3 +128,5 @@ undermine this.
   <https://www.hellointerview.com/learn/system-design/problem-breakdowns/dropbox>
 - **[S3]** Hello Interview — Design Ticketmaster —
   <https://www.hellointerview.com/learn/system-design/problem-breakdowns/ticketmaster>
+- **[S6]** Hello Interview — Design a Coding Platform Like LeetCode —
+  <https://www.hellointerview.com/learn/system-design/problem-breakdowns/leetcode>

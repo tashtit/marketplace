@@ -122,6 +122,17 @@ periodic refresh, so the two work together rather than either being sufficient [
 challenge is that keeping cache and database consistent is hard specifically when updates are
 frequent [S3].
 
+## Refreshing on a timer instead of on change
+
+S6 grades a cache rebuilt periodically from the database, with an example interval of 30 seconds,
+as good but limited [S6]. It removes the per-request database load. In exchange, results are only as
+fresh as the refresh interval, clients still have to poll to see them, and the source names possible
+race conditions if the refresh frequency is too low [S6].
+
+Its better answer updates the cached structure **on write**. When a result is processed, both the
+database and the in-memory structure are updated, and reads come only from memory [S6]. See
+`live-ranking.md`.
+
 ## Caching query results rather than records
 
 Repeated searches can be cached as whole result sets, keyed by the query parameters so each
@@ -160,6 +171,8 @@ expiration time, so stale entries are evicted automatically [S1]. See `record-ex
 - **A claim made against a cached quantity** that the writing path never invalidated [S4].
 - **A cache that inherits the skew of the store it fronts**, when it is sharded by the same key
   [S5].
+- **Staleness bounded only by a refresh timer**, when the cache is rebuilt periodically rather than
+  updated on write [S6].
 
 ## Not covered by sources
 
@@ -176,6 +189,8 @@ expiration time, so stale entries are evicted automatically [S1]. See `record-ex
   entries.
 - How cache tags are assigned to query results in practice.
 - How to measure the working set, in order to size a cache against it.
+- What keeps the database and a cache updated on the same write consistent if one of the two
+  updates fails.
 
 ## Sources
 
@@ -189,3 +204,5 @@ expiration time, so stale entries are evicted automatically [S1]. See `record-ex
   <https://www.hellointerview.com/learn/system-design/problem-breakdowns/gopuff>
 - **[S5]** Hello Interview — Design Facebook's News Feed —
   <https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-news-feed>
+- **[S6]** Hello Interview — Design a Coding Platform Like LeetCode —
+  <https://www.hellointerview.com/learn/system-design/problem-breakdowns/leetcode>
