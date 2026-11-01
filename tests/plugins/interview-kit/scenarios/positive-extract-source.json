@@ -9,12 +9,12 @@
   "setup": [
     "The working directory is a checkout of the plugin's source repository.",
     "The source document is fetchable in full and states reasoning about at least one concern.",
-    "The library's Sources processed table already records tags S1 through S5."
+    "The library records tags S8 through S14 and declares retired tags S1 through S7."
   ],
   "expected": [
     "The whole source is read before anything is written.",
     "Writes go to the checkout resolved by scripts/library-path.sh write, not to the bundled install copy.",
-    "The run claims S6, the next unused tag, and every new claim carries a citation resolving to a Sources entry.",
+    "The run claims S15, the next unused tag, and every new claim carries a citation resolving to a Sources entry.",
     "Concept files are named for the concern rather than the source's example system.",
     "Gaps are recorded as unanswered questions under 'Not covered by sources'.",
     "The concept index and Sources processed table are updated, and rejected candidates are listed under a heading bearing this run's tag."

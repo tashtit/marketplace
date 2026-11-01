@@ -1,5 +1,8 @@
 # Evaluation Rubric
 
+Tashtit convention for implementation evidence, not a Hello Interview standard or
+a career-level ladder.
+
 How to score whether a concern was handled well. One generic scale, applied to any concept in
 this library. Concept files deliberately carry **no** per-level anchors of their own: a source
 that never stated what "level 4 caching" looks like cannot support one, and inventing it would

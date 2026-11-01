@@ -1,12 +1,13 @@
 ---
 name: mock-design-interview
-description: Conduct a mock system design interview about an implementation the candidate already built. Scopes to one attempt directory, reads it and its git history, recovers session transcripts to tell prompted from unprompted decisions, then asks questions one at a time — probing decisions made, using symptom scenarios for concerns missed, following up when answers are thin — and ends with a level assessment. Invoke only on an explicit request to be interviewed, grilled, or assessed on a design. Never invoke it to write, fix, or review code, nor in a session that helped build the code under interview.
+description: Conduct a mock system design interview about an implementation the candidate already built. Scopes to one attempt directory, reads it and its git history, recovers session transcripts to tell prompted from unprompted decisions, then asks questions one at a time — probing decisions made, using symptom scenarios for concerns missed, following up when answers are thin — and ends with a technical assessment and any source-supported level observations. Invoke only on an explicit request to be interviewed, grilled, or assessed on a design. Never invoke it to write, fix, or review code, nor in a session that helped build the code under interview.
 ---
 
 # Mock Design Interview
 
 Interview the candidate about a system they have built. Questions come from probe seeds in the
-bundled `system-design-concerns` library, graded against its `level-expectations.md`. Resolve its
+bundled `system-design-concerns` pattern library. Technical criteria come from cited
+concepts; seniority observations are limited by `level-expectations.md`. Resolve its
 path with `scripts/library-path.sh read` and read those files directly — the library is data, not
 a skill to invoke.
 
@@ -130,9 +131,10 @@ pulls them all in.
 
 ### 4. Reconstruct who raised what
 
-The level bars turn on whether a concern was raised *unprompted* — see `level-expectations.md`.
-When the candidate directed an agent to write the code, that distinction lives in the transcript,
-not the repo.
+Record whether the candidate or agent raised a concern. This is evidence of ownership,
+not automatically a career-level bar. Apply a prompting-based bar only if the current
+`level-expectations.md` explicitly provides one. When the candidate directed an agent
+to write the code, that distinction lives in the transcript, not the repo.
 
 **Find the sessions by the files they touched.** The attempt directory is the key, and it is the
 most reliable one available: file paths are recorded on every edit and never change, whereas a
@@ -245,23 +247,27 @@ interrogating it during review is.
 pruned, and work done outside a session leaves no turns at all. Do not infer prompting from
 commit messages or code comments — that is guessing, and a confident wrong claim about who raised
 what is worse than none. Say the prompting axis cannot be measured, interview on depth alone, and
-note in the debrief that the level estimate is unanchored on that axis.
+note in the debrief that ownership evidence is unavailable on that axis.
 
 ### 5. Select probes
 
-Load the probe file matching the problem class. Choose seeds that:
+Read the library index and load probe files for the patterns relevant to this attempt.
+One attempt may need several pattern files; do not require a matching walkthrough
+or example product. If the index lists pending patterns, they have no answer key.
+Choose seeds that:
 
 - **Probe real decisions** — anchored to what is actually in their code.
 - **Probe real gaps** — a concern absent from the repo, asked as a symptom.
-- **Span levels** — some mid, some senior, at least two staff+.
+- **Span supported depth** — recognition, mechanism, tradeoffs, and failures. Do not
+  label technical depth as a seniority level unless the source explicitly does.
 
 Skip seeds whose concern does not apply to the design. A concern that cannot apply cannot be
 graded.
 
 ## Conducting it
 
-**One question at a time**, via `ask_user`. Never batch. Never number the questions or announce
-which concern is coming.
+**One question at a time**, via the host’s user-question tool or a conversational
+turn. Never batch. Never number the questions or announce which concern is coming.
 
 **Generate wording live** from the seed plus their code. Say "your `POST /urls` handler does a
 synchronous insert, then…" — not the seed's generic phrasing. Reference their actual function
@@ -282,8 +288,9 @@ Two follow-ups per probe is usually enough. Do not interrogate to exhaustion.
 do not resolve it until the debrief — real interviews do not.
 
 **Never grade beyond the sources.** Where a probe carries a "do not grade this" note, honor it.
-If the candidate raises something no source establishes a bar for, engage with it but score
-nothing.
+A cited technical criterion can assess an answer even without a seniority bar. If
+there is no cited technical answer key, engage but score nothing. In particular,
+pending patterns have no probes and must be reported as coverage gaps.
 
 ## Debrief
 
@@ -292,10 +299,13 @@ Only after the questions are done.
 **Per concern:** who raised it first (candidate / agent / neither), how the answer held up, and
 what the follow-up revealed.
 
-**Level assessment.** Name the highest bar cleared and quote the specific expectation from
-`level-expectations.md` that supports it. Be precise about what separates them from the next
-level — "you reached read-heaviness when I asked, but staff+ requires structuring the design
-around it from the start."
+**Assessment.** Explain demonstrated technical understanding against the probes’
+cited criteria. Report only the scoped seniority expectations actually supported
+by `level-expectations.md`; preserve hedges and grouped levels. If the sources do
+not distinguish senior from staff or establish an overall career level, say so.
+Do not import the removed walkthrough bars or derive levels from deep-dive headings.
+The optional 0–5 scale in `rubric.md` concerns implementation evidence under a
+Tashtit convention; it is not an answer-quality or career-level ladder.
 
 **The three most valuable things they got wrong**, with what a strong answer contains.
 
@@ -350,7 +360,8 @@ without any guessing.
   not a property. Push.
 - **Batching questions.** An interview is a conversation.
 - **Softening a wrong answer.** The most expensive habit in this whole skill.
-- **Grading unbanked concerns.** If no source set the bar, there is no bar.
+- **Inventing a seniority ladder.** Technical answer criteria do not establish
+  career thresholds. Uncovered concerns have neither an answer key nor a bar.
 - **Reading a `NULL` prompt as "unprompted".** It means no turn was found at that index, usually an
   in-flight turn. Unknown is not evidence.
 - **Inferring prompting from the artifact.** Commit messages and comments do not record who raised
@@ -381,12 +392,11 @@ The lightest setup that this skill can read reliably, if the candidate asks:
 The library is a plain reference directory, not a skill. Resolve it with
 `scripts/library-path.sh read` and read these files directly — do not expect to invoke anything:
 
-- `probes/` — seeds per source and problem class.
-- `level-expectations.md` — the bars, with the prompted/unprompted axis.
+- `probes/` — seeds grouped by reusable pattern.
+- `level-expectations.md` — explicitly stated, scoped seniority observations.
 - `concepts/` — what a good answer contains, cited.
 - `rubric.md` — 0–5 scale, for scoring an implementation rather than an interview.
 - `README.md` — the concept index, and which sources have been processed.
 
-`extract-design-concepts`, in this same plugin, is the only thing that writes to it. If a probe
-file has no bar for a concern that came up, that is a genuine gap in the library — say so rather
-than grading against an invented standard, and mine a source that covers it later.
+`extract-design-concepts`, in this same plugin, is the only thing that writes to it. A technical answer can be assessed without a seniority bar. If no cited answer
+criterion covers a concern, report that coverage gap instead of scoring it.

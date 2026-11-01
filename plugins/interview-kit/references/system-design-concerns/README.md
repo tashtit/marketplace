@@ -1,253 +1,108 @@
-# System Design Concerns
+# System Design Pattern Library
 
-Reference data, not a skill. A library of engineering concepts where **every claim is cited to a
-source that stated it**. Files are written by the `extract-design-concepts` skill, one source at a
-time, and read by `mock-design-interview` while it runs. Both ship in the `interview-kit` plugin
-alongside this directory.
-
-Nothing here is an instruction to an agent. There is no frontmatter and no trigger surface, on
-purpose: this directory is deliberately not a skill so that it cannot be selected, only opened by
-a consumer that already has a reason to.
-
-## What this library is and is not
-
-**Is:** an attributable record of engineering reasoning drawn from specific documents. If a
-claim is here, a source said it, and the citation tells you which.
-
-**Is not:** a complete treatment of system design. Coverage is exactly as broad as the sources
-processed so far — no broader. Each concept file has a `## Not covered by sources` section
-naming its own gaps; those gaps are real and are the honest edge of the library, not an
-oversight to be filled from general knowledge.
-
-**Consequence for use:** absence of a concern here does not mean the concern doesn't apply to
-your system. It means no processed source discussed it. Treat this as a checklist of
-*verified* reasoning, not an exhaustive one.
-
-## When not to open this library
-
-**Never while building the implementation an interview would later assess.** The concerns
-recorded here, together with `probes/` and `level-expectations.md`, are what that implementation is
-later interviewed and graded against. Work built while consulting them scores well on concerns it
-was handed, which measures the library rather than the person, and the assessment is then
-worthless. This is why `interview-kit` is meant to be enabled only once the building is done.
-
-Legitimate reads are: an interview in progress, an extraction run, or a direct question from the
-user about what this library says. When answering such a question, carry the citations — the point
-of the library is that a reader can tell which claims are verified, and a claim stripped of its
-tag is indistinguishable from general knowledge. Note also that a concept file existing is never a
-reason to recommend infrastructure; several sources make the opposite point, that at low volume
-the simple thing is correct.
+The interview answer key, extracted from complete Hello Interview pattern articles
+supplied as saved HTML. It is plain data, not a selectable skill. Each concept
+preserves source reasoning; probe symptoms are Tashtit-authored adaptations, not
+quotations or source-defined interview questions.
 
 ## Concept index
 
-<!-- Maintained by extract-design-concepts. One line per file; no entry without a file. -->
-
 | Concept | Consider it when | Sources |
-| --------- | ------------------ | --------- |
-| [requirements-scoping](concepts/requirements-scoping.md) | Starting a design; deciding what's out of scope; naming where the emphasis lies; turning "should be fast" into a benchmark; ranking consistency against availability — per operation, not per system | S1, S2, S3, S4, S5, S6, S7 |
-| [capacity-estimation](concepts/capacity-estimation.md) | A scale target is stated and a storage, compute, infrastructure, or transfer-time choice follows from it; a needed figure has to be derived from the one you were given | S1, S2, S4, S5, S6, S7 |
-| [read-heavy-workloads](concepts/read-heavy-workloads.md) | Reads outnumber writes by orders of magnitude; sizing peak load; splitting read and write paths; scaling a service horizontally | S1, S3, S4, S5 |
-| [caching-the-read-path](concepts/caching-the-read-path.md) | Read volume exceeds what disk can serve; data is mostly static after creation; distant users see single-region latency; choosing what to cache, for how long, and whether to refresh on a timer or on write | S1, S2, S3, S4, S5, S6 |
-| [point-lookup-indexing](concepts/point-lookup-indexing.md) | The dominant query is "find the one row matching this key" over a large table, or all rows for an attribute that cannot be the primary key; weighing the write cost of an index | S1, S3, S5, S6 |
-| [unique-identifier-generation](concepts/unique-identifier-generation.md) | Minting short identifiers users will see and share; collisions would break correctness | S1, S2 |
-| [content-addressed-identity](concepts/content-addressed-identity.md) | You need to recognize identical content across uploads — for dedup or to resume a transfer | S2 |
-| [shared-counter-coordination](concepts/shared-counter-coordination.md) | Correctness depends on one shared counter and the service is being scaled horizontally | S1 |
-| [record-expiry](concepts/record-expiry.md) | Records carry an expiration time, especially when they are also cached, or when a cleanup job would otherwise be load-bearing | S1, S3 |
-| [client-cached-responses](concepts/client-cached-responses.md) | Choosing response semantics that let clients cache; the mapping may later change | S1 |
-| [redundancy-for-availability](concepts/redundancy-for-availability.md) | An availability target is stated and a single stateful dependency is on the critical path | S1, S2 |
-| [large-file-transfer](concepts/large-file-transfer.md) | A payload could exceed a request timeout or size limit; progress or resumption is required | S2 |
-| [bypassing-the-application-server](concepts/bypassing-the-application-server.md) | Bulk data passes through your server on its way to or from a storage service | S2 |
-| [client-authority-and-verification](concepts/client-authority-and-verification.md) | Server state mirrors work the client performed out of the server's sight; a request carries identity or a timestamp the server could establish itself | S2, S6, S7 |
-| [propagating-changes-to-clients](concepts/propagating-changes-to-clients.md) | The same state lives on multiple clients and must converge after a change; deciding whether polling alone is enough | S2, S3, S6 |
-| [bidirectional-relationship-queries](concepts/bidirectional-relationship-queries.md) | A many-to-many relationship is embedded on one side and queried from the other | S2, S5 |
-| [signed-url-access-control](concepts/signed-url-access-control.md) | Clients fetch directly from storage or a CDN, so your server can't check permissions at fetch time | S2 |
-| [compression-tradeoffs](concepts/compression-tradeoffs.md) | Deciding whether to compress before transferring, and in what order with encryption | S2 |
-| [preventing-double-allocation](concepts/preventing-double-allocation.md) | Finite inventory is claimed by one user at a time; a claim must be held then released, or covers several items at once | S3, S4 |
-| [admission-control](concepts/admission-control.md) | Demand for a contended resource so far exceeds supply that a faster interface stops helping | S3 |
-| [full-text-search](concepts/full-text-search.md) | Users search free text by keyword and a wildcard query would scan the table; filtered or geospatial queries need a store kept in sync with the primary | S3, S7 |
-| [delegating-external-operations](concepts/delegating-external-operations.md) | A third party performs an operation and reports the outcome by callback, handles data you should never store, or computes an answer synchronously on your read path | S3, S4 |
-| [service-and-data-boundaries](concepts/service-and-data-boundaries.md) | Deciding whether separate services get separate databases, or whether a small system needs separate services at all; one path writes far more than another | S3, S4, S5, S6, S7 |
-| [entity-granularity](concepts/entity-granularity.md) | A concern could be its own entity or attributes on an existing one; the abstract type and the physical instance are being conflated; the actor is also the subject | S3, S4, S5, S7 |
-| [aggregating-availability-across-locations](concepts/aggregating-availability-across-locations.md) | A resource is spread across places and each caller can only reach some of them, so no stored total is correct | S4 |
-| [proximity-candidate-filtering](concepts/proximity-candidate-filtering.md) | Deciding what is "near enough" needs an expensive predicate — travel time, not distance — evaluated per candidate; the location itself needs an index | S4, S7 |
-| [partitioning-by-query-locality](concepts/partitioning-by-query-locality.md) | Every read is already scoped to a narrow slice of the keyspace, and one instance is under read pressure; choosing whether to key by the actor or by the pair | S4, S7 |
-| [fan-out-on-read-vs-write](concepts/fan-out-on-read-vs-write.md) | One request must gather data from many other records, or one write must update many; deciding whether to assemble at read time or precompute at write time or on a schedule, and when a precomputed result goes stale | S5, S7 |
-| [hot-key-load-distribution](concepts/hot-key-load-distribution.md) | A store or cache scales on aggregate throughput but the load is concentrated on a few keys | S5, S7 |
-| [cursor-pagination](concepts/cursor-pagination.md) | A client walks a long ordered result a page at a time, and the position has to be carried between calls; deciding whether a generated feed needs paging at all | S5, S7 |
-| [untrusted-code-execution](concepts/untrusted-code-execution.md) | Users submit code the system must run; choosing between VMs, containers and serverless, and hardening the sandbox | S6 |
-| [live-ranking](concepts/live-ranking.md) | Many clients poll a top-N ranking whose scores change as users act | S6 |
-| [asynchronous-work-queue](concepts/asynchronous-work-queue.md) | Slow work behind a request may spike past worker capacity or fail mid-run; deciding whether a buffer is worth making the flow asynchronous | S6 |
-| [scaling-compute-bound-work](concepts/scaling-compute-bound-work.md) | Each request does substantial CPU work; choosing between a bigger machine and more machines | S6 |
-| [cross-runtime-test-harness](concepts/cross-runtime-test-harness.md) | The same checks must run against code written in several languages | S6 |
-| [detecting-mutual-actions](concepts/detecting-mutual-actions.md) | Two users acting on each other must produce exactly one outcome, even when both act at nearly the same moment | S7 |
-| [excluding-previously-seen-items](concepts/excluding-previously-seen-items.md) | A generated list must leave out items the user has already acted on, and the history is large or lags its replicas | S7 |
-
-## Support files
-
-- `level-expectations.md` — what interviewers expect at mid / senior / staff+, with the
-  prompted-vs-unprompted axis that distinguishes them.
-- `probes/` — question seeds per source and problem class, used by `mock-design-interview`.
-  Symptom-first, so a probe never names the concern it is testing.
-- `rubric.md` — generic 0–5 scale for evaluating whether a concern was handled, with an evidence
-  hierarchy that rejects "the dependency exists, therefore it's implemented."
-
-## Who consumes this library
-
-| Skill | Uses | For |
 | --- | --- | --- |
-| `extract-design-concepts` | writes all of it | growing the library from a new source |
-| `mock-design-interview` | `probes/`, `level-expectations.md`, `concepts/` | interviewing you about something you built |
-
-## Growing the library
-
-New claims go to a **versioned checkout**, never to the bundled copy inside an installed plugin:
-that directory is managed by the host and has no history, so a reinstall or upgrade discards
-whatever was written there. `scripts/library-path.sh write` resolves a safe target and fails
-closed when there is none.
-
-Run the `extract-design-concepts` skill with a new source. It will create new concept files or
-extend existing ones with additional citations, record contradictions between sources rather
-than resolving them, and update this index.
-
-Do not hand-author concept files here. Content that arrives without a citation defeats the
-purpose of the library, because a reader can no longer tell which claims are verified.
+| [Scaling Reads](concepts/scaling-reads.md) | High read volume, expensive queries, or repeated access to the same data | S8 |
+| [Scaling Writes](concepts/scaling-writes.md) | Write throughput exceeds a component’s capacity, traffic bursts, or a hot key dominates | S9 |
+| [Managing Long Running Tasks](concepts/managing-long-running-tasks.md) | Work takes seconds or minutes, needs specialized hardware, or blocks the request tier | S10 |
+| [Multi-step Processes](concepts/multi-step-processes.md) | Several services or human steps must coordinate through failures, retries, and long waits | S11 |
+| [Real-time Updates](concepts/realtime-updates.md) | Users need timely events or shared state changes rather than occasional refreshes | S12 |
+| [Dealing with Contention](concepts/dealing-with-contention.md) | Concurrent writers compete for the same resource or violate a shared invariant | S13 |
+| [Handling Large Blobs](concepts/large-blobs.md) | Large uploads or downloads burden application servers or need resumability | S14 |
 
 ## Sources processed
 
-<!-- Append one row per source run through extract-design-concepts. -->
+Tags S1–S7 are retired with the removed walkthrough library. They MUST NOT be
+reused. The replacement starts at S8 so historical citations cannot silently
+refer to a different article. The next available tag is S15.
 
 | Tag | Source | Date | Concepts touched |
-| ----- | -------- | ------ | ------------------ |
-| S1 | [Hello Interview — Design Bit.ly](https://www.hellointerview.com/learn/system-design/problem-breakdowns/bitly) | 2026-08 | all 10 concepts (created); level bars; 12 probe seeds |
-| S2 | [Hello Interview — Design a File Storage Service Like Dropbox](https://www.hellointerview.com/learn/system-design/problem-breakdowns/dropbox) | 2026-08 | 8 created, 5 extended; level bars; 13 probe seeds |
-| S3 | [Hello Interview — Design Ticketmaster](https://www.hellointerview.com/learn/system-design/problem-breakdowns/ticketmaster) | 2026-08 | 6 created, 6 extended; level bars; 21 probe seeds |
-| S4 | [Hello Interview — Design a Local Delivery Service like Gopuff](https://www.hellointerview.com/learn/system-design/problem-breakdowns/gopuff) | 2026-08 | 3 created, 8 extended; level bars; 21 probe seeds |
-| S5 | [Hello Interview — Design Facebook's News Feed](https://www.hellointerview.com/learn/system-design/problem-breakdowns/fb-news-feed) | 2026-08 | 3 created, 8 extended; level bars; 21 probe seeds |
-| S6 | [Hello Interview — Design a Coding Platform Like LeetCode](https://www.hellointerview.com/learn/system-design/problem-breakdowns/leetcode) | 2026-10 | 5 created, 7 extended; level bars; 12 probe seeds |
-| S7 | [Hello Interview — Design a Dating App Like Tinder](https://www.hellointerview.com/learn/system-design/problem-breakdowns/tinder) | 2026-10 | 2 created, 11 extended; level bars; 11 probe seeds |
+| --- | --- | --- | --- |
+| S8 | [Scaling Reads](https://www.hellointerview.com/learn/system-design/patterns/scaling-reads) | 2026-11 | scaling-reads |
+| S9 | [Scaling Writes](https://www.hellointerview.com/learn/system-design/patterns/scaling-writes) | 2026-11 | scaling-writes |
+| S10 | [Managing Long Running Tasks](https://www.hellointerview.com/learn/system-design/patterns/long-running-tasks) | 2026-11 | managing-long-running-tasks |
+| S11 | [Multi-step Processes](https://www.hellointerview.com/learn/system-design/patterns/multi-step-processes) | 2026-11 | multi-step-processes |
+| S12 | [Real-time Updates](https://www.hellointerview.com/learn/system-design/patterns/realtime-updates) | 2026-11 | realtime-updates |
+| S13 | [Dealing with Contention](https://www.hellointerview.com/learn/system-design/patterns/dealing-with-contention) | 2026-11 | dealing-with-contention |
+| S14 | [Handling Large Blobs](https://www.hellointerview.com/learn/system-design/patterns/large-blobs) | 2026-11 | large-blobs |
 
-### Rejected from S1
+## Input verification
 
-Concepts named by the source but without transferable reasoning attached, so no file was
-created:
+All seven requested patterns have been processed from complete article bodies
+across the user-supplied saved-file versions. No patterns remain pending.
+Filename mismatches were resolved using the main heading, body, and canonical
+URL, rather than assigning claims to the filename's subject.
 
-- **Consistency** — stated only as a ranking ("availability > consistency"); no reasoning about
-  what that implies. Recorded as a gap in `redundancy-for-availability.md`.
-- **Analytics / click tracking, authentication, spam and malicious-content filtering** — declared
-  out of scope by the source.
-- **Observability, rate limiting, idempotency, asynchronous processing** — not discussed.
+| Pattern | Saved input used |
+| --- | --- |
+| Scaling Reads | Initial file named Multi-step Processes; its body is Scaling Reads |
+| Scaling Writes | File named How to scale writes; the file named How to scale reads duplicates this article |
+| Managing Long Running Tasks | File named Managing Long Running Tasks |
+| Multi-step Processes | Initial file named Dealing with Contention, before it was replaced; its body is Multi-step Processes |
+| Real-time Updates | File named Real-time Updates |
+| Dealing with Contention | Corrected file named Dealing with Contention |
+| Handling Large Blobs | Corrected file named Handling Large Blobs |
 
-### Rejected from S2
+The current files named How to scale reads and Multi-step Processes still contain
+Scaling Writes and Scaling Reads respectively. Replacing the Contention save did
+not change S11's provenance: it cites the complete earlier article body already
+processed, not the later file at the same path. References are paraphrased
+extractions, not copies of the downloaded HTML.
 
-- **Blob storage internals** — explicitly declared out of scope by the source, which suggests it
-  as separate reading.
-- **Database selection** — the source names a document store and immediately says a relational
-  one would work as well and not to dwell on it. The transferable part (the workload doesn't
-  discriminate) was folded into `capacity-estimation.md` rather than given its own file.
-- **Authentication and token placement** — the source states the convention (credentials in
-  headers, never the body, because the body is client-manipulable) but treats users as already
-  authenticated and develops nothing further. One sentence, no surrounding reasoning.
-- **Encryption in transit and at rest** — named as no-brainers with no tradeoff attached; kept as
-  context inside `signed-url-access-control.md` rather than as a concept.
-- **File editing, in-place viewing, storage limits per user, versioning, virus and malware
-  scanning** — declared out of scope by the source.
-- **Load balancers, API gateways, SSL termination** — listed as components in the final design
-  with no reasoning about when or why.
-- **Observability, rate limiting, idempotency** — not discussed.
+## Excluded material
 
-### Rejected from S3
+For each processed source, navigation, marketing, player controls, quizzes,
+reader comments, and linked walkthroughs were excluded. No linked problem
+breakdowns were mined.
 
-- **Payment processing as a named service** — the source routes payment through a specific
-  provider but gives no reasoning for choosing it. The transferable parts (client-side
-  tokenization, idempotent callbacks) went into `delegating-external-operations.md` instead.
-- **The specific database engine** — the source names one but says any engine with ACID
-  properties is fine, so the engine choice carries no reasoning. The parts that do — the
-  transactional requirement, and needing isolation levels plus row locking or optimistic
-  concurrency control — went into `preventing-double-allocation.md` and
-  `service-and-data-boundaries.md`.
-- **API gateway, load balancers** — the load-balancing algorithms came with a reason and went into
-  `read-heavy-workloads.md`; the gateway itself appears only as a box in the design.
-- **Sharding and replication** — named in the senior-level bar as expected knowledge, but the
-  source never explains either. Recorded as a bar in `level-expectations.md` with no concept file,
-  since there is nothing cited to check an answer against.
-- **GDPR, fault tolerance, secure transactions, CI/CD, backups** — declared out of scope by the
-  source in its requirements phase.
-- **Viewing booked events, admin event creation, dynamic pricing** — declared out of scope as
-  functional requirements.
-- **Diagramming and interview communication advice** — interview meta-advice, not engineering
-  reasoning.
-- **Observability, rate limiting, multi-region deployment** — not discussed.
+### Rejected from S8
 
-### Rejected from S4
+- Collaborative editing algorithms: only a use-case signal; no mechanism taught.
+- Absolute freshness from a cached version pointer: no pointer-freshness protocol supplied.
 
-- **Load balancing** — named in the staff+ expectations as a topic to understand, with no reasoning
-  attached. The reasoning-bearing statelessness argument already lives in
-  `read-heavy-workloads.md` from S3.
-- **Search index over the catalog** — mentioned as something the source would ideally add, with no
-  reasoning about how or when. The transferable part (divergent consumers and workloads justify the
-  split) went into `service-and-data-boundaries.md` instead.
-- **Database selection** — the source names a relational engine for its transaction and a key-value
-  store for the rejected split-store option, but the criterion it states is only "an ACID store when
-  atomicity is required", which was folded into `preventing-double-allocation.md`.
-- **Payment and purchase handling, driver routing and deliveries, catalog and search APIs,
-  cancellations and returns** — declared out of scope by the source.
-- **Privacy and security, disaster recovery** — declared out of scope by the source.
-- **Observability, rate limiting, idempotency, asynchronous processing** — not discussed.
+### Rejected from S9
 
-### Rejected from S5
+- A guarantee of lossless dual writes: the migration outline does not explain partial-write recovery.
+- Universal database throughput or flush settings: product-specific illustrative figures are not capacity guarantees.
 
-- **API gateway and load balancer** — named as the entry point with a reason for horizontal scaling
-  attached, but that reason is statelessness, which already has a home. The transferable claim went
-  into `read-heavy-workloads.md`; the gateway itself appears only as a box.
-- **Database selection** — the source picks a specific key-value store for "simplicity and
-  scalability" and notes it allows high provisioned throughput. The only reasoning-bearing part is
-  the condition on that throughput (even load across the keyspace), which went into
-  `hot-key-load-distribution.md`. The choice itself is a name-drop.
-- **Single-table versus multi-table modeling** — the source notes the platform's recommended
-  practice and says it deliberately used separate tables for clarity, but explains neither practice.
-  The transferable habit (labelling a simplification as one) went into
-  `service-and-data-boundaries.md`.
-- **Idempotency** — stated as the reason for choosing one HTTP verb over another for a binary
-  action, which is a real criterion, but it is one sentence with no reasoning about retries,
-  duplicate delivery, or failure. Not enough to support a file; recorded here rather than rounded
-  up.
-- **Queue technology selection** — a specific managed queue is named, but the reasoning-bearing part
-  is the requirements it must meet (at-least-once delivery, high scalability), which went into
-  `fan-out-on-read-vs-write.md`. The product name carries nothing.
-- **Reactions and replies on a record, visibility and privacy rules, removing a relationship** —
-  declared out of scope by the source.
-- **Authentication** — the source explicitly assumes it is already handled and declines to detail
-  it.
-- **Ranking and relevance** — the source's ordering is reverse chronological by requirement; it
-  makes no claim about scoring.
-- **Observability, rate limiting, multi-region deployment, disaster recovery** — not discussed.
+### Rejected from S10
 
-### Rejected from S6
+- Atomic duplicate admission: the example separates lookup and insertion without resolving races.
+- Automatic recovery of pending records after enqueue failure: no recovery protocol stated.
 
-- **Database selection** — the source picks a document store because it needs no complex queries
-  and wants to nest test cases inside the problem record, after saying either kind would work. That
-  is a preference with a thin reason, and it is the same non-discriminating choice S1 and S2 already
-  record in `capacity-estimation.md`.
-- **Pagination of lists** — offset pages are used because there are too many items for one
-  response, with no reasoning about the scheme. `cursor-pagination.md` is untouched.
-- **Code-stub generation and the in-browser editor** — product detail with no transferable
-  reasoning.
-- **Leaving the user entity implicit** — interview meta-advice.
-- **Availability over consistency** — stated as a requirement and never developed.
-- **User authentication, profiles, payments, analytics, social features, fault tolerance, purchase
-  security, CI/CD, backups** — declared out of scope by the source.
-- **Observability, rate limiting, multi-region deployment** — not discussed.
+### Rejected from S11
 
-### Rejected from S7
+- Exactly-once network delivery: the source distinguishes repeat attempts from side-effect safety.
+- Reconciliation against an unqueryable external provider: no mechanism supplied.
 
-- **API gateway, profile service** — boxes in the diagram with no stated reasoning.
-- **Picture upload, chat after matching, premium and boosted actions** — declared out of scope.
-- **Fake-profile protection, monitoring and alerting** — declared out of scope.
-- **Engine internals (wide-column storage engine, search engine, in-memory store, push services)**
-  — name-drops. Where the source gave a reason, it went into a concept file. The rest is
-  engine-specific.
-- **Storing matches after creation** — the source explicitly skips it.
-- **Push notification delivery** — the source assumes an external service. Only the
-  "notify the earlier actor" reasoning was kept, in `detecting-mutual-actions`.
-- **Marking which endpoints need authentication** — interview meta-advice.
-- **Observability, rate limiting, multi-region** — not discussed.
+### Rejected from S12
+
+- CRDT, operational-transform, and vector-clock algorithms: named without sufficient explanation.
+- General networking tutorial: background outside this pattern's focused answer key.
+
+### Rejected from S13
+
+- Cross-store transactions and multi-writer replication algorithms: explicitly outside the article's scope.
+- Exclusive action guaranteed by a TTL lease: the source explicitly describes overlapping holders after a pause.
+- ABA detection from comparing all business fields: the source does not explain the case where every compared field returns to its original value.
+
+### Rejected from S14
+
+- Universal upload-size thresholds and provider part-size limits: illustrative, provider-dependent details rather than guarantees.
+- Uniform support for signed size/type conditions across every upload API: not established by the article.
+- Duplicate-event processing and immediate revocation: no mechanism supplied.
+
+## Assessment resources
+
+- [Probe seeds](probes/): one file per pattern, named `<pattern>.md` without a
+  source-number prefix. Select relevant patterns, potentially more than one per
+  attempt. Citations retain source tags and each file starts its probes at P1.
+- [Level expectations](level-expectations.md): only source-stated, narrowly scoped seniority observations.
+- [Evaluation rubric](rubric.md): Tashtit convention for implementation evidence, not a source-defined seniority ladder.

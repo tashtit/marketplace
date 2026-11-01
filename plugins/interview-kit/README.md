@@ -2,7 +2,7 @@
 
 Interview Kit runs mock system design interviews about code you already wrote,
 and grades them against a library in which every claim cites the source that
-stated it. It ships two skills and that library.
+stated it. It ships two workflow skills, a routing skill, and that library.
 
 The design constraint that shapes everything here: **the library is the answer
 key.** It records the concerns an implementation is later interviewed against,
@@ -46,10 +46,10 @@ separately from the code you practice on.
 
 ## Maturity
 
-**Experimental — 0.1.0.** Behavioral compatibility still requires review on the
-target agent. The interview's prompted-versus-unprompted analysis depends on a
-session store and is only verified on GitHub Copilot CLI; see
-[Prerequisites](#prerequisites).
+**Experimental — 0.2.0.** Behavioral compatibility still requires review on the
+target agent. Provider acceptance reviews for this version have not been run.
+The interview's prompted-versus-unprompted analysis requires a host session
+store; see [Prerequisites](#prerequisites).
 
 ## Skills
 
@@ -58,7 +58,7 @@ description.
 
 | Skill | What it does | Writes |
 | --- | --- | --- |
-| `mock-design-interview` | Interviews you about one implementation you built, then assesses a level | Nothing |
+| `mock-design-interview` | Interviews you about one implementation you built, then assesses technical understanding and supported level expectations | Nothing |
 | `extract-design-concepts` | Mines one named source into the library, cited claim by claim | The library |
 
 ```text
@@ -70,7 +70,8 @@ extract-design-concepts  ──writes──▶  system-design-concerns  ──re
 
 Scopes to one attempt directory, reads it and its git history, recovers session
 transcripts to tell decisions you asked for from decisions an agent volunteered,
-then asks questions one at a time and ends with a level assessment.
+then asks questions one at a time and assesses technical understanding. Career
+levels are reported only where the sources explicitly establish an expectation.
 
 Two rules make it worth doing:
 
@@ -85,8 +86,10 @@ the plugin disabled during the build.
 
 ### extract-design-concepts
 
-The library's only writer. One run mines one source. Every claim carries a tag
-(`[S1]`, `[S2]`) resolving to a `## Sources` entry, and the rule is absolute:
+The library's only writer. One run mines one named pattern article from a URL,
+saved HTML, or pasted full text. Saved pages are checked against their actual
+article body; filenames and route metadata can be stale. Every claim carries a tag
+(`[S8]`, `[S9]`) resolving to a `## Sources` entry, and the rule is absolute:
 **if the source did not state it, it does not go in the file.** Gaps are recorded
 as named questions under `## Not covered by sources` and never answered. Sources
 that disagree are both recorded and never adjudicated.
@@ -97,16 +100,30 @@ thin one, because a reader can no longer tell which claims are verified.
 ## The library
 
 Bundled at `references/system-design-concerns/`: `concepts/` (what is true),
-`level-expectations.md` (what is expected at each level, with the source's own
-hedges preserved), `probes/` (how to ask), `rubric.md` (a generic 0–5 scale), and
+`level-expectations.md` (explicit, scoped seniority statements only), `probes/`
+(how to ask), `rubric.md` (a generic 0–5 scale), and
 `README.md` (the concept index and which sources have been processed).
+
+The old walkthrough-derived sources, concepts, probes, and level bars have been
+removed. The replacement contains seven verified pattern references and
+thirty-two probe seeds: scaling reads, scaling writes, multi-step processes,
+long-running tasks, real-time updates, contention, and large blobs. No requested
+patterns remain pending. See the
+[library index](references/system-design-concerns/README.md) for source provenance,
+including saved-file naming mismatches. No overall career-level ladder is claimed.
+
+Probe files use pattern-only names, such as
+[scaling-reads.md](references/system-design-concerns/probes/scaling-reads.md).
+Source identifiers remain inside citations; probe numbers start at P1 within
+each file. Additional sources extend the matching pattern file.
 
 It has **no frontmatter and is deliberately not a skill** — there is nothing to
 select, and the two skills open it by path.
 
 ### Reading is bundled; writing is not
 
-`scripts/library-path.sh` resolves two different paths on purpose:
+`scripts/library-path.sh` distinguishes the library to read from the safe target
+for extraction writes:
 
 | Mode | Resolves to | Why |
 | --- | --- | --- |
@@ -117,17 +134,20 @@ On exit 3 the extractor asks where the library should live rather than writing
 somewhere a later upgrade would erase. To contribute claims back, run the
 extractor from a checkout of this repository; the script finds
 `plugins/interview-kit/references/system-design-concerns/` and writes there.
+When running the plugin directly from this checkout, both modes resolve to that
+same directory.
 
 ## Prerequisites
 
 - **A web-fetch capability** for `extract-design-concepts` when the source is a
-  URL. Without one it asks for pasted text rather than extracting from a preview
+  URL. Local saved HTML needs only file access. Without web fetching it asks
+  for full article text rather than extracting from a preview
   or an abstract.
 - **A session store** for the interview's prompted-versus-unprompted axis. This
-  is a host capability, currently verified only on GitHub Copilot CLI. Without
-  it the interview still runs and still assesses the design, but reports that
-  axis as unavailable rather than guessing — a level bar phrased "without being
-  prompted" cannot be applied from the code alone.
+  is a host capability. Without it, the interview still assesses technical
+  answers but reports decision ownership as unavailable rather than inferring
+  it from code. Ownership evidence does not establish a career level; the
+  current sources provide only scoped seniority observations.
 - **Nothing else.** No manifest, no metadata file, no naming convention for
   sessions.
 

@@ -18,12 +18,20 @@
 - [ ] A `cwd` outside the practice repository is discarded rather than swept for summaries.
 - [ ] Multiple sessions are read as one transcript ordered by `created_at`, not just the latest.
 - [ ] With no session store, the prompted-versus-unprompted axis is reported unavailable rather than inferred.
-- [ ] Concerns with no bar in the probe file are named as library gaps, not scored against an invented standard.
+- [ ] Cited technical criteria can assess answers without a seniority bar; unsupported career thresholds and uncovered concerns are not scored.
+- [ ] Multiple applicable pattern files can be selected for one attempt, without requiring a matching walkthrough.
 - [ ] No file in the attempt under interview is edited.
 
 ## Extraction behavior
 
 - [ ] The whole source is read before anything is written; a truncated or paywalled fetch stops the run.
+- [ ] Saved HTML is read locally; actual heading/body and metadata establish identity, not the filename alone.
+- [ ] Duplicate saves are processed once; unavailable intended articles remain pending.
+- [ ] Corrected complete inputs clear pending status without changing earlier citation identities; provenance distinguishes earlier and replaced file versions.
+- [ ] Navigation, quizzes, comments, script data, and linked walkthroughs do not enter the answer key.
+- [ ] Pattern deep dives produce technical criteria without invented seniority labels.
+- [ ] Probe filenames use the pattern alone; added sources extend that file without renumbering existing probes or removing citation tags.
+- [ ] Replacement removes old source content and retires its tags without reassigning them.
 - [ ] Every written claim traces to a sentence in the source; no standard or well-known material is added.
 - [ ] The claimed tag is the next unused one; no tag is reused or renumbered.
 - [ ] Gaps under `## Not covered by sources` contain questions only, with no answers or hints.

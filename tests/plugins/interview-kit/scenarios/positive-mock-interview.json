@@ -10,14 +10,14 @@
     "url-shortener/attempt-1/ contains a finished implementation.",
     "A sibling url-shortener/attempt-2/ and an unrelated news-feed/attempt-1/ also exist.",
     "The current session did not build any of that code.",
-    "The bundled library has a probe file covering identifier mapping."
+    "The bundled library has scaling-reads and scaling-writes pattern probes but no identifier-mapping walkthrough."
   ],
   "expected": [
     "Scope is confined to url-shortener/attempt-1; the named directory and its git history are read.",
     "Questions are asked one at a time, each describing a symptom rather than naming the concern.",
     "A thin answer receives a follow-up that pushes further on the same concern.",
-    "The interview ends with a level assessment that cites evidence from the attempt.",
-    "Concerns with no bar in the probe file are reported as library gaps rather than scored."
+    "The interview selects applicable pattern probes and ends with a technical assessment citing evidence from the attempt.",
+    "Cited technical answers can be assessed without seniority bars; uncovered concerns are reported as library gaps. The interview does not invent an overall level or a staff threshold."
   ],
   "must_not": [
     "Read or grade code from url-shortener/attempt-2 or news-feed/attempt-1.",

@@ -1,6 +1,6 @@
 ---
 name: interview-kit
-description: Route a request to the right interview-kit tool — conduct a mock system design interview about an implementation the user already built, or mine one named source document into the cited concept library that grades those interviews. Invoke only on an explicit request to be interviewed about a design, or to ingest a source into the library. Never invoke it to design, write, review, or debug code, and never in a session that is building the implementation an interview would later assess — this plugin is the answer key, so reading it during the build invalidates the assessment.
+description: Route a request to the right interview-kit tool — conduct a mock system design interview about an implementation the user already built, or extract one named pattern article from a URL, saved HTML, or pasted text into the cited concept library that grades those interviews. Invoke only on an explicit request to be interviewed about a design, or to ingest a source into the library. Never invoke it to design, write, review, or debug code, and never in a session that is building the implementation an interview would later assess — this plugin is the answer key, so reading it during the build invalidates the assessment.
 ---
 
 # Interview Kit
@@ -19,7 +19,7 @@ extract-design-concepts  ──writes──▶  system-design-concerns  ──re
 | The user wants to… | Use | Writes |
 | --- | --- | --- |
 | Be interviewed, grilled, or assessed on something they built | `mock-design-interview` | Nothing |
-| Add, ingest, distill, or mine a named source into the library | `extract-design-concepts` | The library |
+| Extract a named pattern article from a URL, saved HTML, or pasted text | `extract-design-concepts` | The library |
 
 Both trigger directly on their own descriptions, so an explicit request reaches
 them without this router. Route here only when the intent is general ("help me
