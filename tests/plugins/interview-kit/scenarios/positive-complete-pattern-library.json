@@ -1,0 +1,27 @@
+{
+  "id": "interview-kit-positive-complete-pattern-library",
+  "type": "positive",
+  "platforms": [
+    "claude-code",
+    "github-copilot"
+  ],
+  "prompt": "Finish replacing the library using these corrected contention and large-blobs HTML files.",
+  "setup": [
+    "The initial extraction recorded S8 through S12 and retired S1 through S7.",
+    "The corrected main headings, article bodies, and canonical URLs identify Dealing with Contention and Handling Large Blobs, with complete conclusions.",
+    "The earlier complete Multi-step Processes article was supplied under the original Contention filename before that file was replaced."
+  ],
+  "expected": [
+    "Process the two complete corrected articles as S13 and S14 without renumbering existing sources.",
+    "Add cited pattern references and symptom probes, preserving failure limits such as stale lease holders and eventual metadata synchronization.",
+    "Remove their pending status and retain clear provenance for S11 from the earlier input version.",
+    "Record no new seniority bars because neither article states career-level thresholds.",
+    "Update the concept index, Sources processed, coverage documentation, and next available tag to S15."
+  ],
+  "must_not": [
+    "Re-extract the new contention body under S11 or label it Multi-step Processes.",
+    "Treat a TTL lease as a guarantee of exclusive action, or client upload acknowledgment as authoritative completion.",
+    "Restore walkthrough-derived claims or invent unsupported technical mechanisms.",
+    "Record a provider acceptance pass without actually observing it."
+  ]
+}

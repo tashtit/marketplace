@@ -1,0 +1,25 @@
+{
+  "id": "interview-kit-positive-pattern-assessment",
+  "type": "positive",
+  "platforms": [
+    "claude-code",
+    "github-copilot"
+  ],
+  "prompt": "Interview me on report-service/attempt-1 and tell me my level.",
+  "setup": [
+    "The named finished attempt needs background work and multiple dependent steps.",
+    "The current session did not build it.",
+    "The pattern library has technical job-processing probes, grouped senior/staff workflow expectations, and no global career-level ladder."
+  ],
+  "expected": [
+    "Load long-running-task and multi-step pattern probes appropriate to this attempt.",
+    "Ask one symptom-based question at a time and assess against the cited technical criteria.",
+    "Preserve the grouped senior/staff observation and explain that it cannot establish a separate staff threshold or overall career level.",
+    "Keep transcript ownership evidence separate from technical answer quality and implementation-evidence rubric scores."
+  ],
+  "must_not": [
+    "Require a matching report-service walkthrough.",
+    "Skip a supported technical probe solely because no seniority bar exists.",
+    "Assign a career level from deep-dive difficulty or the 0\u20135 implementation rubric."
+  ]
+}

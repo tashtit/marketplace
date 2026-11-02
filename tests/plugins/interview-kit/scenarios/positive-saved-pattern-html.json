@@ -1,0 +1,28 @@
+{
+  "id": "interview-kit-positive-saved-pattern-html",
+  "type": "positive",
+  "platforms": [
+    "claude-code",
+    "github-copilot"
+  ],
+  "prompt": "Extract this saved HTML pattern article into the library.",
+  "setup": [
+    "A writable checkout contains the library with tags through S14.",
+    "The full main article teaches a reusable pattern, with mechanisms and deep dives but no seniority labels.",
+    "Navigation, player controls, a quiz, and reader comments surround the article.",
+    "A probe file for the article’s pattern already contains cited probes from an earlier source."
+  ],
+  "expected": [
+    "Read the complete main article locally without requiring a web tool.",
+    "Create or extend a cohesive pattern reference with S15 citations, supported tradeoffs, and unanswered gaps.",
+    "Derive symptom probes with cited technical criteria while explicitly recording no seniority bar.",
+    "Exclude page chrome, quizzes, reader comments, and linked walkthroughs; update the index.",
+    "Extend probes/<pattern>.md without a source-number prefix, continue after the highest existing probe number, and preserve source tags inside citations."
+  ],
+  "must_not": [
+    "Treat a deep-dive heading as a senior or staff expectation.",
+    "Mine linked walkthroughs or executable script data.",
+    "Copy the raw saved page or account UI into the plugin.",
+    "Create a second probe file for the same pattern solely because the source tag differs, or renumber existing probes."
+  ]
+}
