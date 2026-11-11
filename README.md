@@ -1,5 +1,7 @@
 # Tashtit Marketplace
 
+[![skills.sh installs](https://skills.sh/b/tashtit/marketplace)](https://skills.sh/tashtit/marketplace)
+
 **Opinionated, production-focused engineering standards for AI coding agents.**
 
 Tashtit is an open-source plugin marketplace for teams that want agents to
