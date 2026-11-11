@@ -13,7 +13,11 @@
     "github-actions",
     "ci",
     "cd",
-    "supply-chain"
+    "supply-chain",
+    "github-actions-standards",
+    "agent-skills",
+    "ci-cd",
+    "workflow-security"
   ],
   "skills": "./skills/",
   "interface": {

@@ -46,11 +46,9 @@ codex plugin add engineering-standards
 Every plugin except `evalkit` is published to the Codex catalog; `evalkit`
 supports Claude Code and GitHub Copilot CLI only.
 
-### Discover individual skills
+### Install individual skills
 
-The [skills CLI](https://github.com/vercel-labs/skills) can list skills without
-installing a plugin. Run these commands from the project where the skills should
-be installed:
+Use the [skills CLI](https://github.com/vercel-labs/skills) in your project:
 
 ```bash
 npx skills add tashtit/marketplace --list
@@ -58,12 +56,16 @@ npx skills add tashtit/marketplace --skill engineering-standards
 npx skills add tashtit/marketplace --skill github-actions-standards
 ```
 
-A skill-only installation copies only the selected skill directory. Some
-routers need sibling skills, and Evalkit and Interview Kit need plugin-level
-resources; use plugin installation for those cases. See the
-[discovery audit](docs/skill-discovery.md) for the tested scope and limitations.
-All skills remain experimental; discovery and installation are not behavioral
-reviews.
+Install the complete skill sets for Maturity and Agent Parity so their routers
+can find their dependencies:
+
+```bash
+npx skills add tashtit/marketplace --skill maturity evaluate-dockerfile evaluate-npm evaluate-repository-hygiene evaluate-ci-workflow
+npx skills add tashtit/marketplace --skill agent-parity parity-instructions parity-mcp parity-skills parity-plugins
+```
+
+Evalkit and Interview Kit require plugin installation for their bundled
+resources. All skills are experimental.
 
 ## Why Tashtit
 

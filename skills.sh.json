@@ -3,21 +3,71 @@
   "notGrouped": "bottom",
   "groupings": [
     {
-      "title": "Engineering Standards",
+      "title": "Start here",
+      "description": "Experimental engineering review, secure CI, repository maturity, and cross-agent configuration parity.",
       "skills": [
         "engineering-standards",
         "github-actions-standards",
+        "maturity",
+        "agent-parity"
+      ]
+    },
+    {
+      "title": "Repository maturity",
+      "description": "Focused checks for Dockerfiles, npm projects, repository hygiene, and CI workflows.",
+      "skills": [
+        "evaluate-dockerfile",
+        "evaluate-npm",
+        "evaluate-repository-hygiene",
+        "evaluate-ci-workflow"
+      ]
+    },
+    {
+      "title": "Agent configuration",
+      "description": "Compare instructions, MCP servers, skills, and plugins across coding agents.",
+      "skills": [
+        "parity-instructions",
+        "parity-mcp",
+        "parity-skills",
+        "parity-plugins"
+      ]
+    },
+    {
+      "title": "Engineering workflows",
+      "skills": [
+        "api-design-standards",
+        "architecture-diagrams",
         "dependency-standards",
+        "git-workflow",
+        "logging-standards",
+        "repository-governance",
+        "repository-policy",
+        "repository-settings",
+        "repository-onboarding",
+        "typescript-library-build",
         "typescript-style-standards"
       ]
     },
     {
-      "title": "Repository Quality",
+      "title": "Skill evaluation",
+      "description": "Install the Evalkit plugin for its bundled agent and host resources.",
       "skills": [
-        "maturity",
-        "repository-governance",
-        "repository-onboarding",
-        "agent-parity"
+        "evalkit",
+        "review-skill",
+        "compare-skills",
+        "evaluate-skill",
+        "benchmark-skills",
+        "compare-models",
+        "remove-worktrees"
+      ]
+    },
+    {
+      "title": "System design interviews",
+      "description": "Install the Interview Kit plugin for its bundled concept library.",
+      "skills": [
+        "interview-kit",
+        "mock-design-interview",
+        "extract-design-concepts"
       ]
     }
   ]

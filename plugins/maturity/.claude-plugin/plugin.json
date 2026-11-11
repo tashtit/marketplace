@@ -15,7 +15,11 @@
     "npm",
     "lockfile",
     "github-actions",
-    "static-analysis"
+    "static-analysis",
+    "agent-skills",
+    "repository-quality",
+    "repository-hygiene",
+    "technical-debt"
   ],
   "skills": "./skills/",
   "interface": {
