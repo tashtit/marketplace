@@ -1,0 +1,25 @@
+{
+  "$schema": "https://skills.sh/schemas/skills.sh.schema.json",
+  "paths": ["./plugins"],
+  "notGrouped": "bottom",
+  "groupings": [
+    {
+      "title": "Engineering Standards",
+      "skills": [
+        "engineering-standards",
+        "github-actions-standards",
+        "dependency-standards",
+        "typescript-style-standards"
+      ]
+    },
+    {
+      "title": "Repository Quality",
+      "skills": [
+        "maturity",
+        "repository-governance",
+        "repository-onboarding",
+        "agent-parity"
+      ]
+    }
+  ]
+}
