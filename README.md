@@ -1,5 +1,7 @@
 # Tashtit Marketplace
 
+[![CI](https://github.com/tashtit/marketplace/actions/workflows/ci.yml/badge.svg?branch=main&event=push)](https://github.com/tashtit/marketplace/actions/workflows/ci.yml) [![License](https://img.shields.io/github/license/tashtit/marketplace)](LICENSE) [![Experimental](https://img.shields.io/badge/status-experimental-orange)](#project-status) [![skills.sh installs](https://skills.sh/b/tashtit/marketplace)](https://skills.sh/tashtit/marketplace)
+
 **Opinionated, production-focused engineering standards for AI coding agents.**
 
 Tashtit is an open-source plugin marketplace for teams that want agents to
