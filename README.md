@@ -46,6 +46,27 @@ codex plugin add engineering-standards
 Every plugin except `evalkit` is published to the Codex catalog; `evalkit`
 supports Claude Code and GitHub Copilot CLI only.
 
+### Install individual skills
+
+Use the [skills CLI](https://github.com/vercel-labs/skills) in your project:
+
+```bash
+npx skills add tashtit/marketplace --list
+npx skills add tashtit/marketplace --skill engineering-standards
+npx skills add tashtit/marketplace --skill github-actions-standards
+```
+
+Install the complete skill sets for Maturity and Agent Parity so their routers
+can find their dependencies:
+
+```bash
+npx skills add tashtit/marketplace --skill maturity evaluate-dockerfile evaluate-npm evaluate-repository-hygiene evaluate-ci-workflow
+npx skills add tashtit/marketplace --skill agent-parity parity-instructions parity-mcp parity-skills parity-plugins
+```
+
+Evalkit and Interview Kit require plugin installation for their bundled
+resources. All skills are experimental.
+
 ## Why Tashtit
 
 Agent output should be safe to review, predictable to operate, and suitable for

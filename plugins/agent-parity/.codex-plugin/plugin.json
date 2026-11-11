@@ -16,7 +16,11 @@
     "mcp",
     "skills",
     "plugins",
-    "configuration-drift"
+    "configuration-drift",
+    "agent-parity",
+    "agent-skills",
+    "agent-configuration",
+    "configuration-sync"
   ],
   "skills": "./skills/",
   "interface": {
