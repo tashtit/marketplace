@@ -3,6 +3,13 @@
 All notable changes to this plugin are documented here. Versions follow
 [Semantic Versioning](https://semver.org/).
 
+## 0.3.2 - 2026-11-17
+
+- Distinguish GitHub-authored action release tags from third-party action
+  and external workflow SHAs when reviewing pin formats offline.
+- Evaluate job timeouts on runners in local workflows, including reusable
+  workflows. Exclude caller jobs, where GitHub does not support the key.
+
 ## 0.3.1 - 2026-08-08
 
 ### Changed

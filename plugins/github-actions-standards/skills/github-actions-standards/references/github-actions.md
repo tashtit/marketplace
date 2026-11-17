@@ -43,6 +43,8 @@ Use current GitHub documentation when platform behavior may have changed:
   deployment events, environments, concurrency, and deployment URLs.
 - [Reuse workflows](https://docs.github.com/en/actions/how-tos/reuse-automations/reuse-workflows):
   inputs, outputs, permissions, secret passing, and nesting.
+- [Supported keywords for jobs that call a reusable workflow](https://docs.github.com/en/actions/reference/workflows-and-actions/reusing-workflow-configurations#supported-keywords-for-jobs-that-call-a-reusable-workflow)
+  lists the caller keys. Configure the timeout on each runner job in the callee.
 - [Artifact attestations](https://docs.github.com/en/actions/how-tos/secure-your-work/use-artifact-attestations/use-artifact-attestations):
   build provenance, required permissions, and plan availability.
 - [Immutable releases](https://docs.github.com/en/code-security/concepts/supply-chain-security/immutable-releases):
@@ -193,39 +195,18 @@ can still be over-authorized.
 
 ## Action and reusable-workflow pins
 
-GitHub states that a full-length commit SHA is the only immutable action
-reference. Tashtit therefore requires full SHAs for non-GitHub-authored remote
-actions and cross-repository reusable workflows, and prefers them for every
-remote action. A tag in a comment preserves readability:
+Review publisher identity and pin format separately. Confirm that the listing
+links to the expected upstream repository. GitHub's verified-creator badge
+identifies a partner organization. Popularity, a badge or a commit hash cannot
+establish that the code is suitable for the job.
+[Marketplace publisher verification](https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/find-and-customize-actions)
 
-```yaml
-- uses: owner/action@0123456789abcdef0123456789abcdef01234567 # v1.2.3
-```
-
-GitHub's own secure-use guidance also recognizes tags as a convenient choice
-when the creator is trusted. Tashtit permits this only for GitHub-authored
-actions in the `actions` and `github` organizations, only with a complete
-release tag such as `@v6.0.2`, and only when repository or organization policy
-does not require SHA pinning:
-
-```yaml
-- uses: actions/checkout@v6.0.2
-```
-
-The exact tag improves version intent but remains movable or deletable, so it
-MUST NOT be described as immutable. Prefer the SHA form for any job with
-secrets, write permissions, OIDC, or deployment authority. Major-only tags,
-branches, and `@latest` are not permitted by this exception.
-
-Verify the SHA against the upstream repository, not a fork. Configure
-Dependabot or Renovate to propose reviewed updates. A repository policy can
-also require full-SHA pins.
-
-Local actions use a repository-relative path and have no remote reference:
-
-```yaml
-- uses: ./.github/actions/setup
-```
+Apply the publisher and approval rules in the skill's supply-chain section.
+For an official action, confirm the full release tag exists upstream. For a
+third-party pin, resolve the reviewed release to its upstream commit, inspect
+the source and retain the version in a trailing comment. Exact tags can be
+moved or deleted. Use the repository's existing dependency update tooling.
+[GitHub action security guidance](https://docs.github.com/en/actions/reference/security/secure-use#using-third-party-actions)
 
 Cross-repository reusable workflows accept tags, branches, or SHAs, but
 Tashtit requires a full SHA because tags and branches can move. A called
@@ -308,11 +289,12 @@ and their tag cannot then be modified.
       `true` names the step that needs it.
 - [ ] Secrets avoid source and command-line arguments; derived values are
       masked before output and exposure response is defined.
-- [ ] Every non-GitHub action and cross-repository reusable workflow uses a
-      verified full commit SHA; a GitHub-authored action uses either the
-      preferred SHA or a policy-approved exact release tag.
+- [ ] Official actions use verified exact release tags unless a stricter SHA
+      policy applies. Third-party actions and external workflow calls use full
+      upstream SHAs. Each unverified action has explicit user approval.
 - [ ] Lockfiles and immutable install commands make dependencies reproducible.
-- [ ] Every job has an explicit timeout and least-privilege permissions.
+- [ ] Every runner job has an explicit timeout. Callers and callees have
+      least-privilege permissions.
 - [ ] CI concurrency cancels superseded PR work without racing publication.
 - [ ] Independent jobs run in parallel; `needs` models only real dependencies.
 - [ ] The actual distributable artifact is tested in a clean consumer where

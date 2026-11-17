@@ -1,0 +1,19 @@
+{
+  "id": "maturity-ci-positive-reusable-timeout",
+  "type": "positive",
+  "platforms": [
+    "claude-code",
+    "codex",
+    "github-copilot"
+  ],
+  "prompt": "Evaluate CI workflow hygiene, including job timeouts.",
+  "setup": [
+    "ci.yml contains a checks job with job-level uses: ./.github/workflows/checks.yml. The called file has a build runner job with a step-level uses and no timeout, and a test runner job with a five-minute timeout. All jobs have scoped permissions and checkout is pinned to a full commit SHA. There is no SHA-only policy."
+  ],
+  "expected": [
+    "Report ci-workflow-job-missing-timeout once for checks.yml's build job. The caller and the timed test job receive no timeout finding. The official checkout SHA is a style observation and does not count as a failing unpinned-action rule."
+  ],
+  "must_not": [
+    "Recommend adding timeout-minutes to the workflow call, fetch remote workflows or edit files."
+  ]
+}

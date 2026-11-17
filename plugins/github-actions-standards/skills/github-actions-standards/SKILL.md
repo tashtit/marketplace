@@ -1,6 +1,6 @@
 ---
 name: github-actions-standards
-description: Design, implement, or review secure and reproducible GitHub Actions workflows. Use when creating or changing CI, test, build, artifact, matrix, release, deployment, or reusable workflows; choosing triggers, permissions, concurrency, runners, caching, secrets, OIDC, environments, or action pins; or diagnosing unsafe, flaky, redundant, slow, or incomplete automation under .github/workflows. For a scored, read-only maturity audit of existing workflows, use the maturity plugin's evaluate-ci-workflow instead.
+description: Design, simplify, or review GitHub Actions workflow structure and security. Use when deciding what belongs in ci.yml, splitting jobs or reusable workflows, naming steps, or changing CI, artifacts, matrices, releases, and deployments. Covers triggers, permissions, concurrency, runners, caching, secrets, OIDC, environments, action pins, and verification. For a scored read-only hygiene audit, use the maturity plugin's evaluate-ci-workflow.
 ---
 
 # GitHub Actions Standards
@@ -37,14 +37,36 @@ proceed safely.
 
 ## Use the standard workflow shape
 
-For the primary continuous-integration workflow, Tashtit conventions are:
+For new CI, start with `.github/workflows/ci.yml`, named `CI`, and a job with
+the identifier `ci`. Keep the ordinary delivery path readable in its `jobs:`
+block. Choose the smallest shape that proves the repository's contract.
 
-- use `.github/workflows/ci.yml`;
-- use a short, stable workflow name such as `CI`;
+| Repository contract | Default layout in `ci.yml` |
+| --- | --- |
+| Source checks and unit tests share setup | One `ci` job runs both. |
+| Consumers install a package | `ci` builds and packs once. A `smoke` job tests that artifact across supported runtimes. Add service-backed `e2e` only when the integration is part of the contract. |
+| Packaging needs another OS or toolchain | `package` depends on `ci`, assembles the distributable and tests it on that runner. |
+| An established release follows successful CI | Add a separately permissioned `release` job downstream of all required gates and pass it the tested artifact. Preserve the authorized event and ref. |
+
+Give a workflow its own file when it has an independent lifecycle, such as
+a docs site deployed to a separate target or an explicitly required manual
+release. Keep validation in the primary file by default. Introduce bootstrap
+automation only for an evidenced first-release requirement and identify when
+it can be retired.
+
+Before reorganizing an existing workflow, trace each event through its jobs to
+its final effect. Preserve required check identities, dry runs, approvals and
+the distinction between manual and automatic publication. A change to any of
+these requires an explicit delivery decision. Check external references to a
+renamed file, including trusted-publisher bindings, badges and dispatch commands.
+
+Apply these conventions to the primary workflow:
+
 - trigger on `workflow_dispatch`, `pull_request`, and push to the actual
   default branch;
-- give every job a short, stable, lowercase identifier such as `build`,
-  `test`, or `release`, and an explicit `timeout-minutes`;
+- give jobs short, stable lowercase identifiers and set `timeout-minutes`
+  on each runner job, including jobs inside reusable workflows. GitHub omits
+  that key from the supported keywords on a job that calls a workflow;
 - do not set a job-level `name`; the identifier is the display name;
 - define workflow-level concurrency for ordinary CI;
 - cancel superseded pull-request runs, but let trusted branch runs finish;
@@ -72,20 +94,69 @@ tested check design ensure skipped runs cannot leave a required check pending
 or silently bypass relevant validation. A docs-only optimization is a
 repository decision, not a default.
 
-A job's status check appears as `<workflow name> / <job id>`, so both halves
-are contracts: keep the workflow name short and stable, keep job identifiers
-undecorated lowercase tokens, and do not hide an identifier behind a job-level
-`name`. Step names SHOULD be concise and diagnostic. Emojis MAY mark a few
-high-value steps but MUST NOT appear in workflow or job names and MUST NOT
-carry meaning by themselves.
+Read observed check names and required-check settings before renaming jobs,
+adding a matrix or introducing a reusable caller. Each can change the check
+a ruleset expects.
 
-Quote string values in `with:`, `env:`, and runtime-version fields. Unquoted
-YAML scalars are type-coerced, which silently changes what an action receives:
-`node-version: 20.10` becomes the number `20.1`, and `no` becomes `false`.
-Booleans and numbers that are genuinely typed, such as
-`persist-credentials: false` or `timeout-minutes: 10`, stay unquoted. Note that
-a bare `on:` key is itself parsed as the boolean `true` by YAML loaders, so
-tooling that reads workflows MUST NOT assume the string key.
+## Format workflows consistently
+
+Use these Tashtit property orders for the keys present. Omit unused fields.
+
+| Scope | Property order |
+| --- | --- |
+| Workflow | `name`, `on`, `permissions`, `concurrency`, `env`, `defaults`, `jobs` |
+| Runner job | `needs`, `if`, `runs-on`, `timeout-minutes`, `environment`, `concurrency`, `permissions`, `strategy`, `env`, `defaults`, `outputs`, `container`, `services`, `steps` |
+| Workflow call | `needs`, `if`, `permissions`, `strategy`, `concurrency`, `uses`, `with`, `secrets` |
+| Step | `name`, `id`, `if`, `timeout-minutes`, `continue-on-error`, `uses`, `with`, `env`, `working-directory`, `shell`, `run` |
+
+Give every step a concise, single-quoted name. Use the same name for the same
+operation across jobs, such as `'Checkout'`, `'Setup Node.js'`, `'Install'`,
+`'Lint'`, `'Test'` and `'Build'`. Qualify names when the distinction matters,
+such as `'Test packed package'`. Keep workflow names and job identifiers free
+of emoji. Put one blank line between successive steps. Keep properties
+together with no other decorative blank lines.
+
+Inline simple maps and lists when the complete indented line fits within
+160 columns. Expand nested structures, per-entry comments, multiline values
+and longer collections. Preserve whitespace inside scripts. Quote string
+inputs and versions so their spelling survives YAML parsing. Keep genuine
+numbers and booleans typed. YAML 1.1 loaders can interpret the `on` key as a
+boolean, which workflow tooling must account for.
+
+For example, a Node.js repository with a committed npm lockfile, `.nvmrc`
+and a test script can start here. Use the repository's actual default branch
+and verify the upstream release tags when applying the example.
+
+```yaml
+name: 'CI'
+on:
+  workflow_dispatch:
+  pull_request:
+  push: { branches: ['main'] }
+permissions: {}
+concurrency:
+  group: '${{ github.workflow }}-${{ github.ref }}'
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+jobs:
+  ci:
+    runs-on: 'ubuntu-latest'
+    timeout-minutes: 10
+    permissions: { contents: 'read' }
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v7.0.1
+        with: { persist-credentials: false }
+
+      - name: 'Setup Node.js'
+        uses: actions/setup-node@v7.1.0
+        with: { node-version-file: '.nvmrc', cache: 'npm' }
+
+      - name: 'Install'
+        run: npm ci
+
+      - name: 'Test'
+        run: npm test
+```
 
 ## Establish the trust boundary
 
@@ -116,8 +187,8 @@ output, or a reusable-workflow input. Prefer the binding, quote the expansion,
 validate the expected form, and avoid `eval`:
 
 ```yaml
-- env:
-    PR_TITLE: '${{ github.event.pull_request.title }}'
+- name: 'Report pull request title'
+  env: { PR_TITLE: '${{ github.event.pull_request.title }}' }
   run: |
     printf 'title: %s\n' "${PR_TITLE}"
 ```
@@ -133,6 +204,12 @@ documented capability, network, compliance, or performance need, and record
 their trust, isolation, patching, and cleanup assumptions.
 
 ## Minimize authority
+
+Start with no stored secrets. Ordinary build and test jobs should work on fork
+PRs with read-only access. Introduce a stored credential only for an evidenced
+operation that the automatic job token and federated identity cannot support.
+Scope it to the consuming step in its job or protected environment and document
+rotation.
 
 Every job MUST declare only the `GITHUB_TOKEN` permissions it needs. Prefer
 `permissions: {}` for jobs that do not need the token and `contents: read` for
@@ -162,7 +239,8 @@ another private repository, call the API through git credentials. When none
 does, which is the common case for build and test jobs, choose `false`:
 
 ```yaml
-- uses: actions/checkout@<ref>
+- name: 'Checkout'
+  uses: actions/checkout@v7.0.1
   with: { persist-credentials: false }
 ```
 
@@ -198,26 +276,20 @@ is an external side effect and requires explicit authorization.
 
 ## Pin the supply chain
 
-Remote actions SHOULD use a full 40-character commit SHA. Non-GitHub-authored
-actions and cross-repository reusable workflows MUST use one. Add a comment
-with the human-readable release version so automated dependency tooling can
-update it:
+Prefer built-in workflow features, existing commands and official GitHub
+actions. For actions published by GitHub under `actions/` or `github/`, use
+a verified, complete release tag such as `actions/checkout@v7.0.1`. Exact
+tags can move. Follow an explicit repository or organization SHA mandate
+when present and identify it in the review.
 
-```yaml
-- uses: actions/checkout@<full-40-character-commit-sha> # vX.Y.Z
-```
-
-An action authored by GitHub in the `actions` or `github` organization MAY use
-a complete release tag such as `@v6.0.2` when repository policy intentionally
-trusts GitHub as the publisher and does not require SHA pinning. This is a
-convenience exception, not an immutability claim; prefer a full SHA for jobs
-with secrets, write permissions, OIDC, or deployment authority.
-
-Do not use a branch, `@latest`, or a movable major tag such as `@v6` as the
-executable reference. Verify a pinned commit belongs to the intended upstream
-repository and an exact tag identifies the intended release. Prefer
-allowlisted, maintained actions with a narrow purpose. Review their inputs,
-permissions, network behavior, and release history before adoption.
+For a third-party action, check the Marketplace publisher and upstream source.
+An unverified publisher, including one whose identity cannot be established,
+requires explicit user approval for that specific action before adoption.
+A verified-creator badge identifies a publisher and confers no GitHub
+authorship. Pin any adopted third-party action and any cross-repository
+reusable workflow to the full 40-character upstream commit SHA and add the
+reviewed release tag in a comment. A SHA alone does not authorize adoption.
+Reject branches, `latest`, and partial version tags for all remote references.
 
 Use a committed lockfile and the ecosystem's immutable or frozen install
 command. Pin command-line tools that are downloaded during the run. Runtime
@@ -327,11 +399,18 @@ not an authorization boundary.
 
 ## Reuse without hiding risk
 
-Create a reusable workflow or local composite action only after repeated,
-stable behavior exists. Keep repository-specific orchestration in the caller.
-Define typed inputs, explicit outputs, narrow permissions, and individually
-named secrets. Avoid `secrets: inherit` unless the called workflow genuinely
-needs every secret and the trust boundary has been reviewed.
+Default to direct steps. Use safe action defaults and pass only inputs needed
+by the repository or this security baseline. Call existing build, test and
+release commands directly. Avoid introducing shell implementations, helper
+scripts, local composite actions or same-repository reusable workflows just
+to wrap setup or a single command. A few repeated checkout and setup lines
+make each job readable on its own.
+
+Consider extraction only for substantive, stable logic shared by continuing
+callers or for a documented platform requirement. Identify the callers and
+what would drift if kept inline. Keep permissions and deployment decisions
+visible in the caller, type the inputs and pass only individually named
+secrets required by the callee.
 
 Pin cross-repository reusable workflows by full commit SHA. Version local
 interfaces, document breaking changes, and test the caller and reusable
@@ -350,8 +429,11 @@ After editing:
    `needs`, concurrency groups, timeouts, artifact paths, and cleanup;
 3. run the repository's local checks that the workflow invokes when safe;
 4. verify required check names still match repository settings;
-5. observe a pull-request run and each trusted release path before claiming the
-   workflow works;
+5. compare the before/after job graph for each supported event, including
+   a fork PR, trusted push, manual dry run and authorized publication where
+   applicable. Identify which gates run, which artifact advances and the
+   first job that can write. Cite observed runs when available. Publishing
+   solely to validate a workflow requires separate authorization;
 6. test cancellation, cache miss, missing artifact, service timeout, failed
    diagnostics, and cleanup behavior where relevant.
 

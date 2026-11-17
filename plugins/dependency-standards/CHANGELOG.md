@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.1 - 2026-11-17
+
+- Align action intake with the GitHub Actions standard for official release
+  tags, third-party SHAs and explicit approval of unverified publishers.
+
 ## 0.1.0 - 2026-08-09
 
 - Added a blocking intake gate for new dependencies covering need,

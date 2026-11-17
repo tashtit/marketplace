@@ -118,14 +118,14 @@ The prioritized scope and acceptance criteria live in the
 | [Agent Parity](plugins/agent-parity/) | 0.1.0 | Experimental | Cross-agent instructions, MCP, skills, and plugin parity report, fixes on request |
 | [API Design Standards](plugins/api-design-standards/) | 0.1.0 | Experimental | Async REST jobs and safe API deprecation |
 | [Architecture Diagrams](plugins/architecture-diagrams/) | 0.1.0 | Experimental | C4 system context and container diagrams |
-| [Dependency Standards](plugins/dependency-standards/) | 0.1.0 | Experimental | Evidence-gated dependency intake, updates, and removal |
+| [Dependency Standards](plugins/dependency-standards/) | 0.1.1 | Experimental | Evidence-gated dependency intake, updates, and removal |
 | [Engineering Standards](plugins/engineering-standards/) | 0.2.0 | Experimental | Evidence-backed production change review |
 | [Evalkit](plugins/evalkit/) | 0.4.2 | Experimental | Host-adaptive static skill review and worktree-isolated skill/model benchmarks (Claude Code + Copilot CLI) |
 | [Git Workflow](plugins/git-workflow/) | 0.1.0 | Experimental | Safe branches, commits, and pull-request handoff |
-| [GitHub Actions Standards](plugins/github-actions-standards/) | 0.4.0 | Experimental | Secure, reproducible CI and release workflows |
+| [GitHub Actions Standards](plugins/github-actions-standards/) | 0.5.0 | Experimental | Secure, reproducible CI and release workflows |
 | [Interview Kit](plugins/interview-kit/) | 0.2.0 | Experimental | Mock system design interviews against cited pattern references; enable after the build, not during |
 | [Logging Standards](plugins/logging-standards/) | 0.1.0 | Experimental | Secure structured production logging |
-| [Maturity](plugins/maturity/) | 0.3.1 | Experimental | Dockerfile, npm, repository-hygiene, and CI-workflow maturity evaluation, fixes on request |
+| [Maturity](plugins/maturity/) | 0.3.2 | Experimental | Dockerfile, npm, repository-hygiene, and CI-workflow maturity evaluation, fixes on request |
 | [Repository Governance](plugins/repository-governance/) | 0.1.1 | Experimental | Audit repository governance, then optionally apply merge policy and rulesets |
 | [Repository Onboarding](plugins/repository-onboarding/) | 0.1.0 | Experimental | Read-only, evidence-backed repository assessment |
 | [TypeScript Library Build](plugins/typescript-library-build/) | 0.1.0 | Experimental | Dual ESM and CJS library build and publish |

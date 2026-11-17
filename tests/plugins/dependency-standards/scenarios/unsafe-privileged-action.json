@@ -15,7 +15,7 @@
     "The action is treated as a privileged build-time dependency with access to the pipeline's secrets, token, and network, and its blast radius is stated.",
     "The mutable reference is rejected in favor of a full 40-character commit SHA resolved from a reviewed tag, and the runtime script download is reported as unreviewable.",
     "Reduced-trust alternatives are proposed, such as an inline script using an already-trusted CLI or a narrower-permission action from a known owner.",
-    "A dependency record and an owner are required before the action is adopted."
+    "The unverified action requires explicit user approval in addition to a reviewed upstream SHA, an owner and the dependency record. Approval alone cannot establish the provenance of the runtime download."
   ],
   "must_not": [
     "Pin the action to a tag or branch, or add it to a workflow that holds publishing secrets while the trust questions are open.",

@@ -238,6 +238,18 @@ describe('validateActionPins', () => {
     assert.match(errors[0], /exact release tag/);
   });
 
+  it('rejects a quoted SHA on an official action', (t) => {
+    const errors = pinErrors(t, `      - uses: 'Actions/checkout@${'a'.repeat(40)}' # reviewed\n`);
+    assert.equal(errors.length, 1);
+    assert.match(errors[0], /exact release tag/);
+  });
+
+  it('requires a SHA for an external workflow even under a GitHub owner', (t) => {
+    const errors = pinErrors(t, '      uses: github/example/.github/workflows/test.yml@v1.2.3\n');
+    assert.equal(errors.length, 1);
+    assert.match(errors[0], /full 40-character commit SHA/);
+  });
+
   it('rejects a release tag on a third-party action', (t) => {
     const errors = pinErrors(t, '      - uses: third/party@v1.2.3\n');
     assert.equal(errors.length, 1);

@@ -3,15 +3,21 @@
 Design, implement, and review secure, reproducible GitHub Actions workflows for
 continuous integration, artifact verification, releases, and deployments.
 
-**Maturity: Experimental — 0.4.0.** Repository policy, supported runtimes,
+**Maturity: Experimental — 0.5.0.** Repository policy, supported runtimes,
 required checks, deployment environments, and release authority remain
 repository-specific. This plugin does not certify a workflow or supply chain.
 
-The default is a small CI workflow with explicit triggers, PR-aware
-concurrency, bounded jobs, least-privilege permissions, immutable action
-references, lockfile-based installs, and checks derived from repository
-contracts. Release and deployment work is isolated behind successful CI,
-trusted events, and protected environments.
+Start with a single `ci` job in `ci.yml`. A package can add smoke tests of
+the packed artifact, a desktop app can add platform-specific packaging, and
+an existing publisher can run downstream of its required checks. The skill
+explains when a separate workflow earns its place and how to preserve dry
+runs, required checks and approvals when simplifying an existing pipeline.
+
+Routine jobs use direct commands and safe action defaults with no stored
+secrets. The worked YAML example shows the property order, quoted step
+names, spacing and 160-column inline convention. GitHub-authored actions use
+exact release tags. Third-party actions use full upstream commit SHAs, and
+unverified actions require explicit user approval.
 
 The skill also covers artifact handoff, clean-room smoke tests, compatibility
 matrices, integration-service lifecycle, caches, diagnostics, path filters,

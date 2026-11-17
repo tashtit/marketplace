@@ -1,0 +1,21 @@
+{
+  "id": "github-actions-standards-positive-independent-site",
+  "type": "positive",
+  "platforms": [
+    "claude-code",
+    "codex",
+    "github-copilot"
+  ],
+  "prompt": "Simplify the workflow layout for this desktop app and its documentation site.",
+  "setup": [
+    "CI tests the app on Linux. Packaging and smoke testing the distributable require macOS. A trusted release consumes the resulting app bundle.",
+    "The docs site has its own deployment target, permissions and triggers."
+  ],
+  "expected": [
+    "The app's ci, package and release jobs remain visible in ci.yml, with the released bundle traceable to the successful packaging job.",
+    "The site retains its independent docs workflow and deployment boundary."
+  ],
+  "must_not": [
+    "Move the app checks into a single-caller reusable workflow or couple the app release to the docs deployment."
+  ]
+}

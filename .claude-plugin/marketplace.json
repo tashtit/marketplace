@@ -36,7 +36,7 @@
       "name": "dependency-standards",
       "source": "./plugins/dependency-standards",
       "description": "Evidence-based intake, update, and removal standards for third-party dependencies.",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "license": "Apache-2.0",
       "category": "Developer Tools"
     },
@@ -72,7 +72,7 @@
       "name": "github-actions-standards",
       "source": "./plugins/github-actions-standards",
       "description": "Secure, reproducible GitHub Actions CI and release standards.",
-      "version": "0.4.0",
+      "version": "0.5.0",
       "license": "Apache-2.0",
       "category": "Developer Tools"
     },
@@ -100,7 +100,7 @@
       "name": "maturity",
       "source": "./plugins/maturity",
       "description": "Evaluate repository maturity for Dockerfiles, npm projects, repository hygiene, and CI workflows, with fixes only on request.",
-      "version": "0.3.1",
+      "version": "0.3.2",
       "license": "Apache-2.0",
       "category": "Developer Tools"
     },
