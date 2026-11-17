@@ -2,7 +2,12 @@
 
 - [ ] Repository policy, required checks, delivery contract, and supported
       runtimes are discovered rather than invented.
-- [ ] The primary CI uses explicit triggers, concurrency, timeouts, stable job
+- [ ] The main checks and required artifact handoffs are visible in `ci.yml`.
+      Each extra file has a concrete caller or independent lifecycle, and
+      step names identify failures in the run log.
+- [ ] A restructure preserves the previous event-to-publication contract,
+      including manual dry runs, approvals and trusted-publisher bindings.
+- [ ] The primary CI uses explicit triggers, concurrency, runner job timeouts, stable job
       names, least-privilege permissions, and real dependency edges.
 - [ ] String values in `with:`, `env:`, and runtime-version fields are quoted
       so YAML type coercion cannot change them; genuinely typed booleans and
@@ -15,9 +20,13 @@
       own least-privilege job.
 - [ ] Secrets do not appear in source, command arguments, or logs; derived
       values are masked before output and exposure response is documented.
-- [ ] Non-GitHub actions and cross-repository reusable workflows use verified
-      full commit SHAs; GitHub-authored actions use the preferred SHA or a
-      policy-approved exact release tag.
+- [ ] Official actions use exact release tags unless a stricter SHA policy
+      applies. Third-party actions and external workflow calls use full
+      upstream SHAs. An unverified action has specific user approval.
+- [ ] Routine jobs need no stored secrets. Direct calls and safe defaults
+      suffice unless additional setup or local reuse has a concrete consumer.
+- [ ] Keys follow the documented order, simple values fit inline within 160
+      columns and quoted step names are separated by one blank line.
 - [ ] Dependency installation is lockfile-based and cache misses remain correct.
 - [ ] Required outputs are built once and the distributable artifact is tested.
 - [ ] Matrices, service jobs, retries, diagnostics, and cleanup have bounded

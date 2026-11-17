@@ -1,0 +1,19 @@
+{
+  "id": "github-actions-standards-positive-single-job",
+  "type": "positive",
+  "platforms": [
+    "claude-code",
+    "codex",
+    "github-copilot"
+  ],
+  "prompt": "Set up CI for this repository of standards and validation scripts.",
+  "setup": [
+    "Validate and unit-test commands use the same lockfile, runtime and runner and finish in two minutes. The repository distributes source and has no publish command."
+  ],
+  "expected": [
+    "ci.yml defines a CI workflow with one ci runner job. Checkout, setup, install, validate and test each have a consistent single-quoted step name. Workflow, job and step keys follow the documented order. Simple inputs fit inline within 160 columns, with one blank line between steps and none between their properties."
+  ],
+  "must_not": [
+    "Add stored secrets, a local setup action, shell wrapper, reusable workflow, artifact, matrix or release path for these existing commands."
+  ]
+}

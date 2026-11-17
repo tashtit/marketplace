@@ -81,15 +81,17 @@ Rules:
   tag and a branch are both mutable and can be moved onto different code after
   review. See
   [GitHub's hardening guidance](https://docs.github.com/en/actions/security-for-github-actions/security-guides/security-hardening-for-github-actions#using-third-party-actions).
-- An action published by GitHub itself may use an exact release tag when
-  repository policy allows it; a movable major tag such as `v4` never
-  qualifies.
+- For GitHub-authored actions under `actions/` and `github/`, use an exact
+  release tag such as `v7.0.1`, unless repository policy mandates full SHAs.
+  Confirm the tag upstream. An exact tag can still move.
+- Check third-party publishers before adoption. An unverified action requires
+  the user's explicit approval of that action even when the SHA is known.
 - Read what the action does with `GITHUB_TOKEN`, secrets, and the runner
   filesystem before pinning it. Prefer an action that declares narrow
   permissions and does not require write scopes.
 - Prefer a short inline script over an action that wraps one CLI call. The
   action adds a trust relationship the script does not.
-- Cross-repository reusable workflows follow the same pinning rule.
+- Pin cross-repository reusable workflows to the reviewed full commit SHA.
 
 Red flags: an action that requires broad `permissions`; one that curls a
 script at runtime; a fork of a popular action under an unfamiliar owner; a

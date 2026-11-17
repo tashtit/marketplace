@@ -4,7 +4,7 @@ Decide whether a third-party dependency may enter a codebase, on evidence
 rather than availability, and keep it pinned, recorded, updated, and removable
 afterwards.
 
-**Maturity: Experimental — 0.1.0.** Licensing decisions, allowed license sets,
+**Maturity: Experimental — 0.1.1.** Licensing decisions, allowed license sets,
 approval authority, and registry policy remain repository-specific and are not
 legal advice. This plugin does not certify a dependency, a license, or a supply
 chain.

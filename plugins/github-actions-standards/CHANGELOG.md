@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.5.0 - 2026-11-17
+
+- Define the default job layout for source checks, packages and platform
+  builds, with criteria for separate workflows and readable step names.
+- Trace event and artifact flow when restructuring CI to preserve required
+  checks, manual previews, release authority and external workflow bindings.
+- Specify property order, inline maps within 160 columns, single-quoted
+  step names and spacing. Prefer direct commands and secretless setup.
+- Use exact release tags for GitHub-authored actions and full SHAs for
+  third-party actions. Require explicit user approval for unverified actions.
+- Apply timeouts to runner jobs, including those inside reusable workflows.
+
 ## 0.4.0 - 2026-08-09
 
 - Expression handling in `run` scripts is now explicit: bind the value to an

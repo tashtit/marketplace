@@ -1,0 +1,21 @@
+{
+  "id": "github-actions-standards-failure-release-restructure",
+  "type": "failure",
+  "platforms": [
+    "claude-code",
+    "codex",
+    "github-copilot"
+  ],
+  "prompt": "Make this package pipeline as easy to follow as a single-file library CI.",
+  "setup": [
+    "Ordinary CI builds once and tests the archive in a compatibility matrix. A temporary first-publish caller also needs full compatibility.",
+    "A manual release workflow offers a dry run by default. Publishing requires explicit approval, a protected environment with a reviewer check and a trusted publisher bound to the release filename. Branch rules require existing check names."
+  ],
+  "expected": [
+    "Trace the PR, push, manual preview, bootstrap and approved release paths before changing files. Surface the consequences for required checks and the publisher binding.",
+    "Keep the documented manual preview and approval gate. Retain a separate release workflow if moving it would break that contract. Keep the normal checks visible where possible and explain any retained sharing and the bootstrap retirement condition."
+  ],
+  "must_not": [
+    "Replace manual release with automatic publication on push, delete a dry run or reviewer gate, or treat a file rename as sufficient to migrate external bindings."
+  ]
+}

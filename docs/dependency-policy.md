@@ -42,7 +42,7 @@ with evidence and committed in the same pull request:
    license.
 6. **Security** — known advisories, install-time scripts, required
    capabilities, and the blast radius if the package were compromised.
-7. **Control** — the immutable pin, the owner, and the exit plan.
+7. **Control** — the pin specified in the Pinning section, the owner, and the exit plan.
 
 The answers go in the pull request: the **Dependencies** section of the
 template carries them, and the issue that proposed the dependency links the
@@ -95,11 +95,13 @@ it happened.
 
 - npm dependencies MUST be exact versions in `package.json`, installed with
   `npm ci` against the committed lockfile. `npm install` in CI is prohibited.
-- Third-party GitHub Actions MUST be pinned to a full 40-character commit SHA.
-- Actions published by GitHub itself MAY use an exact release tag such as
-  `v7.0.1`, because this repository's CI holds no secrets, write permissions,
-  or deployment authority. A movable major tag such as `v7` is never allowed.
-- `npm run validate` enforces the action pinning rule.
+- GitHub-authored actions under `actions/` and `github/` use an exact release
+  tag such as `v7.0.1`. Tags can move. A branch or major tag is insufficient.
+- Third-party actions and cross-repository reusable workflows use the full
+  upstream commit SHA. Introducing an unverified Marketplace action requires
+  explicit user approval of that action as part of dependency intake.
+- `npm run validate` checks reference format. Review the upstream release,
+  publisher identity and approval during intake.
 
 ## Removal
 

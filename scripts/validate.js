@@ -12,10 +12,9 @@ const PLUGIN_NAME = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const MARKDOWN_LINK = /!?\[[^\]]*]\(([^)]+)\)/g;
 // A step may open with "- uses:" or carry "uses:" on its own line; both forms
 // reference an action and both must satisfy the pinning rule.
-const ACTION_REFERENCE = /^\s*(?:-\s+)?uses:\s+([^@\s]+)@([^\s#]+)/gm;
+const ACTION_REFERENCE = /^\s*(?:-\s+)?uses:\s+(['"]?)([^@\s'"]+)@([^\s#'"]+)\1\s*(?:#.*)?$/gm;
 const FULL_SHA = /^[0-9a-f]{40}$/;
-// A GitHub-authored action may use an exact release tag. A movable major tag
-// such as "v7" or a branch name stays forbidden because it is not immutable.
+// GitHub-authored actions use exact release tags in this repository.
 const GITHUB_AUTHORED_OWNERS = ['actions/', 'github/'];
 const EXACT_RELEASE_TAG = /^v\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/;
 const SCENARIO_TYPES = new Set(['positive', 'failure', 'unsafe']);
@@ -1158,12 +1157,7 @@ export function validateJsonFiles() {
 }
 
 export function validateActionPins() {
-  // Enforce the pinning rule documented in github-actions-standards.
-  //
-  // Any remote action may use a full commit SHA. An action published by
-  // GitHub itself may instead use an exact release tag, which this repository
-  // accepts because CI holds no secrets, write permissions, or deployment
-  // authority.
+  // Publisher review and approval happen during dependency intake.
   const workflows = path.join(ROOT, '.github', 'workflows');
   const workflowPaths = listDirectory(workflows)
     .filter(
@@ -1175,30 +1169,18 @@ export function validateActionPins() {
     .sort();
   for (const workflowPath of workflowPaths) {
     const content = readText(workflowPath);
-    for (const [, action, reference] of content.matchAll(ACTION_REFERENCE)) {
-      if (FULL_SHA.test(reference)) {
-        continue;
-      }
+    for (const [, , action, reference] of content.matchAll(ACTION_REFERENCE)) {
       if (action.startsWith('./') || action.startsWith('docker://')) {
         continue;
       }
-      const githubAuthored = GITHUB_AUTHORED_OWNERS.some((owner) =>
-        action.startsWith(owner),
-      );
-      if (githubAuthored && EXACT_RELEASE_TAG.test(reference)) {
-        continue;
-      }
-      if (githubAuthored) {
-        fail(
-          workflowPath,
-          `${action} must use a full 40-character commit SHA or an ` +
-            `exact release tag such as v1.2.3, not ${show(reference)}`,
-        );
-      } else {
-        fail(
-          workflowPath,
-          `${action} must be pinned to a full 40-character commit SHA`,
-        );
+      const upstream = action.toLowerCase();
+      const officialAction =
+        !upstream.includes('/.github/workflows/') &&
+        GITHUB_AUTHORED_OWNERS.some((owner) => upstream.startsWith(owner));
+      if (officialAction && !EXACT_RELEASE_TAG.test(reference)) {
+        fail(workflowPath, `${action} must use an exact release tag such as v1.2.3`);
+      } else if (!officialAction && !FULL_SHA.test(reference)) {
+        fail(workflowPath, `${action} must be pinned to a full 40-character commit SHA`);
       }
     }
   }

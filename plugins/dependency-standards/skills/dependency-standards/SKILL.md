@@ -116,9 +116,10 @@ capability. Where the ecosystem supports it, install with scripts disabled.
 ### 7. Control
 
 Decide, before adopting, how the dependency is pinned, updated, and removed.
-Pin to an immutable reference — a lockfile entry, an exact version, a digest,
-or a full commit SHA — so the build is reproducible and an upstream change
-cannot alter it silently. Assign an owner, subscribe to its advisories, and
+Use the ecosystem's integrity mechanism, such as a lockfile with integrity
+hashes, an image digest or a full commit SHA. For GitHub-authored actions,
+apply the exact release tag convention in the intake reference unless a
+stricter repository rule applies. Assign an owner, subscribe to its advisories, and
 write down the exit: the alternative to switch to, or the code that would
 replace it, if the project is abandoned or compromised.
 
@@ -179,5 +180,5 @@ what was verified and what was not.
 A dependency change is done when the need and alternatives are stated, usage
 and health are evidenced, provenance is verified, the license is identified and
 compatible, security and capability exposure are understood, the version is
-pinned to an immutable reference, the record is committed, the project's checks
+pinned according to the ecosystem rule, the record is committed, the project's checks
 pass, and the diff contains no unrelated dependency movement.

@@ -43,19 +43,20 @@ cite. All rules are report-only.
 
 ### unpinned-action (High, weight 8, report-only)
 
-- Precondition: at least one workflow references a remote action via `uses:`.
-- Detect: a `uses:` value that is not pinned to a full 40-character commit SHA.
-  Report each offending `uses:` line. A local action (`./…`) or a container
-  action (`docker://…`) is exempt. An action published by GitHub itself (the
-  `actions/*` or `github/*` owner) referenced by an exact release tag such as
-  `actions/checkout@v4.2.2` is an allowed convenience exception; a branch,
-  `@latest`, or a movable major tag such as `@v4` is never allowed.
-- Why: a movable reference lets an upstream change alter what runs in a
-  privileged context, which is a supply-chain risk.
-- Remediation (manual): pin each remote action to a full commit SHA and add a
-  `# vX.Y.Z` comment so dependency tooling can update it. Report only —
-  resolving a tag to a commit requires the network.
-- Reference: <https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions#using-third-party-actions>
+- Precondition: a workflow references a remote action or reusable workflow.
+- Detect: check the executable ref on each remote `uses`. GitHub-authored
+  actions under `actions/` and `github/` use exact release tags such as
+  `v7.0.1` by convention. Honor an explicitly supplied SHA-only policy.
+  Third-party actions and cross-repository workflow calls require a full
+  40-character commit SHA. Exclude local paths and container references.
+  Report a failing pin with its actual form. Mention an official action's full
+  SHA as a style observation outside the score when the tag convention applies.
+  A full SHA already satisfies the integrity goal of this scored rule.
+- Remediation (manual): identify the expected pin form and cite the line.
+  Leave release resolution, publisher verification and any required user
+  approval to the implementation review. Offline inspection cannot prove
+  those properties.
+- Reference: <https://docs.github.com/en/actions/reference/security/secure-use#using-third-party-actions>
 
 ### overly-permissive-permissions (High, weight 8, report-only)
 
@@ -88,14 +89,17 @@ cite. All rules are report-only.
 
 ### ci-workflow-job-missing-timeout (Medium, weight 5, report-only)
 
-- Precondition: a parseable workflow exists.
-- Detect: a job with no `timeout-minutes` set on the job. Report each job by
-  workflow file and job id.
+- Precondition: a parseable local workflow contains a runner job (`runs-on`).
+- Detect: report each runner job missing `timeout-minutes` by file and job id,
+  including runner jobs in local reusable workflows. A job-level `uses` calls
+  a workflow and cannot declare a timeout. A step-level `uses` is an action
+  within a runner job and the job still needs a timeout.
 - Why: a job without a timeout can hang until the runner limit, wasting minutes
   and delaying feedback instead of failing fast.
-- Remediation (manual): add `timeout-minutes` to each job, sized to its
+- Remediation (manual): add `timeout-minutes` to the runner job, sized to its
   expected duration. Report only.
 - Reference: <https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idtimeout-minutes>
+- [Supported caller keywords](https://docs.github.com/en/actions/reference/workflows-and-actions/reusing-workflow-configurations#supported-keywords-for-jobs-that-call-a-reusable-workflow)
 
 ### unsafe-pull-request-target (High, weight 9, report-only)
 

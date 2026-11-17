@@ -19,8 +19,9 @@
       transitive tree the candidate adds are reported.
 - [ ] A build-time or CI dependency is assessed against the pipeline's
       privileges, not only the application's.
-- [ ] Third-party actions and reusable workflows are pinned to a full commit
-      SHA resolved from a reviewed tag; a mutable tag or branch is rejected.
+- [ ] GitHub-authored actions use exact release tags unless stricter policy
+      applies. Third-party actions and cross-repository workflows use reviewed
+      full commit SHAs. Adopting an unverified action has explicit user approval.
 - [ ] An update is reviewed against the actual change between the pinned and
       proposed versions, including a bot-authored or security update.
 - [ ] The recorded pinned version is updated in the same change, so the record
