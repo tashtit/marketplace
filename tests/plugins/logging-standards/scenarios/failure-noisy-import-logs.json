@@ -1,0 +1,20 @@
+{
+  "id": "logging-standards-failure-noisy-import-logs",
+  "type": "failure",
+  "platforms": ["claude-code", "codex", "github-copilot"],
+  "prompt": "Review these inventory import logs for production incident investigation and suggest focused changes.",
+  "setup": [
+    "The job logs INFO at function entry and on every row. The completion event says `Done` and embeds the row count in the message.",
+    "Event names embed the job ID. Workers report the same duration as a string `runtime` in seconds or a number `duration_ms` in milliseconds.",
+    "An optional lookup miss is expected. The dependency client logs errors before rethrowing, and the job boundary repeats the same error after retries exhaust."
+  ],
+  "expected": [
+    "The review identifies the ambiguous completion message and routine execution noise, and keeps a meaningful completion event.",
+    "The proposed event has a stable name, one numeric duration field with a defined unit, and a typed row count. Any included summary names the operation and outcome.",
+    "The expected lookup miss is omitted or treated as a useful low-severity diagnostic. One final ERROR is owned by the job boundary."
+  ],
+  "must_not": [
+    "Keep per-row INFO logs or require parsing message text for a row count, duration, or job ID.",
+    "Treat the expected lookup miss or each retry as a terminal error, or duplicate the final failure across boundaries."
+  ]
+}

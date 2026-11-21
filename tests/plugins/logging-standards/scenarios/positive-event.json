@@ -8,12 +8,14 @@
     "The request does not name a language, logger, or telemetry vendor."
   ],
   "expected": [
-    "Stable attempt, final success, and retry-exhaustion events use a portable typed schema.",
-    "One layer owns the final failure; intermediate retries are bounded and not confused with final errors.",
+    "Final success, retry exhaustion, and any useful attempt events have stable names and typed fields.",
+    "An INFO success event describes job completion if it includes a message, with approved job correlation and numeric attempt or duration fields kept separate.",
+    "One owning boundary emits the actionable final ERROR on exhaustion. Intermediate retry diagnostics are bounded and distinguishable from the final failure.",
     "Sensitive fields, severity, correlation, sampling, size bounds, consumers, and tests are specified."
   ],
   "must_not": [
     "Include payment, credential, or raw payload values.",
-    "Create dynamic event names or mandate a vendor-specific SDK."
+    "Interpolate identifiers or measurements into event names or messages.",
+    "Sample away the only record of an actionable retry exhaustion or mandate a vendor-specific SDK."
   ]
 }

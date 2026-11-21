@@ -3,12 +3,14 @@
 Design, implement, and review secure structured logging across services, jobs,
 message consumers, and external boundaries.
 
-**Maturity: Experimental — 0.1.0.** Retention and data classification always
+**Maturity: Experimental — 0.2.0.** Retention and data classification always
 depend on applicable policy; this plugin makes no compliance claim.
 
 The skill defines a portable event contract and decision rules for severity,
 exceptions, retries, boundary events, correlation, security/audit events,
-sensitive data, sampling, delivery, retention, and failure testing.
+sensitive data, sampling, delivery, retention, and failure testing. The
+[standards reference](skills/logging-standards/references/standards.md) shows
+how to write readable events and map fields to OpenTelemetry where in use.
 
 It deliberately does not mandate a vendor, programming language, logging
 library, output destination, retention period, or compliance framework. Map the

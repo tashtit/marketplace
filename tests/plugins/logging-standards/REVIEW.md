@@ -1,7 +1,14 @@
 # Human review checklist
 
 - [ ] The response first identifies the operational, security, or audit question.
-- [ ] Events use a stable structured contract with bounded, typed fields.
+- [ ] Events reuse stable names and consistent domain terms, with bounded,
+      typed fields and consistent units.
+- [ ] Optional messages state what happened, and investigators can filter by
+      safe structured fields without parsing the message.
+- [ ] Business or operational transitions are visible without routine execution
+      noise.
+- [ ] The existing logger and telemetry schema are reused. Local formatting
+      preserves the structured event contract and data controls.
 - [ ] Severity reflects impact; expected conditions are not inflated.
 - [ ] One layer owns each failure, including retry exhaustion.
 - [ ] Exceptions use safe allowlisted serialization rather than raw objects.

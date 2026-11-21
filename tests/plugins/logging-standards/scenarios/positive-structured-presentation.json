@@ -1,0 +1,19 @@
+{
+  "id": "logging-standards-positive-structured-presentation",
+  "type": "positive",
+  "platforms": ["claude-code", "codex", "github-copilot"],
+  "prompt": "Use our existing logging setup to make inventory import events easy to scan locally and search during production incidents.",
+  "setup": [
+    "The repository has an approved structured logger, a console formatter, and an OpenTelemetry bridge that supports named records and propagates trace context.",
+    "Policy permits counts and durations but excludes item contents and operator identity for this event."
+  ],
+  "expected": [
+    "The existing logger and formatter present the same event contract, with stable names and typed attributes in production and readable text locally.",
+    "The mapping uses EventName, optional Body display text, Attributes, the appropriate severity fields, and existing TraceId and SpanId.",
+    "Operators can identify completed imports and filter by numeric counts or duration even without a message. Any included summary remains stable."
+  ],
+  "must_not": [
+    "Require a message, JSON encoding, a new logging library, or a wrapper that enforces no additional invariant.",
+    "Copy item contents, operator identity, or other unneeded data into either output."
+  ]
+}

@@ -21,11 +21,15 @@ For each proposed event:
 1. State the operational, security, or audit question it answers.
 2. Identify the event owner and the system boundary where it belongs.
 3. Reuse the existing logger, schema, severity model, trace context, and error
-   taxonomy.
+   taxonomy. Prefer the library's configuration and organization defaults.
+   Add a wrapper only when those mechanisms cannot enforce a required invariant
+   such as a mandatory field allowlist.
 4. Define safe fields, types, bounds, and cardinality before implementation.
 5. Decide who consumes the event and whether it drives an alert, investigation,
    audit trail, metric, or debugging workflow.
-6. Remove the event if an existing signal answers the same question.
+6. Prefer meaningful business or operational transitions, such as an inventory
+   import completing, over routine function entry, exit, and loop details.
+   Remove the event if an existing signal answers the same question.
 
 Do not use logs as the authoritative business ledger, analytics warehouse,
 distributed trace, or metrics system. Link to those systems with safe
@@ -33,7 +37,9 @@ identifiers when needed.
 
 ## Portable event contract
 
-Emit structured events. A production event SHOULD contain:
+Keep production events structured in the format the receiving system supports.
+A local formatter MAY render readable text from the same structured records
+under the same data controls. A production event SHOULD contain:
 
 | Field | Contract |
 | --- | --- |
@@ -52,10 +58,18 @@ Add deployment version, environment, region, host, or runtime identity at the
 collector/resource layer when reliable there. Do not make every application
 call repeat static infrastructure metadata.
 
-Keep field meanings and types stable across versions. Reserve names centrally
-and document incompatible schema changes. Never derive field names,
-`event.name`, severity, or logger category from untrusted or high-cardinality
-values. Keep user-controlled text in sanitized values.
+Use consistent domain terms across event names, fields, and messages. Reuse the
+same field name, meaning, type, and unit for a given concept across events and
+versions. Reserve names centrally and document incompatible schema changes.
+Never derive field names, `event.name`, severity, or logger category from
+untrusted or high-cardinality values. Keep user-controlled text in sanitized
+values.
+
+When included, use a short, stable message that names the operation and what
+happened. For example, `Inventory import completed` tells the on-call reader
+more than `Done`. Keep per-occurrence values in structured attributes so people
+can scan messages and search by field during an incident. Include only the
+context needed to understand, filter, or correlate the event.
 
 Use identifiers instead of copied objects. Distinguish identifier types:
 request, trace, operation, job, message, and tenant identifiers are not
@@ -217,6 +231,8 @@ Test representative success, handled failure, final failure, retry, timeout,
 cancellation, and degraded-path events. Verify:
 
 - schema, required fields, stable types, severity, and timestamps;
+- included messages identify the operation and outcome without requiring
+  readers to decode internal execution details;
 - trace and operation correlation across boundaries;
 - one owner for each failure and no accidental duplicate emission;
 - secret and sensitive-data exclusion, including exceptions and nested values;
@@ -230,5 +246,5 @@ Use synthetic fixtures. Do not place real secrets or personal data in tests.
 For reviews, lead with findings by severity and cite code or configuration
 evidence. Modify the implementation only when requested.
 
-Read [references/standards.md](references/standards.md) when validating the
-baseline against authoritative guidance or explaining why a control exists.
+See [standards and examples](references/standards.md) for OpenTelemetry field
+mappings, sample events, and the rationale for this baseline.
