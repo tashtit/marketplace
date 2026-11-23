@@ -47,7 +47,7 @@ jobs:
       # contributor also needs.
       - name: Review dependency changes
         if: github.event_name == 'pull_request'
-        uses: actions/dependency-review-action@v5.0.0
+        uses: actions/dependency-review-action@v5.0.1
         with:
           fail-on-severity: 'high'
           allow-licenses: '0BSD, Apache-2.0, BSD-2-Clause, BSD-3-Clause, CC0-1.0, ISC, MIT, MPL-2.0, Unlicense'
